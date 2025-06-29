@@ -8,7 +8,9 @@ use std::{
 mod exercicios;
 
 fn link_dos_exercícios(número_do_exercício: u32, cabeçalho_do_programa: &String) {
-    if número_do_exercício == 2 {
+    if número_do_exercício == 3 {
+        exercicios::ex_003::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 2 {
         exercicios::ex_002::rodar_o_exercício(&cabeçalho_do_programa);
     } else {
         exercicios::ex_001::rodar_o_exercício(&cabeçalho_do_programa);
@@ -19,7 +21,8 @@ fn menu_de_opções_de_exercícios(cabeçalho_do_programa: &String) {
     loop {
         let nome_de_todos_os_exercícios = vec![
             String::from("ex_001"),
-            String::from("ex_002")
+            String::from("ex_002"),
+            String::from("ex_003")
         ];
 
         let tamanho_da_lista_de_exercícios = nome_de_todos_os_exercícios.len().to_string();
@@ -103,5 +106,5 @@ fn main() {
     menu_de_opções_de_exercícios(&cabeçalho_do_programa);
 
     // Para Desenolvimento do exercício
-    // exercicios::ex_002::rodar_o_exercício(&cabeçalho_do_programa);
+    // exercicios::ex_003::rodar_o_exercício(&cabeçalho_do_programa);
 }
