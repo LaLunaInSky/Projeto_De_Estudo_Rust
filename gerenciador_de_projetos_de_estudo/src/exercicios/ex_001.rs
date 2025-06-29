@@ -12,7 +12,7 @@ fn clean_terminal_linux() {
 fn descrição_do_exercícios() {
     println!("Descrição do exercício 001:");
     println!(
-        "Um programa que lê dois números inteiro e\nmostra a soma entre os mesmos."
+        " Um programa que lê dois números inteiro e\nmostra a soma entre os mesmos."
     );
 }
 
