@@ -65,7 +65,7 @@ fn obter_a_entrada_do_teclado(cabeçalho_do_programa: &String) -> String {
 
                 println!("{}", cabeçalho_do_programa);
 
-                println!("\nFoi digitado:\n'{}'", input.trim());
+                analise_da_entrada_digitada(&input.trim());
 
                 println!("\nGostaria de digitar outra frase (S/N)? ");
 
@@ -87,4 +87,93 @@ fn obter_a_entrada_do_teclado(cabeçalho_do_programa: &String) -> String {
     }
 
     input
+}
+
+fn analise_da_entrada_digitada(entrada_digitada: &str) {
+    println!("\nAnalisando o que foi digitado:\n'{}'", entrada_digitada);
+    let mut entrada_sem_espaços = String::new();
+    let mut chars: Vec<char> = vec![];
+
+    if entrada_digitada.contains(" ") {
+        for char in entrada_digitada.chars() {
+            if char != ' ' {
+                chars.push(char);
+            }
+        }
+
+        for char in chars {
+            entrada_sem_espaços.push(char);
+        }
+
+    } else {
+        entrada_sem_espaços.push_str(entrada_digitada);
+    }
+
+    thread::sleep(Duration::from_millis(1000));
+
+    match entrada_sem_espaços.parse::<i64>() {
+        Ok(number) => {
+            println!("\nO seu Tipo Primitivo é: {}", retornar_o_tipo_primitivo(&number));
+            thread::sleep(Duration::from_millis(1000));
+
+            println!("É apenas número?......: SIM");
+            thread::sleep(Duration::from_millis(1000));
+
+            println!("Possui espaços?.......: {}", retornar_se_possui_espaços(&entrada_digitada));
+            thread::sleep(Duration::from_millis(1000));
+
+            println!("É alfabético?.........: NÃO");
+            thread::sleep(Duration::from_millis(1000));
+
+            println!("É alfanumérico?.......: NÃO");
+            thread::sleep(Duration::from_millis(1000));
+
+            println!("Está em maiúscula?....: NÃO");
+            thread::sleep(Duration::from_millis(1000));
+
+            println!("Está em minúscula?....: NÃO");
+            thread::sleep(Duration::from_millis(1000));
+
+            println!("Está capitalizada?....: NÃO");
+            thread::sleep(Duration::from_millis(1000));
+        }
+        Err(_) => {
+            println!("\nO seu Tipo Primitivo é: {}", retornar_o_tipo_primitivo(&entrada_digitada));
+            thread::sleep(Duration::from_millis(1000));
+
+            println!("É apenas número?......: NÃO");
+            thread::sleep(Duration::from_millis(1000));
+
+            println!("Possui espaços?.......: {}", retornar_se_possui_espaços(&entrada_digitada));
+            thread::sleep(Duration::from_millis(1000));
+
+            println!("É alfabético?.........: {}", "?");
+            thread::sleep(Duration::from_millis(1000));
+
+            println!("É alfanumérico?.......: {}", "?");
+            thread::sleep(Duration::from_millis(1000));
+
+            println!("Está em maiúscula?....: {}", "?");
+            thread::sleep(Duration::from_millis(1000));
+
+            println!("Está em minúscula?....: {}", "?");
+            thread::sleep(Duration::from_millis(1000));
+
+            println!("Está capitalizada?....: {}", "?");
+            thread::sleep(Duration::from_millis(1000));
+        }
+    }
+    
+}
+
+fn retornar_o_tipo_primitivo<T>(_: &T) -> String {
+    std::any::type_name::<T>().to_string()
+}
+
+fn retornar_se_possui_espaços(entrada_digitada: &str) -> String {
+    if entrada_digitada.contains(" ") {
+        return String::from("SIM");
+    } else {
+        return String::from("NÃO");
+    }
 }
