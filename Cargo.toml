@@ -1,5 +1,5 @@
 [package]
-name = "gerenciador_de_projetos_de_estudo"
+name = "projeto_de_estudo_rust"
 version = "0.1.0"
 edition = "2024"
 
