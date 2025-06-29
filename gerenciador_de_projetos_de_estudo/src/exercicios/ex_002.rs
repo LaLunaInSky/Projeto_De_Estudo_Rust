@@ -147,10 +147,10 @@ fn analise_da_entrada_digitada(entrada_digitada: &str) {
             println!("Possui espaços?.......: {}", retornar_se_possui_espaços(&entrada_digitada));
             thread::sleep(Duration::from_millis(1000));
 
-            println!("É alfabético?.........: {}", "?");
+            println!("É alfabético?.........: {}", if retorna_se_a_string_possui_números(&entrada_digitada) == "SIM" {"NÃO"} else {"SIM"});
             thread::sleep(Duration::from_millis(1000));
 
-            println!("É alfanumérico?.......: {}", "?");
+            println!("É alfanumérico?.......: {}", retorna_se_a_string_possui_números(&entrada_digitada));
             thread::sleep(Duration::from_millis(1000));
 
             println!("Está em maiúscula?....: {}", "?");
@@ -176,4 +176,16 @@ fn retornar_se_possui_espaços(entrada_digitada: &str) -> String {
     } else {
         return String::from("NÃO");
     }
+}
+
+fn retorna_se_a_string_possui_números(entrada_digitada: &str) -> String {
+    let lista_de_número_primários = vec!["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+    for número in lista_de_número_primários {
+        if entrada_digitada.contains(número) {
+            return String::from("SIM");
+        }
+    }
+
+    String::from("NÃO")
 }
