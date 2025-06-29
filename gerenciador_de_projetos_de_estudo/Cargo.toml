@@ -1,0 +1,6 @@
+[package]
+name = "gerenciador_de_projetos_de_estudo"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
