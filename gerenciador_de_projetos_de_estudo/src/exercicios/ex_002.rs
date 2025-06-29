@@ -153,17 +153,16 @@ fn analise_da_entrada_digitada(entrada_digitada: &str) {
             println!("É alfanumérico?.......: {}", retorna_se_a_string_possui_números(&entrada_digitada));
             thread::sleep(Duration::from_millis(1000));
 
-            println!("Está em maiúscula?....: {}", "?");
+            println!("Está em maiúscula?....: {}", verificar_se_a_string_é_maiúscula(&entrada_digitada));
             thread::sleep(Duration::from_millis(1000));
 
             println!("Está em minúscula?....: {}", verificar_se_a_string_é_minúscula(&entrada_digitada));
             thread::sleep(Duration::from_millis(1000));
 
-            println!("Está capitalizada?....: {}", "?");
+            println!("Está capitalizada?....: {}", verificar_se_a_string_está_capitalizada(&entrada_digitada));
             thread::sleep(Duration::from_millis(1000));
         }
-    }
-    
+    }    
 }
 
 fn retornar_o_tipo_primitivo<T>(_: &T) -> String {
@@ -191,12 +190,46 @@ fn retorna_se_a_string_possui_números(entrada_digitada: &str) -> String {
 }
 
 fn verificar_se_a_string_é_maiúscula(entrada_digitada: &str) -> String {
-    
+    if entrada_digitada == entrada_digitada.to_uppercase() {
+        return String::from("SIM");
+    } else {
+        return String::from("NÃO");
+    }
 }
 
 fn verificar_se_a_string_é_minúscula(entrada_digitada: &str) -> String {
     if entrada_digitada == entrada_digitada.to_lowercase() {
         return String::from("SIM");
+    } else {
+        return String::from("NÃO");
+    }
+}
+
+fn verificar_se_a_string_está_capitalizada(entrada_digitada: &str) -> String {
+    if verificar_se_a_string_é_maiúscula(&entrada_digitada) == "NÃO" && verificar_se_a_string_é_minúscula(&entrada_digitada) == "NÃO" && entrada_digitada.len() > 1 {
+        let palavras_digitadas: Vec<&str> = entrada_digitada.split(" ").collect();
+
+        let mut primeiras_letras_upper: Vec<bool> = vec![];
+
+        for palavra in &palavras_digitadas {
+            for (index, char) in palavra.chars().enumerate() {
+                if index == 0 {
+                    if char.is_ascii_uppercase() {
+                        primeiras_letras_upper.push(true);
+                    }
+                }
+            }
+        }
+        
+        if palavras_digitadas.len() == primeiras_letras_upper.len() {
+            return String::from("SIM");
+        } else {
+            return String::from("NÃO");
+        }
+
+    } else if entrada_digitada.len() == 1 && verificar_se_a_string_é_minúscula(&entrada_digitada) == "NÃO" {
+        return String::from("SIM");
+
     } else {
         return String::from("NÃO");
     }
