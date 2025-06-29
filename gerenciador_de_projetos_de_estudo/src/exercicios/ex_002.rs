@@ -156,7 +156,7 @@ fn analise_da_entrada_digitada(entrada_digitada: &str) {
             println!("Está em maiúscula?....: {}", "?");
             thread::sleep(Duration::from_millis(1000));
 
-            println!("Está em minúscula?....: {}", "?");
+            println!("Está em minúscula?....: {}", verificar_se_a_string_é_minúscula(&entrada_digitada));
             thread::sleep(Duration::from_millis(1000));
 
             println!("Está capitalizada?....: {}", "?");
@@ -188,4 +188,16 @@ fn retorna_se_a_string_possui_números(entrada_digitada: &str) -> String {
     }
 
     String::from("NÃO")
+}
+
+fn verificar_se_a_string_é_maiúscula(entrada_digitada: &str) -> String {
+    
+}
+
+fn verificar_se_a_string_é_minúscula(entrada_digitada: &str) -> String {
+    if entrada_digitada == entrada_digitada.to_lowercase() {
+        return String::from("SIM");
+    } else {
+        return String::from("NÃO");
+    }
 }
