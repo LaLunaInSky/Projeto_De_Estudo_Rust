@@ -52,7 +52,7 @@ fn menu_de_opções_de_exercícios(cabeçalho_do_programa: &String) {
                             
                             println!("\nAbrindo o exercício {}...\n", number);
 
-                            thread::sleep(Duration::from_millis(1000));
+                            thread::sleep(Duration::from_millis(2000));
 
                             clean_terminal_linux();
 
