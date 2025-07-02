@@ -29,7 +29,7 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
 
     thread::sleep(Duration::from_millis(3000));
 
-    println!("Voltando para o menu de exercício...");
+    println!("Voltando para o menu de exercícios...");
 
     thread::sleep(Duration::from_millis(3000));
 

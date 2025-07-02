@@ -40,7 +40,7 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
 
     thread::sleep(Duration::from_millis(2000));
 
-    println!("\nVoltando para o menu de exercício...");
+    println!("\nVoltando para o menu de exercícios...");
 
     thread::sleep(Duration::from_millis(3000));
 
