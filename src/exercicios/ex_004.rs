@@ -28,6 +28,14 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     thread::sleep(Duration::from_millis(2000));
 
     analisador_deo_número_inteiro(&número_do_input);
+
+    thread::sleep(Duration::from_millis(3000));
+
+    println!("\nVoltando para o menu de exercício...\n");
+
+    thread::sleep(Duration::from_millis(3000));
+
+    clean_terminal_linux();
 }
 
 fn obter_input_de_um_número_inteiro(cabeçalho_do_programa: &String) -> u32 {
@@ -75,16 +83,16 @@ fn analisador_deo_número_inteiro(número_inteiro: &u32) {
 
     println!(
         "O Dobro é..........: {}",
-        número_inteiro
+        (número_inteiro * 2)
     );
 
     println!(
         "O triplo é.........: {}",
-        número_inteiro
+        (número_inteiro * 3)
     );
 
     println!(
         "A Raiz Quadrada é..: {}",
-        número_inteiro
+        número_inteiro.isqrt()
     );
 }
