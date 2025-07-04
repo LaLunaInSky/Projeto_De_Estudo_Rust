@@ -1,4 +1,5 @@
 use std::{
+    io,
     process::Command
 };
 
@@ -19,4 +20,17 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     descrição_do_exercício();
 
     println!();
+
+    obter_o_número_inteiro();
+}
+
+fn obter_o_número_inteiro() {
+    println!("Digite um número inteiro:");
+
+    let mut input = String::new();
+
+    match io::stdin().read_line(&mut input) {
+        Ok(_) => println!("Input: {}", input),
+        Err(_) => println!("Erro!"),
+    }
 }
