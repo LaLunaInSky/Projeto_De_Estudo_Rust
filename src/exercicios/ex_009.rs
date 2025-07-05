@@ -23,7 +23,7 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     
     println!();
 
-    /* Corpo do programa main */
+    /* Corpo do exercício main */
     let mut tamanho_da_parede: Vec<f32> = vec![];
 
     for tamanho in 1..3 {

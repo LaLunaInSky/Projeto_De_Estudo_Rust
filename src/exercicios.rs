@@ -7,3 +7,4 @@ pub mod ex_006;
 pub mod ex_007;
 pub mod ex_008;
 pub mod ex_009;
+pub mod ex_010;

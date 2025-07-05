@@ -8,7 +8,9 @@ use std::{
 mod exercicios;
 
 fn link_dos_exercícios(número_do_exercício: u32, cabeçalho_do_programa: &String) {
-    if número_do_exercício == 9 {
+    if número_do_exercício == 10 {
+        exercicios::ex_010::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 9 {
         exercicios::ex_009::rodar_o_exercício(&cabeçalho_do_programa);
     } else if número_do_exercício == 8 {
         exercicios::ex_008::rodar_o_exercício(&cabeçalho_do_programa);
@@ -40,7 +42,8 @@ fn menu_de_opções_de_exercícios(cabeçalho_do_programa: &String) {
             String::from("ex_006"),
             String::from("ex_007"),
             String::from("ex_008"),
-            String::from("ex_009")
+            String::from("ex_009"),
+            String::from("ex_010")
         ];
 
         let tamanho_da_lista_de_exercícios = nome_de_todos_os_exercícios.len().to_string();
@@ -51,7 +54,8 @@ fn menu_de_opções_de_exercícios(cabeçalho_do_programa: &String) {
         println!("          Lista de Exercícios\n");
         
         for (index, exercicio) in nome_de_todos_os_exercícios.into_iter().enumerate() {
-            if index % 4 == 0 && index != 0 {
+
+            if index > 0 && index % 5 == 4{
                 print!("{exercicio}\n");
             } else {
                 print!("{exercicio}   ");
@@ -125,8 +129,8 @@ fn main() {
     let cabeçalho_do_programa: String = String::from("- Gerenciador De Projetos De Estudo Rust -\n             Por LaLunaInSky               \n");
 
     // Para o programa final
-    menu_de_opções_de_exercícios(&cabeçalho_do_programa);
+    // menu_de_opções_de_exercícios(&cabeçalho_do_programa);
 
     // Para Desenolvimento do exercício
-    // exercicios::ex_009::rodar_o_exercício(&cabeçalho_do_programa);
+    exercicios::ex_010::rodar_o_exercício(&cabeçalho_do_programa);
 }
