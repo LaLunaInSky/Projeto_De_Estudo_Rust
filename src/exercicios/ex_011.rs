@@ -12,7 +12,7 @@ fn clean_terminal_linux() {
 fn descrição_do_exercício() {
     println!("Descrição do exercício 011:");
     println!(
-        " Um programa que lê o salário de um funcionário e mostra o seu novo salário com 15% de aumento."
+        " Um programa que lê o salário de um\nfuncionário e mostra o seu novo salário\ncom 15% de aumento."
     );
 }
 
@@ -74,7 +74,7 @@ fn obter_o_salario(cabeçalho_do_programa: &String) -> f32 {
 
                             match salário_formatado.parse::<f32>() {
                                 Ok(salário_final) => {
-                                    println!("\nO salário do funcionário é R${:.2}\n", salário_final);
+                                    println!("\nO salário do funcionário de R${:.2}\nadicionado com sucesso.\n", salário_final);
                                 
                                     return salário_final;
                                 }
