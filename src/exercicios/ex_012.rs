@@ -24,7 +24,7 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     println!();
 
     /* Corpo do exercício main */
-
+    obter_a_temperatura();
 
     /* Fim do Exercício */
     // thread::sleep(Duration::from_millis(3000));
@@ -34,4 +34,15 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     // thread::sleep(Duration::from_millis(3000));
 
     // clean_terminal_linux();
+}
+
+fn obter_a_temperatura() {
+    println!("Digite a temperatuda em °C:");
+
+    let mut input = String::new();
+
+    match io::stdin().read_line(&mut input) {
+        Ok(_) => println!("Input: {}", input),
+        Err(_) => println!("Erro!"),
+    }
 }
