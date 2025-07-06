@@ -1,4 +1,5 @@
 use std::{
+    io,
     process::Command,
     thread,
     time::Duration
@@ -23,7 +24,7 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     println!();
 
     /* Corpo do exercício main */
-
+    obter_o_salario();
 
     /* Fim do Exercício */
     // thread::sleep(Duration::from_millis(3000));
@@ -33,4 +34,22 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     // thread::sleep(Duration::from_millis(3000));  
 
     // clean_terminal_linux();  
+}
+
+fn obter_o_salario() {
+    loop {
+        println!("Digite o salário do funcionário:");
+    
+        let mut input = String::new();
+    
+        match io::stdin().read_line(&mut input) {
+            Ok(_) => {
+                match input.trim().parse::<f32>() {
+                    Ok(number) => println!("Number: {}", number),
+                    Err(_) => println!("Erro! Digite um valor válido!"),
+                }
+            }
+            Err(_) => println!("Erro!"),
+        }
+    }
 }
