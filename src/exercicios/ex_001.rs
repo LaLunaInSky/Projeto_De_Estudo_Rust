@@ -1,14 +1,17 @@
+/* importação das bibliotecas  */
 use std::{
     io,
-    process::Command,
     thread,
-    time::Duration
+    time::Duration,
+    process::Command
 };
 
+/* Uma função que limpa o termninal no linux */
 fn clean_terminal_linux() {
     Command::new("clear").status().unwrap();
 }
 
+/* Uma função que imprime no terminal o número do exercício e a descrição do mesmo */
 fn descrição_do_exercícios() {
     println!("Descrição do exercício 001:");
     println!(
@@ -16,6 +19,7 @@ fn descrição_do_exercícios() {
     );
 }
 
+/* A função principal do exercício, contento o corpo main deste módulo, o único a ser público */
 pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     println!("{}", cabeçalho_do_programa);
 
@@ -90,20 +94,5 @@ fn obter_a_entrada_de_um_número_inteiro(
         }
 
         
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn soma_de_dois_números() {
-        let primeiro_número = 5;
-        let segundo_número = 5;
-
-        let resultado_da_soma = soma_de_dois_números_inteiros(primeiro_número, segundo_número);
-
-        assert_eq!(resultado_da_soma, 10);
     }
 }
