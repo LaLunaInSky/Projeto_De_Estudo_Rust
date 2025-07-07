@@ -33,15 +33,15 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     analisar_o_número_inteiro(&número_real_digitado);
 
     /* Fim do Exercício */
-    // thread::sleep(Duration::from_millis(3000));
+    thread::sleep(Duration::from_millis(3000));
 
-    // println!(
-    //     "\nVoltando ao menu de exercícios...\n"
-    // );
+    println!(
+        "\nVoltando ao menu de exercícios...\n"
+    );
 
-    // thread::sleep(Duration::from_millis(3000));
+    thread::sleep(Duration::from_millis(3000));
 
-    // clean_terminal_linux();  
+    clean_terminal_linux();  
 }
 
 fn analisar_o_número_inteiro(número_real: &f32) {
@@ -49,9 +49,11 @@ fn analisar_o_número_inteiro(número_real: &f32) {
 
     thread::sleep(Duration::from_millis(2000));
 
+    let número_inteiro = *número_real as u32;
+
     println!(
         "O número inteiro é {:.0}.",
-        número_real
+        número_inteiro 
     );
 }
 
