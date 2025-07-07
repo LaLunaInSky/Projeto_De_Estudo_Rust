@@ -12,3 +12,4 @@ pub mod ex_011;
 pub mod ex_012;
 pub mod ex_013;
 pub mod ex_014;
+pub mod ex_015;
