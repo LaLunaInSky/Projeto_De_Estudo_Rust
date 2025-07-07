@@ -137,9 +137,9 @@ fn main() {
 
     let cabeçalho_do_programa: String = String::from("- Gerenciador De Projetos De Estudo Rust -\n             Por LaLunaInSky               \n");
 
-    // Para o programa final
+    // Rodar o menu de exercícios
     // menu_de_opções_de_exercícios(&cabeçalho_do_programa);
 
-    // Para Desenolvimento do exercício
+    // Rodar apenaso exercício X
     exercicios::ex_013::rodar_o_exercício(&cabeçalho_do_programa);
 }
