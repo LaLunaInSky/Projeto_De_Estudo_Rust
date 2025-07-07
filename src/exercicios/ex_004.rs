@@ -1,8 +1,8 @@
 use std::{
-    process::Command,
     io,
     thread,
-    time::Duration
+    time::Duration,
+    process::Command
 };
 
 fn clean_terminal_linux() {
@@ -56,7 +56,7 @@ fn obter_input_de_um_número_inteiro(cabeçalho_do_programa: &String) -> u32 {
 
                         println!();
 
-                        println!("Analisando o número digitado {}...", number);
+                        println!("Analisando o número {}...", number);
 
                         return number;
                     }
@@ -81,15 +81,21 @@ fn obter_input_de_um_número_inteiro(cabeçalho_do_programa: &String) -> u32 {
 fn analisador_deo_número_inteiro(número_inteiro: &u32) {
     println!();
 
+    thread::sleep(Duration::from_millis(1000));
+
     println!(
         "O Dobro é..........: {}",
         (número_inteiro * 2)
     );
 
+    thread::sleep(Duration::from_millis(1000));
+
     println!(
         "O triplo é.........: {}",
         (número_inteiro * 3)
     );
+
+    thread::sleep(Duration::from_millis(1000));
 
     println!(
         "A Raiz Quadrada é..: {}",

@@ -12,7 +12,7 @@ fn clean_terminal_linux() {
 fn descrição_do_exercícios() {
     println!("Descrição do exercício 003:");
     println!(
-        " Um programa que lê um número inteiro e mostra na tela o seu sucessor e seu antecessor."
+        " Um programa que lê um número inteiro e\nmostra na tela o seu sucessor e seu\nantecessor."
     );
 }
 

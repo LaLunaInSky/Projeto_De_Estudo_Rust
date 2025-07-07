@@ -39,7 +39,7 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
 }
 
 fn obter_a_tabuado_do_número_inteiro_informado(número_inteiro: &u32) {
-    println!("A Tabuado do {} é...\n", número_inteiro);
+    println!("A Tabuada do {} é...\n", número_inteiro);
 
     thread::sleep(Duration::from_millis(2000));
 

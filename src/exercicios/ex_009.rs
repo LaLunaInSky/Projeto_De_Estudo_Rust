@@ -36,16 +36,21 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
 
     let area_da_parede = cacular_a_area_da_parede(&tamanho_da_parede[0], &tamanho_da_parede[1]);
 
+    
     println!(
-        "Altura: {:.1}m\nLargura: {:.1}m\n",
+        "Calculando a área da parade com:\nAltura: {:.1}m\nLargura: {:.1}m\n",
         tamanho_da_parede[0],
         tamanho_da_parede[1]
     );
-
+    
+    thread::sleep(Duration::from_millis(2000));
+    
     println!(
-        "A área da parade é de {}m²\n",
+        "Sua área é de {}m²,",
         area_da_parede
     );
+
+    thread::sleep(Duration::from_millis(2000));
 
     calcular_quantidade_de_tinta(&area_da_parede);
 
