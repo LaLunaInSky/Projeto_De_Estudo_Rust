@@ -7,59 +7,27 @@ use std::{
 
 mod exercicios;
 
-fn link_dos_exercícios(número_do_exercício: u32, cabeçalho_do_programa: &String) {
-    if número_do_exercício == 15 {
-        exercicios::ex_015::rodar_o_exercício(&cabeçalho_do_programa);
-    } else if número_do_exercício == 14 {
-        exercicios::ex_014::rodar_o_exercício(&cabeçalho_do_programa);
-    } else if número_do_exercício == 13 {
-        exercicios::ex_013::rodar_o_exercício(&cabeçalho_do_programa);
-    } else if número_do_exercício == 12 {
-        exercicios::ex_012::rodar_o_exercício(&cabeçalho_do_programa);
-    } else if número_do_exercício == 11 {
-        exercicios::ex_011::rodar_o_exercício(&cabeçalho_do_programa);
-    } else if número_do_exercício == 10 {
-        exercicios::ex_010::rodar_o_exercício(&cabeçalho_do_programa);
-    } else if número_do_exercício == 9 {
-        exercicios::ex_009::rodar_o_exercício(&cabeçalho_do_programa);
-    } else if número_do_exercício == 8 {
-        exercicios::ex_008::rodar_o_exercício(&cabeçalho_do_programa);
-    } else if  número_do_exercício == 7 {
-        exercicios::ex_007::rodar_o_exercício(&cabeçalho_do_programa);
-    } else if número_do_exercício == 6 {
-        exercicios::ex_006::rodar_o_exercício(&cabeçalho_do_programa);
-    } else if número_do_exercício == 5 {
-        exercicios::ex_005::rodar_o_exercício(&cabeçalho_do_programa);
-    } else if número_do_exercício == 4 {
-        exercicios::ex_004::rodar_o_exercício(&cabeçalho_do_programa);
-    } else if número_do_exercício == 3 {
-        exercicios::ex_003::rodar_o_exercício(&cabeçalho_do_programa);
-    } else if número_do_exercício == 2 {
-        exercicios::ex_002::rodar_o_exercício(&cabeçalho_do_programa);
-    } else {
-        exercicios::ex_001::rodar_o_exercício(&cabeçalho_do_programa);
-    }
-}
-
 fn menu_de_opções_de_exercícios(cabeçalho_do_programa: &String) {
     loop {
-        let nome_de_todos_os_exercícios = vec![
-            String::from("ex_001"),
-            String::from("ex_002"),
-            String::from("ex_003"),
-            String::from("ex_004"),
-            String::from("ex_005"),
-            String::from("ex_006"),
-            String::from("ex_007"),
-            String::from("ex_008"),
-            String::from("ex_009"),
-            String::from("ex_010"),
-            String::from("ex_011"),
-            String::from("ex_012"),
-            String::from("ex_013"),
-            String::from("ex_014"),
-            String::from("ex_015")
-        ];
+        let mut nome_de_todos_os_exercícios = vec![];
+
+        for quantidade_de_exercícios in 1..16 {
+            let mut número_formatado = String::new();
+            
+            if quantidade_de_exercícios < 10 {
+                número_formatado = format!("00{}", quantidade_de_exercícios);
+            } else if quantidade_de_exercícios < 100 {
+                número_formatado = format!("0{}", quantidade_de_exercícios);
+            } else {
+                número_formatado = format!("{}", quantidade_de_exercícios);
+            }
+
+            let nome = format!(
+                "ex_{}", número_formatado
+            );
+
+            nome_de_todos_os_exercícios.push(nome);
+        }
 
         let tamanho_da_lista_de_exercícios = nome_de_todos_os_exercícios.len().to_string();
         let tamanho_da_lista_de_exercícios: u32 = tamanho_da_lista_de_exercícios.parse().unwrap();
@@ -69,7 +37,6 @@ fn menu_de_opções_de_exercícios(cabeçalho_do_programa: &String) {
         println!("          Lista de Exercícios\n");
         
         for (index, exercicio) in nome_de_todos_os_exercícios.into_iter().enumerate() {
-
             if index > 0 && index % 5 == 4{
                 print!("{exercicio}\n");
             } else {
@@ -101,8 +68,8 @@ fn menu_de_opções_de_exercícios(cabeçalho_do_programa: &String) {
                             clean_terminal_linux();
 
                             // Ficar de olho neste trecho
-                            link_dos_exercícios(number, cabeçalho_do_programa);
-                            
+                            // link_dos_exercícios(number, cabeçalho_do_programa);
+                            exercicios::executar_o_exercício_x(number, &cabeçalho_do_programa);
                         } else {
                             clean_terminal_linux();
 

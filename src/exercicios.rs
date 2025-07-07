@@ -1,15 +1,49 @@
-pub mod ex_001;
-pub mod ex_002;
-pub mod ex_003;
-pub mod ex_004;
-pub mod ex_005;
-pub mod ex_006;
-pub mod ex_007;
-pub mod ex_008;
-pub mod ex_009;
-pub mod ex_010;
-pub mod ex_011;
-pub mod ex_012;
-pub mod ex_013;
-pub mod ex_014;
-pub mod ex_015;
+mod ex_001;
+mod ex_002;
+mod ex_003;
+mod ex_004;
+mod ex_005;
+mod ex_006;
+mod ex_007;
+mod ex_008;
+mod ex_009;
+mod ex_010;
+mod ex_011;
+mod ex_012;
+mod ex_013;
+mod ex_014;
+mod ex_015;
+
+pub fn executar_o_exercício_x(número_do_exercício: u32, cabeçalho_do_programa: &String) {
+    if número_do_exercício == 15 {
+        ex_015::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 14 {
+        ex_014::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 13 {
+        ex_013::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 12 {
+        ex_012::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 11 {
+        ex_011::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 10 {
+        ex_010::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 9 {
+        ex_009::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 8 {
+        ex_008::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if  número_do_exercício == 7 {
+        ex_007::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 6 {
+        ex_006::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 5 {
+        ex_005::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 4 {
+        ex_004::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 3 {
+        ex_003::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 2 {
+        ex_002::rodar_o_exercício(&cabeçalho_do_programa);
+    } else {
+        ex_001::rodar_o_exercício(&cabeçalho_do_programa);
+    }
+}
