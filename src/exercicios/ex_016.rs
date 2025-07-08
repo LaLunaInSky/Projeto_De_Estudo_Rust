@@ -2,6 +2,7 @@ use std::{
     io,
     thread,
     time::Duration,
+    f64::consts::PI,
     process::Command
 };
 
@@ -35,45 +36,61 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     calcular_o_seno_o_cosseno_e_a_tangente_do_angulo(&angulo_inforamado);
 
     /* Fim do Exercício */
-    // thread::sleep(Duration::from_millis(3000));
+    thread::sleep(Duration::from_millis(3000));
 
-    // println!(
-    //     "\nVoltando ao menu de exercícios...\n"
-    // );
+    println!(
+        "\nVoltando ao menu de exercícios...\n"
+    );
 
-    // thread::sleep(Duration::from_millis(3000));    
+    thread::sleep(Duration::from_millis(3000));    
 
-    // clean_terminal_linux();
+    clean_terminal_linux();
 }
 
-fn calcular_o_seno_o_cosseno_e_a_tangente_do_angulo(angulo: &f32) {
-    let seno = angulo * (std::f32::consts::PI / 180.0) ;
-    let cosseno = angulo;
-    let tangente = angulo;
+fn calcular_o_seno_o_cosseno_e_a_tangente_do_angulo(angulo: &f64) {
+    let x = (angulo * PI) / 180.0;
+    let seno: f64 = x.sin();
+    let cosseno = x.cos();
+
+    let mut tangente: Option<f64> = None;
+    if *angulo != 90.0 {
+        tangente = Some(x.tan());
+    }
     
     println!(
-        "O seno......: {}",
+        "O seno......: {:.4}",
         seno
     );
 
     thread::sleep(Duration::from_millis(800));
 
     println!(
-        "O cosseno...: {}",
+        "O cosseno...: {:.4}",
         cosseno
     );
 
     thread::sleep(Duration::from_millis(800));
 
-    println!(
-        "A tangente..: {}",
-        tangente
-    );
+    match tangente {
+        Some(result) => {
+            println!(
+                "A tangente..: {:.4}",
+                result
+            );
+        }
+        None => {
+            println!(
+                "A tangente..: -",
+                
+            );
+        }
+    }
+
 
     thread::sleep(Duration::from_millis(800));
 }
 
-fn obter_o_angulo(cabeçalho_do_programa: &String) -> f32 {
+fn obter_o_angulo(cabeçalho_do_programa: &String) -> f64 {
     loop {
         println!("Digite um ângulo:");
 
@@ -95,7 +112,7 @@ fn obter_o_angulo(cabeçalho_do_programa: &String) -> f32 {
                                 angulo
                             );
 
-                            return angulo as f32;
+                            return angulo as f64;
                         } else {
                             clean_terminal_linux();
 
