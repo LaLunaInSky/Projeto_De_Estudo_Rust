@@ -11,7 +11,7 @@ fn menu_de_opções_de_exercícios(cabeçalho_do_programa: &String) {
     loop {
         let mut nome_de_todos_os_exercícios = vec![];
 
-        for quantidade_de_exercícios in 1..16 {
+        for quantidade_de_exercícios in 1..17 {
             let mut número_formatado = String::new();
             
             if quantidade_de_exercícios < 10 {
@@ -114,5 +114,5 @@ fn main() {
     menu_de_opções_de_exercícios(&cabeçalho_do_programa);
 
     // Rodar apenaso exercício X
-    // exercicios::executar_o_exercício_x(15, &cabeçalho_do_programa);
+    // exercicios::executar_o_exercício_x(16, &cabeçalho_do_programa);
 }
