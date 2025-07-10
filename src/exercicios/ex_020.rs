@@ -31,21 +31,74 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     println!();
 
     /* Corpo do Exercício - fn main */
-    obter_o_número_inteiro(&cabeçalho_do_programa);
+    let número_digitado: String = obter_o_número_inteiro(&cabeçalho_do_programa);
+
+    separar_o_número(&número_digitado);
 
     /* Fim do Exercício */
-    // thread::sleep(Duration::from_millis(3000));
+    thread::sleep(Duration::from_millis(3000));
 
-    // println!(
-    //     "\nVoltando ao menu de exercícios...\n"
-    // );
+    println!(
+        "\nVoltando ao menu de exercícios...\n"
+    );
 
-    // thread::sleep(Duration::from_millis(3000));
+    thread::sleep(Duration::from_millis(3000));
 
-    // clean_terminal_linux();
+    clean_terminal_linux();
 }
 
-fn obter_o_número_inteiro(cabeçalho_do_programa: &String) {
+fn separar_o_número(número: &String) {
+    let mut número_separado: Vec<char> = vec![];
+
+    for char in número.chars() {
+        número_separado.push(char);
+    }
+
+    let mut unidade = String::from("-");
+    let mut dezena = String::from("-");
+    let mut centena = String::from("-");
+    let mut milhar = String::from("-");
+
+    if número.len() == 4 {
+        unidade = número_separado[3].to_string();
+        dezena = número_separado[2].to_string();
+        centena = número_separado[1].to_string();
+        milhar = número_separado[0].to_string();
+    } else if número.len() == 3 {
+        unidade = número_separado[2].to_string();
+        dezena = número_separado[1].to_string();
+        centena = número_separado[0].to_string();
+    } else if número.len() == 2 {
+        unidade = número_separado[1].to_string();
+        dezena = número_separado[0].to_string();
+    } else if número.len() == 1 {
+        unidade = número_separado[0].to_string();
+    }
+
+    thread::sleep(Duration::from_millis(2000));
+
+    println!("Analisando o número...\n");
+
+    thread::sleep(Duration::from_millis(2500));
+
+    println!("Unidade.: {}", unidade);
+
+    thread::sleep(Duration::from_millis(1000));
+
+    println!("Dezena..: {}", dezena);
+
+    thread::sleep(Duration::from_millis(1000));
+
+    println!("Centena.: {}", centena);
+
+    thread::sleep(Duration::from_millis(1000));
+
+    println!("Milhar..: {}", milhar);
+
+    thread::sleep(Duration::from_millis(3000));
+}
+
+fn obter_o_número_inteiro(cabeçalho_do_programa: &String) -> String {
     loop {
         println!("Digite um número inteiro [0 à 9999]:");
 
@@ -63,6 +116,8 @@ fn obter_o_número_inteiro(cabeçalho_do_programa: &String) {
                             descrição_do_exercício();
 
                             println!("\nNúmero {},\nadicionado com sucesso!\n", número);
+
+                            return format!("{}", número);
                         } else {
                             clean_terminal_linux();
 
