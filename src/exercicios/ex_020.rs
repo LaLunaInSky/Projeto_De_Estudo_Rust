@@ -31,7 +31,7 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     println!();
 
     /* Corpo do Exercício - fn main */
-
+    obter_o_número_inteiro(&cabeçalho_do_programa);
 
     /* Fim do Exercício */
     // thread::sleep(Duration::from_millis(3000));
@@ -43,4 +43,48 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     // thread::sleep(Duration::from_millis(3000));
 
     // clean_terminal_linux();
+}
+
+fn obter_o_número_inteiro(cabeçalho_do_programa: &String) {
+    loop {
+        println!("Digite um número inteiro [0 à 9999]:");
+
+        let mut input = String::new();
+    
+        match io::stdin().read_line(&mut input) {
+            Ok(_) => {
+                match input.trim().parse::<u16>() {
+                    Ok(número) => {
+                        if número <= 9999 {
+                            clean_terminal_linux();
+
+                            println!("{}", cabeçalho_do_programa);
+
+                            descrição_do_exercício();
+
+                            println!("\nNúmero {},\nadicionado com sucesso!\n", número);
+                        } else {
+                            clean_terminal_linux();
+
+                            println!("{}", cabeçalho_do_programa);
+
+                            descrição_do_exercício();
+
+                            println!("\nErro! Digite um número que vá até 9999!\n");
+                        }
+                    }
+                    Err(_) => {
+                        clean_terminal_linux();
+
+                        println!("{}", cabeçalho_do_programa);
+
+                        descrição_do_exercício();
+                    
+                        println!("\nErro! Digite um valor válido!\n");
+                    }
+                }
+            }
+            Err(_) => println!("Erro!"),
+        }
+    }
 }
