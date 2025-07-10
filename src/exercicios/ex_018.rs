@@ -52,22 +52,24 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
         nome_dos_alunos[3]
     );
 
+    sorteando_a_ordem_dos_nome(&nome_dos_alunos);
+
     /* Fim do Exercício */
-    // thread::sleep(Duration::from_millis(3000));
+    thread::sleep(Duration::from_millis(3000));
 
-    // println!(
-    //     "\nVoltando ao menu de exercícios...\n"
-    // );
+    println!(
+        "\nVoltando ao menu de exercícios...\n"
+    );
 
-    // thread::sleep(Duration::from_millis(3000));
+    thread::sleep(Duration::from_millis(3000));
 
-    // clean_terminal_linux();
+    clean_terminal_linux();
 }
 
 fn sorteando_a_ordem_dos_nome(alunos: &Vec<String>) {
     let mut ordem_sorteado: Vec<usize> = vec![];
 
-    for indice in 0..4 {
+    for indice in 0..alunos.len() {
         loop {
             let número_sorteado: usize = random_range(0..4);
 
@@ -76,11 +78,30 @@ fn sorteando_a_ordem_dos_nome(alunos: &Vec<String>) {
 
                 break;
             } else {
-                
+                if ordem_sorteado.contains(&número_sorteado) == false {
+                    ordem_sorteado.push(número_sorteado);
+
+                    break;
+                }
 
             }
         }
     }
+
+    thread::sleep(Duration::from_millis(2500));
+
+    println!("A ordem de apresentação é:");
+
+    thread::sleep(Duration::from_millis(800));
+
+    for ordem in ordem_sorteado {
+        println!(" {}", alunos[ordem]);
+
+        thread::sleep(Duration::from_millis(800));
+    }
+
+    thread::sleep(Duration::from_millis(2000));
+
 }
 
 fn obter_o_nome_do_aluno(indice_do_nome: u8, cabeçalho_do_programa: &String) -> String {
