@@ -114,5 +114,5 @@ fn main() {
     // menu_de_opções_de_exercícios(&cabeçalho_do_programa);
 
     // Rodar apenaso exercício X
-    exercicios::executar_o_exercício_x(18, &cabeçalho_do_programa);
+    exercicios::executar_o_exercício_x(19, &cabeçalho_do_programa);
 }

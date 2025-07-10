@@ -16,9 +16,12 @@ mod ex_015;
 mod ex_016;
 mod ex_017;
 mod ex_018;
+mod ex_019;
 
 pub fn executar_o_exercício_x(número_do_exercício: u32, cabeçalho_do_programa: &String) {
-    if número_do_exercício == 18 {
+    if número_do_exercício == 19 {
+        ex_019::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 18 {
         ex_018::rodar_o_exercício(&cabeçalho_do_programa);
     } else if número_do_exercício == 17 {
         ex_017::rodar_o_exercício(&cabeçalho_do_programa);
