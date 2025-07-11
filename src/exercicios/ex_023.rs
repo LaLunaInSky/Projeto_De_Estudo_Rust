@@ -14,8 +14,8 @@ fn descrição_do_exercício() {
     println!(
         " Um programa que lê uma frase pelo teclado\nmostra:
 
-- Quantas vezes aparece a letra \"A\".
-- Em que posição o \"A\" aparece pela\nprimeira vez.
+- Quantas vezes aparece a letra \"A\";
+- Em que posição o \"A\" aparece pela\nprimeira vez;
 - Em que posição o \"A\" aparece pela última\nvez."
     );
 }
