@@ -11,7 +11,7 @@ fn menu_de_opções_de_exercícios(cabeçalho_do_programa: &String) {
     loop {
         let mut nome_de_todos_os_exercícios = vec![];
 
-        for quantidade_de_exercícios in 1..24 {
+        for quantidade_de_exercícios in 1..25 {
             let mut número_formatado = String::new();
             
             if quantidade_de_exercícios < 10 {
@@ -111,8 +111,8 @@ fn main() {
     let cabeçalho_do_programa: String = String::from("- Gerenciador De Projetos De Estudo Rust -\n             Por LaLunaInSky               \n");
 
     // Rodar o menu de exercícios
-    // menu_de_opções_de_exercícios(&cabeçalho_do_programa);
+    menu_de_opções_de_exercícios(&cabeçalho_do_programa);
 
     // Rodar apenaso exercício X
-    exercicios::executar_o_exercício_x(24, &cabeçalho_do_programa);
+    // exercicios::executar_o_exercício_x(24, &cabeçalho_do_programa);
 }
