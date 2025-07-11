@@ -24,7 +24,7 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     println!();
 
     /* Corpo do Exercício - fn main */
-
+    obter_o_nome_de_uma_cidade(&cabeçalho_do_programa);
 
     /* Fim de Exercício */
     // thread::sleep(Duration::from_millis(3000));
@@ -36,4 +36,19 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     // thread::sleep(Duration::from_millis(3000));
 
     // clean_terminal_linux();
+}
+
+fn obter_o_nome_de_uma_cidade(cabeçalho_do_programa: &String) {
+    loop {
+        println!("Digite o nome de um cidade:");
+
+        let mut input = String::new();
+
+        match io::stdin().read_line(&mut input) {
+            Ok(_) => {
+                println!("Input: {}", input);
+            }
+            Err(_) => println!("Erro!"),
+        }
+    }
 }
