@@ -12,7 +12,7 @@ fn clean_terminal_linux() {
 fn descrição_do_exercício() {
     println!("Descrição do exercíco 022:");
     println!(
-        " Um programa que lê o nome de uma pessoa e\ndiga se ela tem \"SILVA\" no nome."
+        " Um programa que lê o nome de uma pessoa e\nretorna se ela tem \"SILVA\" no nome."
     );
 }
 
