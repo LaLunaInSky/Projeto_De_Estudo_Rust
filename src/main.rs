@@ -1,16 +1,16 @@
 use std::{
     io,
-    thread,
+    thread::sleep,
     time::Duration,
     process::Command,
 };
 
 mod exercicios;
 
-fn construir_a_lista_de_exercícios(cabeçalho_do_programa: &String) -> u32 {
+fn construir_a_lista_de_exercícios(cabeçalho_do_programa: &String, total_de_exercícios: u32) -> u32 {
     let mut nome_de_todos_os_exercícios = vec![];
 
-    for quantidade_de_exercícios in 1..29 {
+    for quantidade_de_exercícios in 1..(total_de_exercícios + 1) {
         let mut número_formatado = String::new();
         
         if quantidade_de_exercícios < 10 {
@@ -43,14 +43,23 @@ fn construir_a_lista_de_exercícios(cabeçalho_do_programa: &String) -> u32 {
         }
     }
 
+    println!(
+        "\n\n(Escreva SAIR para fechar o programa)\n\"Coloque APENAS o número do exercício\"\n"
+    );
+
     return tamanho_da_lista_de_exercícios;
 }
 
-fn menu_de_opções_de_exercícios(cabeçalho_do_programa: &String) {
+fn menu_de_opções_de_exercícios(cabeçalho_do_programa: &String, total_de_exercícios: u32) {
+    let mut complemento_da_pergunta = String::new();
+
     loop {
-        let tamanho_da_lista_de_exercícios = construir_a_lista_de_exercícios(&cabeçalho_do_programa);    
-    
-        println!("\n\n(Escreva SAIR para fechar o programa)\n'Coloque APENAS o número do exercício'\n\nQual exercício você escolhe?");
+        let tamanho_da_lista_de_exercícios = construir_a_lista_de_exercícios(&cabeçalho_do_programa, total_de_exercícios);    
+
+        println!(
+            "{}Qual exercício você escolhe?",
+            complemento_da_pergunta
+        );
     
         let mut input = String::new();
     
@@ -69,39 +78,28 @@ fn menu_de_opções_de_exercícios(cabeçalho_do_programa: &String) {
                             
                             println!("\nAbrindo o exercício {}...\n", number);
 
-                            thread::sleep(Duration::from_millis(2000));
+                            sleep(Duration::from_millis(2000));
 
                             clean_terminal_linux();
 
-                            // Ficar de olho neste trecho
-                            // link_dos_exercícios(number, cabeçalho_do_programa);
                             exercicios::executar_o_exercício_x(number, &cabeçalho_do_programa);
                         } else {
                             clean_terminal_linux();
 
-                            println!("{}", cabeçalho_do_programa);
-                            
-                            println!("\nErro! Exercício {} não encontrado!\n", number);
-
-                            thread::sleep(Duration::from_millis(1200));
-
-                            clean_terminal_linux();
+                            complemento_da_pergunta = format!(
+                                "Erro! Exercício {} não encontrado!\n\n",
+                                number
+                            )
                         }
                     }
                     Err(_) => {
                         clean_terminal_linux();
 
-                        println!("{}", cabeçalho_do_programa);
-                            
-                        println!("\nErro! Valor inválido digitado!\n");
-
-                        thread::sleep(Duration::from_millis(2000));
-
-                        clean_terminal_linux();
+                        complemento_da_pergunta = String::from("Erro! Valor inválido digitado!\n\n");
                     }
                 }
             }
-            Err(error) => println!("Error: {}", error),
+            Err(_) => println!("Error!"),
         }
     }
 
@@ -114,11 +112,15 @@ fn clean_terminal_linux() {
 fn main() {
     clean_terminal_linux();
 
-    let cabeçalho_do_programa: String = String::from("- Gerenciador De Projetos De Estudo Rust -\n             Por LaLunaInSky               \n");
+    let total_de_exercícios: u32 = 28;
+    
+    let último_exercício = &total_de_exercícios;
+
+    let cabeçalho_do_programa = String::from("- Gerenciador De Projetos De Estudo Rust -\n             Por LaLunaInSky               \n");
 
     // Rodar o menu de exercícios
-    menu_de_opções_de_exercícios(&cabeçalho_do_programa);
+    menu_de_opções_de_exercícios(&cabeçalho_do_programa, total_de_exercícios);
 
     // Rodar apenaso exercício X
-    // exercicios::executar_o_exercício_x(28, &cabeçalho_do_programa);
+    // exercicios::executar_o_exercício_x(*último_exercício, &cabeçalho_do_programa);
 }
