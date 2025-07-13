@@ -113,7 +113,7 @@ fn main() {
     clean_terminal_linux();
 
     let total_de_exercícios: u32 = 28;
-    
+
     let último_exercício = &total_de_exercícios;
 
     let cabeçalho_do_programa = String::from("- Gerenciador De Projetos De Estudo Rust -\n             Por LaLunaInSky               \n");
@@ -121,6 +121,6 @@ fn main() {
     // Rodar o menu de exercícios
     menu_de_opções_de_exercícios(&cabeçalho_do_programa, total_de_exercícios);
 
-    // Rodar apenaso exercício X
+    // Rodar apenas o exercício X
     // exercicios::executar_o_exercício_x(*último_exercício, &cabeçalho_do_programa);
 }
