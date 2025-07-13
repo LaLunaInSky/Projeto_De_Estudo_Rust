@@ -34,15 +34,15 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     analisar_o_nome_informado(&nome_completo_digitado);
 
     /* Fim do Exercício */
-    // sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    // println!(
-    //     "\nVoltando ao menu de exercícios...\n"
-    // );
+    println!(
+        "\nVoltando ao menu de exercícios...\n"
+    );
 
-    // sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    // clean_terminal_linux();
+    clean_terminal_linux();
 }
 
 fn analisar_o_nome_informado(nome_informado: &String) {
@@ -50,6 +50,14 @@ fn analisar_o_nome_informado(nome_informado: &String) {
     let mut último_nome = String::from("-");
 
     let nome_separado: Vec<&str> = nome_informado.split(" ").collect();
+
+    for (index, nome) in nome_separado.iter().enumerate() {
+        if index == 0 {
+            primeiro_nome = nome.to_string();
+        }
+        
+        último_nome = nome.to_string();
+    }
 
     sleep(Duration::from_millis(1200));
 
