@@ -7,42 +7,48 @@ use std::{
 
 mod exercicios;
 
+fn construir_a_lista_de_exercícios(cabeçalho_do_programa: &String) -> u32 {
+    let mut nome_de_todos_os_exercícios = vec![];
+
+    for quantidade_de_exercícios in 1..29 {
+        let mut número_formatado = String::new();
+        
+        if quantidade_de_exercícios < 10 {
+            número_formatado = format!("00{}", quantidade_de_exercícios);
+        } else if quantidade_de_exercícios < 100 {
+            número_formatado = format!("0{}", quantidade_de_exercícios);
+        } else {
+            número_formatado = format!("{}", quantidade_de_exercícios);
+        }
+
+        let nome = format!(
+            "ex_{}", número_formatado
+        );
+
+        nome_de_todos_os_exercícios.push(nome);
+    }
+
+    let tamanho_da_lista_de_exercícios = nome_de_todos_os_exercícios.len().to_string();
+    let tamanho_da_lista_de_exercícios: u32 = tamanho_da_lista_de_exercícios.parse().unwrap();
+
+    println!("{}", cabeçalho_do_programa);
+    
+    println!("          Lista de Exercícios\n");
+    
+    for (index, exercicio) in nome_de_todos_os_exercícios.into_iter().enumerate() {
+        if index > 0 && index % 5 == 4{
+            print!("{exercicio}\n");
+        } else {
+            print!("{exercicio}   ");
+        }
+    }
+
+    return tamanho_da_lista_de_exercícios;
+}
+
 fn menu_de_opções_de_exercícios(cabeçalho_do_programa: &String) {
     loop {
-        let mut nome_de_todos_os_exercícios = vec![];
-
-        for quantidade_de_exercícios in 1..29 {
-            let mut número_formatado = String::new();
-            
-            if quantidade_de_exercícios < 10 {
-                número_formatado = format!("00{}", quantidade_de_exercícios);
-            } else if quantidade_de_exercícios < 100 {
-                número_formatado = format!("0{}", quantidade_de_exercícios);
-            } else {
-                número_formatado = format!("{}", quantidade_de_exercícios);
-            }
-
-            let nome = format!(
-                "ex_{}", número_formatado
-            );
-
-            nome_de_todos_os_exercícios.push(nome);
-        }
-
-        let tamanho_da_lista_de_exercícios = nome_de_todos_os_exercícios.len().to_string();
-        let tamanho_da_lista_de_exercícios: u32 = tamanho_da_lista_de_exercícios.parse().unwrap();
-
-        println!("{}", cabeçalho_do_programa);
-        
-        println!("          Lista de Exercícios\n");
-        
-        for (index, exercicio) in nome_de_todos_os_exercícios.into_iter().enumerate() {
-            if index > 0 && index % 5 == 4{
-                print!("{exercicio}\n");
-            } else {
-                print!("{exercicio}   ");
-            }
-        }
+        let tamanho_da_lista_de_exercícios = construir_a_lista_de_exercícios(&cabeçalho_do_programa);    
     
         println!("\n\n(Escreva SAIR para fechar o programa)\n'Coloque APENAS o número do exercício'\n\nQual exercício você escolhe?");
     
