@@ -25,7 +25,7 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     println!();
 
     /* Corpo do Exercício - fn main */
-
+    obter_um_ano(&cabeçalho_do_programa);
 
     /* Fim do Exercício */
     // sleep(Duration::from_millis(3000));
@@ -35,4 +35,19 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     // sleep(Duration::from_millis(3000));
 
     // clean_terminal_linux();
+}
+
+fn obter_um_ano(cabeçalho_do_programa: &String) {
+    loop {
+        println!("[0 para o ano atual]\nDigite um ano:");
+
+        let mut input = String::new();
+
+        match io::stdin().read_line(&mut input) {
+            Ok(_) => {
+                println!("Input: {}", input);
+            }
+            Err(_) => println!("Erro!"),
+        }
+    }
 }
