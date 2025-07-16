@@ -42,24 +42,91 @@ fn obter_o_ano_atual() -> u16 {
 }
 
 pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    /* Começo do Exercício */
-    println!("{}", cabeçalho_do_programa);
+    loop {
+        /* Começo do Exercício */
+        println!("{}", cabeçalho_do_programa);
 
-    descrição_do_exercício();
+        descrição_do_exercício();
 
-    println!();
+        println!();
 
-    /* Corpo do Exercício - fn main */
-    let ano_escolhido = obter_um_ano(&cabeçalho_do_programa);
+        /* Corpo do Exercício - fn main */
+        let ano_escolhido = obter_um_ano(&cabeçalho_do_programa);
+
+        analisar_se_o_ano_é_bissexto(&ano_escolhido);
+
+        let resposta_da_pergunta_sobre_continuar = perguntar_se_quer_digitar_outro_ano(&cabeçalho_do_programa);
+
+        if resposta_da_pergunta_sobre_continuar == false {
+            break;
+        }
+    }
 
     /* Fim do Exercício */
-    // sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    // println!("{}", cabeçalho_do_programa);
+    println!("\nVoltando ao menu de exercícios...\n");
 
-    // sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    // clean_terminal_linux();
+    clean_terminal_linux();
+}
+
+fn perguntar_se_quer_digitar_outro_ano(cabeçalho_do_programa: &String) -> bool {
+    loop {
+        println!("Quer digitar outro ano? [S/N]");
+
+        let mut input = String::new();
+
+        match io::stdin().read_line(&mut input) {
+            Ok(_) => {
+                let resposta_da_pergunta = input.trim().to_lowercase();
+
+                if resposta_da_pergunta == "s" || resposta_da_pergunta == "n" {
+                    if resposta_da_pergunta == "s" {
+                        clean_terminal_linux();
+
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    clean_terminal_linux();
+
+                    println!("{}", cabeçalho_do_programa);
+
+                    descrição_do_exercício();
+
+                    println!("\nErro! Digite apenas S [sim] ou N [não]!\n");
+                }
+            }
+            Err(_) => println!("Erro!"),
+        }
+    }
+}
+
+fn analisar_se_o_ano_é_bissexto(ano_digitado: &u16) {
+    let mut ano_é_bissexto = String::from("não ");
+
+    if *ano_digitado > 1900 {
+        if ano_digitado % 4 == 0 {
+            if ano_digitado % 100 != 0 {
+                ano_é_bissexto = String::from("");
+            } else {
+                if ano_digitado % 400 == 0{
+                    ano_é_bissexto = String::from("");
+                }
+            }
+        }
+    }
+
+    sleep(Duration::from_millis(1000));
+
+    println!("Analisando o ano...\n");
+
+    sleep(Duration::from_millis(2500));
+
+    println!("O ano {}é BISSEXTO!\n", ano_é_bissexto);
 }
 
 fn obter_um_ano(cabeçalho_do_programa: &String) -> u16 {
