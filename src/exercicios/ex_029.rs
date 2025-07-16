@@ -5,6 +5,8 @@ use std:: {
     process::Command
 };
 
+use chrono::{DateTime, Utc};
+
 fn clean_terminal_linux() {
     Command::new("clear").status().unwrap();
 }
@@ -45,7 +47,17 @@ fn obter_um_ano(cabeçalho_do_programa: &String) {
 
         match io::stdin().read_line(&mut input) {
             Ok(_) => {
-                println!("Input: {}", input);
+                match input.trim().parse::<u16>() {
+                    Ok(ano) => {
+                        let utc: DateTime<Utc> = 
+
+                        println!("\nAno: {}\n", ano);
+                        println!("DateTime: {}", )
+                    }
+                    Err(_) => {
+                        println!("\nErro! Digite um ano válido!\n");
+                    }
+                }
             }
             Err(_) => println!("Erro!"),
         }
