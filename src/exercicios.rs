@@ -28,9 +28,12 @@ mod ex_027;
 mod ex_028;
 mod ex_029;
 mod ex_030;
+mod ex_031;
 
 pub fn executar_o_exercício_x(número_do_exercício: u32, cabeçalho_do_programa: &String) {
-    if número_do_exercício == 30 {
+    if número_do_exercício == 31 {
+        ex_031::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 30 {
         ex_030::rodar_o_exercício(&cabeçalho_do_programa);
     } else if número_do_exercício == 29 {
         ex_029::rodar_o_exercício(&cabeçalho_do_programa);
