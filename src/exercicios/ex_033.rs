@@ -1,5 +1,5 @@
 use std::{
-    io,
+    io::stdin,
     thread::sleep,
     time::Duration,
     process::Command
