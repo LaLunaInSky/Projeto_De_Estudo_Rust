@@ -1,8 +1,8 @@
 use std::{
-    io::stdin,
-    thread::sleep,
+    io::stdin, 
+    thread::sleep, 
     time::Duration,
-    process::Command
+    process::Command 
 };
 
 fn clean_terminal_linux() {
@@ -41,4 +41,19 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     // sleep(Duration::from_millis(3000));
 
     // clean_terminal_linux();
+}
+
+fn obter_um_número_inteiro(cabeçalho_do_programa: &String, indice_de_chamada: u8) -> u32 {
+    loop {
+        println!("Digite o {}º Número:", indice_de_chamada);
+
+        let mut input = String::new();
+
+        match stdin().read_line(&mut input) {
+            Ok(_) => {
+                println!("Input: {}", input);
+            }
+            Err(_) => println!("Erro!"),
+        }
+    }    
 }
