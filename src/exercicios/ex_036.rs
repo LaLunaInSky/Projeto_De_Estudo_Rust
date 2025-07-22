@@ -20,15 +20,15 @@ O programa também deverá mostrar o tempo\nque falta ou que passou do prazo."
 }
 
 struct Pessoa {
-    ano_de_nascimento: u32,
-    idade: u8,
+    _ano_de_nascimento: u32,
+    idade: u32,
 }
 
 impl Pessoa {
     fn new(ano_de_nascimento: u32, ano_atual: &u32) -> Self {
         Self {
-            ano_de_nascimento: ano_de_nascimento,
-            idade: 5,
+            _ano_de_nascimento: ano_de_nascimento,
+            idade: *ano_atual - ano_de_nascimento,
         }
     }
 
