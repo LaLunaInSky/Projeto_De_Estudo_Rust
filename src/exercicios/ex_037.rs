@@ -19,6 +19,22 @@ fn descrição_do_exercício() {
     );
 }
 
+struct Aluno {
+    nota_1: f32,
+    nota_2: f32,
+    média: f32
+}
+
+impl Aluno {
+    fn new(nota_1: f32, nota_2: f32) -> Self {
+        Self {
+            nota_1,
+            nota_2,
+            média: (nota_1 + nota_2 / 2.0)
+        }
+    }
+}
+
 pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     /* Começo do Exercício */
     println!("{}", cabeçalho_do_programa);
@@ -28,7 +44,10 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     println!();
 
     /* Corpo do Exercício - fn main */
-
+    let notas_do_aluno_01 = Aluno::new(
+        obter_a_nota(&cabeçalho_do_programa, 1),
+        obter_a_nota(&cabeçalho_do_programa, 2)
+    );
 
     /* Fim do Exercício */
     // sleep(Duration::from_millis(3000));
@@ -40,4 +59,19 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     // sleep(Duration::from_millis(3000));
 
     // clean_terminal_linux();
+}
+
+fn obter_a_nota(cabeçalho_do_programa: &String, indice_da_nota: u8) -> f32 {
+    loop {
+        println!("Digite a {indice_da_nota}ª Nota:");
+
+        let mut input = String::new();
+
+        match stdin().read_line(&mut input) {
+            Ok(_) => {
+
+            }
+            Err(_) => println!("Erro!"),
+        }
+    }
 }
