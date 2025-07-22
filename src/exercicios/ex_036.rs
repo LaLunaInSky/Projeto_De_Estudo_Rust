@@ -17,6 +17,21 @@ O programa também deverá mostrar o tempo\nque falta ou que passou do prazo."
     );
 }
 
+struct Pessoa {
+    ano_de_nascimento: u32,
+    idade: u8,
+}
+
+impl Pessoa {
+    pub fn new_ano_de_nascimento(mut self, ano_digitado: u32) {
+        self.ano_de_nascimento = ano_digitado;
+    }
+
+    fn calcular_idade(mut self) {
+        
+    }
+}
+
 pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     /* Começo do Exercício */
     println!("{}", cabeçalho_do_programa);

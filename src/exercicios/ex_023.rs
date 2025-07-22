@@ -5,8 +5,6 @@ use std::{
     process::Command
 };
 
-use rand::seq::index;
-
 fn clean_terminal_linux() {
     Command::new("clear").status().unwrap();
 }
