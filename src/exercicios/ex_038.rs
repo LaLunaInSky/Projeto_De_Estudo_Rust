@@ -22,6 +22,11 @@ fn descrição_do_exercício() {
     );
 }
 
+struct Atleta {
+    ano_de_nascimento: u32,
+    idade: u32
+}
+
 pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     /* Começo do Exercício */
     println!("{}", cabeçalho_do_programa);
