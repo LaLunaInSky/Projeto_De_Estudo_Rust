@@ -32,6 +32,20 @@ struct Pessoa {
 
 impl Pessoa {
     fn new(peso: f32, altura: f32) -> Self {
+        let imc = peso / (altura * altura);
+
+        let status_corporal: String = if imc > 40.0 {
+            String::from("Obesidade Mórbida")
+        } else if imc > 30.0 {
+            String::from("Obesidade")
+        } else if imc > 25.0 {
+            String::from("Sobrepeso")
+        } else if imc > 18.5 {
+            String::from("Peso Ideal")
+        } else {
+            String::from("Abaixo do peso")
+        };
+        
         Self {
             peso,
             altura,
@@ -82,11 +96,11 @@ fn arrendondar_um_número_real(número: f32, quantidade_depois_do_ponto: u8) -> 
                 número
             );
         }
-        _ => (),
+        _ => println!("Erro!"),
     }
 
     match número_formatado.parse::<f32>() {
-        Ok(número_final) => return número_final,
-        Err(_) => (),
+        Ok(número_final) => número_final,
+        Err(_) => 0.0,
     }
 }
