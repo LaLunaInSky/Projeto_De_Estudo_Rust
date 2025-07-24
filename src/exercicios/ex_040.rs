@@ -22,6 +22,25 @@ fn descrição_do_exercício() {
     );
 }
 
+#[derive(Debug)]
+struct Pessoa {
+    peso: f32,
+    altura: f32,
+    imc: f32,
+    status_corporal: String, 
+}
+
+impl Pessoa {
+    fn new() -> Self {
+        Self {
+            peso,
+            altura,
+            imc,
+            status_corporal
+        }
+    }
+}
+
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
