@@ -31,7 +31,7 @@ struct Pessoa {
 }
 
 impl Pessoa {
-    fn new() -> Self {
+    fn new(peso: f32, altura: f32) -> Self {
         Self {
             peso,
             altura,
@@ -64,4 +64,29 @@ pub fn rodar_o_exercício(
     // sleep(Duration::from_millis(3000));
 
     // clean_terminal_linux();
+}
+
+fn arrendondar_um_número_real(número: f32, quantidade_depois_do_ponto: u8) -> f32 {
+    let mut número_formatado = String::new();
+    
+    match quantidade_depois_do_ponto {
+        1 => {
+            número_formatado = format!(
+                "{:.1}",
+                número
+            );
+        }
+        2 => {
+            número_formatado = format!(
+                "{:.2}",
+                número
+            );
+        }
+        _ => (),
+    }
+
+    match número_formatado.parse::<f32>() {
+        Ok(número_final) => return número_final,
+        Err(_) => (),
+    }
 }
