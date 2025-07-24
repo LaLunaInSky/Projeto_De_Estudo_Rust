@@ -37,6 +37,7 @@ mod ex_036;
 mod ex_037;
 mod ex_038;
 mod ex_039;
+mod ex_040;
 
 pub fn executar_o_exercício_x(número_do_exercício: u32, cabeçalho_do_programa: &String) {
     if número_do_exercício == 39 {
