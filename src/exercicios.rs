@@ -40,7 +40,9 @@ mod ex_039;
 mod ex_040;
 
 pub fn executar_o_exercício_x(número_do_exercício: u32, cabeçalho_do_programa: &String) {
-    if número_do_exercício == 39 {
+    if número_do_exercício == 40 {
+        ex_040::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 39 {
         ex_039::rodar_o_exercício(&cabeçalho_do_programa);
     } else if número_do_exercício == 38 {
         ex_038::rodar_o_exercício(&cabeçalho_do_programa);
