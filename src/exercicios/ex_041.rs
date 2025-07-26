@@ -59,13 +59,47 @@ pub fn rodar_o_exercício(
     clean_terminal_linux();
 }
 
-fn
+struct Produto {
+    valor: f32
+}
+
+impl Produto {
+    fn pix(&self) -> String {
+        let valor_com_10_de_desconto = self.valor - (self.valor * (10.0 / 100.0));
+
+        format!(
+            "No Pix é de R${:2}!",
+            valor_com_10_de_desconto
+        )
+    }
+
+    fn debito(&self) -> String {
+        let valor_com_5_de_desconto = self.valor - (self.valor * (5.0 / 100.0));
+
+        format!(
+            "No débito é de R${:.2}!",
+            valor_com_5_de_desconto
+        )
+    }
+
+    fn credito_2x(&self) -> String {
+        let valor_de_cada_parcela = self.valor / 2.0;
+
+        format!(
+            "No crédito 2x fica R${:.2},\nde R${:.2}!",
+            valor_de_cada_parcela, self.valor
+        )
+    }
+}
 
 fn obter_a_opção_digitada(
     cabeçalho_do_programa: &String,
     valor_do_produto: &f32
 ) -> bool {
     menu_de_opções();
+    let produto = Produto {
+        valor: *valor_do_produto
+    };
 
     loop {
         println!("Qual opção você escolhe?");
@@ -84,7 +118,15 @@ fn obter_a_opção_digitada(
 
                                 descrição_do_exercício();
 
-                                println!("\nOpção 1\n");
+                                println!(
+                                    "\nProduto de R${:.2}...",
+                                    valor_do_produto
+                                );
+
+                                println!(
+                                    "{}\n",
+                                    produto.pix()
+                                );
                                 
                                 menu_de_opções();
                             }
@@ -95,7 +137,15 @@ fn obter_a_opção_digitada(
 
                                 descrição_do_exercício();
 
-                                println!("\nOpção 2\n");
+                                println!(
+                                    "\nProduto de R${:.2}...",
+                                    valor_do_produto
+                                );
+
+                                println!(
+                                    "{}\n",
+                                    produto.debito()
+                                );
                                 
                                 menu_de_opções();
                             }
@@ -106,7 +156,15 @@ fn obter_a_opção_digitada(
 
                                 descrição_do_exercício();
 
-                                println!("\nOpção 3\n");
+                                println!(
+                                    "\nProduto de R${:.2}...",
+                                    valor_do_produto
+                                );
+
+                                println!(
+                                    "{}\n",
+                                    produto.credito_2x()
+                                );
                                 
                                 menu_de_opções();
                             }
