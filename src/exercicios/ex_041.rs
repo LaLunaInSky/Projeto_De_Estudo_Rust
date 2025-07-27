@@ -86,9 +86,79 @@ impl Produto {
         let valor_de_cada_parcela = self.valor / 2.0;
 
         format!(
-            "No crédito 2x fica R${:.2},\nde R${:.2}!",
+            "No crédito em 2x fica R${:.2},\nde R${:.2}!",
             valor_de_cada_parcela, self.valor
         )
+    }
+
+    fn credito_x_parcelas(
+        &self, quantidade_de_parcelas: u8
+    ) -> String {
+        let valor_final_com_20_de_juros = self.valor + (self.valor * (20.0 / 100.0));
+
+        let valor_de_cada_parcela = valor_final_com_20_de_juros / (quantidade_de_parcelas as f32);
+        
+        format!(
+            "No crédito em {}x fica R${:.2},\nde R${:.2}!",
+            quantidade_de_parcelas,
+            valor_de_cada_parcela,
+            valor_final_com_20_de_juros
+        )
+    }
+}
+
+fn obter_a_quantidade_de_parcelas(
+    cabeçalho_do_programa: &String
+) -> u8 {
+    loop {
+        println!("\n[12x parcelas é o máximo!]\nQuantas parcelas você quer?");
+
+        let mut input = String::new();
+
+        match stdin().read_line(&mut input) {
+            Ok(_) => {
+                match input.trim().parse::<u8>() {
+                    Ok(quantidade) => {
+                        if quantidade >= 3 && quantidade <= 12 {
+                            clean_terminal_linux();
+
+                            println!("{}", cabeçalho_do_programa);
+
+                            descrição_do_exercício();
+
+                            println!(
+                                "\nA quantidade de {} parcelas,\nfoi adicionada com sucesso!",
+                                quantidade
+                            );
+
+                            return quantidade;
+                        } else {
+                            clean_terminal_linux();
+
+                            println!("{}", cabeçalho_do_programa);
+
+                            descrição_do_exercício();
+
+                            println!(
+                                "\nErro! Aceito apenas parcelas de 3 à 12!"
+                            );
+                        }
+                    }
+                    Err(_) => {
+                        clean_terminal_linux();
+
+                        println!("{}", cabeçalho_do_programa);
+
+                        descrição_do_exercício();
+
+                        println!(
+                            "\nErro! Digite apenas números!"
+                        );
+                    }
+                }
+            }
+            Err(_) => (),
+        }
     }
 }
 
@@ -169,13 +239,19 @@ fn obter_a_opção_digitada(
                                 menu_de_opções();
                             }
                             4 => {
-                                clean_terminal_linux();
+                                let quantidade_de_parcelas = obter_a_quantidade_de_parcelas(&cabeçalho_do_programa);
 
-                                println!("{}", cabeçalho_do_programa);
+                                println!(
+                                    "\nProduto de R${:.2}...",
+                                    valor_do_produto
+                                );
 
-                                descrição_do_exercício();
-
-                                println!("\nOpção 4\n");
+                                println!(
+                                    "{}\n",
+                                    produto.credito_x_parcelas(
+                                        quantidade_de_parcelas
+                                    )
+                                );
                                 
                                 menu_de_opções();
                             }
