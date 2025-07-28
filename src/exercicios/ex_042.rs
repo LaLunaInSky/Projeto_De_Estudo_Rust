@@ -5,6 +5,8 @@ use std::{
     process::Command
 };
 
+use rand::random_range;
+
 fn clean_terminal_linux() {
     Command::new("clear").status().unwrap();
 }
@@ -26,9 +28,53 @@ struct Jogadas {
 impl Jogadas {
     fn new(
         jogador: String, 
-        computador: String
+        computador: String,
     ) -> Self {
-        let ganhador = String::new();
+        let ganhador = match jogador.as_str() {
+            "pedra" => {
+                match computador.as_str() {
+                    "pedra" => {
+                        String::from("empate")
+                    }
+                    "papel" => {
+                        String::from("computador")
+                    }
+                    "tesoura" => {
+                        String::from("usuário")
+                    }
+                    _ => String::new(),
+                }
+            }
+            "papel" => {
+                match computador.as_str() {
+                    "pedra" => {
+                        String::from("usuário")
+                    }
+                    "papel" => {
+                        String::from("empate")
+                    }
+                    "tesoura" => {
+                        String::from("computador")
+                    }
+                    _ => String::new(),
+                }
+            },
+            "tesoura" => {
+                match computador.as_str() {
+                    "pedra" => {
+                        String::from("computador")
+                    }
+                    "papel" => {
+                        String::from("usuário")
+                    }
+                    "tesoura" => {
+                        String::from("empate")
+                    }
+                    _ => String::new(),
+                }
+            }
+            _ => String::new(),
+        };
 
         Self {
             jogador,
@@ -59,7 +105,9 @@ pub fn rodar_o_exercício(
                 &cabeçalho_do_programa,
                 &opções_de_jogadas
             ),
-            String::from("pedra")
+            obter_a_escolha_do_computador(
+                &opções_de_jogadas
+            )
         );
 
         analisar_quem_ganhou(&jogadas);
@@ -83,6 +131,18 @@ pub fn rodar_o_exercício(
     sleep(Duration::from_millis(3000));
 
     clean_terminal_linux();
+}
+
+fn obter_a_escolha_do_computador(
+    opções_de_jogadas: &Vec<&str>
+) -> String {
+    let número_sortado = random_range(0..=2);
+
+    let jogada_escolhida = format!(
+        "{}", opções_de_jogadas[número_sortado]
+    );
+    
+    return jogada_escolhida;
 }
 
 fn perguntar_se_quer_adicionar_novo_valore(
@@ -130,11 +190,36 @@ fn analisar_quem_ganhou(jogadas: &Jogadas) {
     sleep(Duration::from_millis(1000));
 
     println!(
-        "{:?}\n",
-        jogadas
+        "Analisando quem ganhou...\n"
     );
 
     sleep(Duration::from_millis(2500));
+
+    println!(
+        "O usuário jogu {}\nE o computador jogou {}\nlogo...",
+        jogadas.jogador.to_uppercase(),
+        jogadas.computador.to_uppercase()
+    );
+
+    println!(
+        "\n{}\n",
+        match jogadas.ganhador.as_str() {
+            "empate" => {
+                format!(
+                    "Ouve {}!",
+                    jogadas.ganhador.to_uppercase()
+                )
+            }
+            _ => {
+                format!(
+                    "O ganhador foi o {}!",
+                    jogadas.ganhador.to_uppercase()
+                )
+            }
+        }
+    );
+
+    sleep(Duration::from_millis(1200));
 } 
 
 fn obter_a_opção_da_escolha(
