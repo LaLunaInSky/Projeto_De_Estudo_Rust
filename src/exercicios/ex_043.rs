@@ -29,16 +29,32 @@ pub fn rodar_o_exercício(
     println!();
 
     /* Corpo do Exercício */
-
+    obter_contagem_regressiva();
 
     /* Fim do Exercício */
-    // sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    // println!(
-    //     "\nVoltando ao menu de exercícios...\n"
-    // );
+    println!(
+        "\nVoltando ao menu de exercícios...\n"
+    );
 
-    // sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    // clean_terminal_linux();
+    clean_terminal_linux();
+}
+
+fn obter_contagem_regressiva() {
+    let mut count = 10;
+    
+    while count > 0 {
+        sleep(Duration::from_secs(1));
+
+        println!("{}", count);
+
+        count -= 1;
+    }
+
+    sleep(Duration::from_secs(1));
+
+    println!("Boom boom!");
 }
