@@ -42,9 +42,12 @@ mod ex_041;
 mod ex_042;
 mod ex_043;
 mod ex_044;
+mod ex_045;
 
 pub fn executar_o_exercício_x(número_do_exercício: u32, cabeçalho_do_programa: &String) {
-    if número_do_exercício == 44 {
+    if número_do_exercício == 45 {
+        ex_045::rodar_o_exercício(&cabeçalho_do_programa);
+    } else if número_do_exercício == 44 {
         ex_044::rodar_o_exercício(&cabeçalho_do_programa);
     } else if número_do_exercício == 43 {
         ex_043::rodar_o_exercício(&cabeçalho_do_programa);

@@ -65,8 +65,6 @@ fn mostrar_resultado(
             print!("{número}, ");
         }
     }
-
-    println!();
 }
 
 fn obter_o_números_pares_até_x() -> Vec<u8> {
