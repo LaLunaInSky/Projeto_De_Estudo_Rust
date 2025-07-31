@@ -12,8 +12,7 @@ fn clean_terminal_linux() {
 fn descrição_do_exercício() -> String {
     format!(
         "Descrição do exercício 046:
- Refaça o Ex_007, mostrando a tabuada de\num número que o usuário escolher, só que\nagora utilizando uma respetição com\npergunta sobre continuar.
-"
+ Refaça o Ex_007, mostrando a tabuada de\num número que o usuário escolher, só que\nagora utilizando uma respetição com\npergunta sobre continuar."
     )
 }
 
