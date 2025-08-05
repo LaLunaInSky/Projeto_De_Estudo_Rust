@@ -113,7 +113,7 @@ fn main() {
     clean_terminal_linux();
 
     /* Alterar para o número do último exercício em modelagem */
-    let total_de_exercícios: u32 = 50;
+    let total_de_exercícios: u32 = 51;
 
     /* Não precisa mexer */
     let último_exercício = &total_de_exercícios;
