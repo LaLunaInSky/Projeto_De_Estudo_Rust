@@ -49,109 +49,264 @@ mod ex_048;
 mod ex_049;
 mod ex_050;
 mod ex_051;
+mod ex_052;
 
 pub fn executar_o_exercício_x(número_do_exercício: u32, cabeçalho_do_programa: &String) {
-    if número_do_exercício == 51 {
-        ex_051::rodar_o_exercício(&cabeçalho_do_programa);
+    if número_do_exercício == 52 {
+        ex_052::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
+    } else if número_do_exercício == 51 {
+        ex_051::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 50 {
-        ex_050::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_050::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 49 {
-        ex_049::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_049::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 48 {
-        ex_048::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_048::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 47 {
-        ex_047::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_047::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 46 {
-        ex_046::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_046::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 45 {
-        ex_045::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_045::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 44 {
-        ex_044::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_044::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 43 {
-        ex_043::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_043::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 42 {
-        ex_042::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_042::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 41 {
-        ex_041::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_041::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 40 {
-        ex_040::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_040::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 39 {
-        ex_039::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_039::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 38 {
-        ex_038::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_038::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 37 {
-        ex_037::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_037::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 36 {
-        ex_036::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_036::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 35 {
-        ex_035::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_035::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 34 {
-        ex_034::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_034::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 33 {
-        ex_033::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_033::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 32 {
-        ex_032::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_032::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 31 {
-        ex_031::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_031::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 30 {
-        ex_030::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_030::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 29 {
-        ex_029::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_029::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 28 {
-        ex_028::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_028::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 27 {
-        ex_027::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_027::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 26 {
-        ex_026::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_026::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 25 {
         ex_025::rodar_o_exercício(&cabeçalho_do_programa);
     } else if número_do_exercício == 24 {
-        ex_024::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_024::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 23 {
-        ex_023::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_023::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 22 {
-        ex_022::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_022::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 21 {
-        ex_021::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_021::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 20 {
-        ex_020::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_020::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+        
     } else if número_do_exercício == 19 {
-        ex_019::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_019::rodar_o_exercício(
+            &cabeçalho_do_programa);
+
+
     } else if número_do_exercício == 18 {
-        ex_018::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_018::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if número_do_exercício == 17 {
-        ex_017::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_017::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if número_do_exercício == 16 {
-        ex_016::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_016::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if número_do_exercício == 15 {
-        ex_015::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_015::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if número_do_exercício == 14 {
-        ex_014::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_014::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if número_do_exercício == 13 {
-        ex_013::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_013::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if número_do_exercício == 12 {
-        ex_012::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_012::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if número_do_exercício == 11 {
-        ex_011::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_011::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if número_do_exercício == 10 {
-        ex_010::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_010::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if número_do_exercício == 9 {
-        ex_009::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_009::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if número_do_exercício == 8 {
-        ex_008::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_008::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if  número_do_exercício == 7 {
-        ex_007::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_007::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if número_do_exercício == 6 {
-        ex_006::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_006::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if número_do_exercício == 5 {
-        ex_005::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_005::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if número_do_exercício == 4 {
-        ex_004::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_004::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if número_do_exercício == 3 {
-        ex_003::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_003::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else if número_do_exercício == 2 {
-        ex_002::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_002::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
     } else {
-        ex_001::rodar_o_exercício(&cabeçalho_do_programa);
+        ex_001::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
     }
 }
