@@ -242,8 +242,7 @@ pub fn rodar_o_exercício(
             );
         }
 
-        println!(
-            "{:?}\n",
+        analisar_as_pessoas(
             pessoas
         );
 
@@ -266,6 +265,53 @@ pub fn rodar_o_exercício(
     sleep(Duration::from_millis(3000));
 
     clean_terminal_linux();
+}
+
+fn analisar_as_pessoas(
+    pessoas: Vec<Pessoa>
+) {
+    let mut média_das_idades: u32 = 0;
+    let mut nome_do_homem_mais_velho = String::new();
+    let mut idade_do_homem_mais_velho: u8 = 0;
+    let mut quantidade_de_mulheres_com_menos_de_20_anos: u8 = 0;
+
+    for pessoa in pessoas {
+        média_das_idades += pessoa.idade as u32;
+
+        if pessoa.gênero == 'm' {
+            if pessoa.idade > idade_do_homem_mais_velho {
+                idade_do_homem_mais_velho = pessoa.idade;
+                nome_do_homem_mais_velho = format!(
+                    "{}",
+                    pessoa.nome
+                );
+            }
+        } else {
+            if pessoa.idade <= 20 {
+                quantidade_de_mulheres_com_menos_de_20_anos += 1;
+            }
+        }
+    }
+
+    média_das_idades = média_das_idades / 4;
+
+    sleep(Duration::from_millis(1000));
+
+    println!(
+        "Analisando as pessoas...\n"
+    );
+
+    sleep(Duration::from_millis(2500));
+
+    println!(
+        "A média de idade é de {}.\nO homem mais velho é o {} de {} anos.\nExiste {} mulheres com menos de 20 anos.\n",
+        média_das_idades,
+        nome_do_homem_mais_velho,
+        idade_do_homem_mais_velho,
+        quantidade_de_mulheres_com_menos_de_20_anos
+    );
+
+    sleep(Duration::from_millis(1500));
 }
 
 fn perguntar_se_quer_adicionar_novos_dados(
