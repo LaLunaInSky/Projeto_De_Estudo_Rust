@@ -71,13 +71,17 @@ pub fn rodar_o_exercício(
 
     loop {
         let quantidade_de_novos_termos: u32 = obter_quantidade_de_novos_termos(
-            &cabeçalho_do_programa
+            &cabeçalho_do_programa,
+            &pa
         );
 
         if quantidade_de_novos_termos == 0 {
             break;
         } else {
-
+            mostrar_os_x_termos_da_pa(
+                &mut pa, 
+                quantidade_de_novos_termos
+            );
         }
     }
 
@@ -93,8 +97,40 @@ pub fn rodar_o_exercício(
     clean_terminal_linux();
 }
 
+fn mostrar_os_x_termos_da_pa(
+    pa: &mut PA,
+    quantidade_de_novos_termos: u32
+) {
+    let mut x_próximos_termos: Vec<u32> = vec![];
+
+    for _quantidade in 1..(quantidade_de_novos_termos + 1) {
+        pa.buscar_o_próximo_termo();
+
+        x_próximos_termos.push(
+            pa.próximo_termo
+        );
+    }
+
+    sleep(Duration::from_millis(1000));
+
+    println!(
+        "Mostrando os {} próximos termos:\n",
+        quantidade_de_novos_termos
+    );
+
+    sleep(Duration::from_millis(1500));
+
+    println!(
+        "{:?}\n",
+        x_próximos_termos
+    );
+
+    sleep(Duration::from_millis(1500));
+}
+
 fn obter_quantidade_de_novos_termos(
-    cabeçalho_do_programa: &String
+    cabeçalho_do_programa: &String,
+    pa: &PA
 ) -> u32 {
     loop {
         println!(
@@ -111,7 +147,26 @@ fn obter_quantidade_de_novos_termos(
                     Ok(número) => {
                         clean_terminal_linux();
                     
-                        
+                        println!(
+                            "{}\n{}",
+                            cabeçalho_do_programa,
+                            descrição_do_exercício()
+                        );
+
+                        if número > 0 {
+                            println!(
+                                "A PA de {}, com Razão de {}.\n",
+                                pa.número,
+                                pa.razão
+                            );
+    
+                            println!(
+                                "Os {} próximos termos...\n",
+                                número
+                            );
+                        }
+
+                        return número;
                     }
                     Err(_) => {
                         clean_terminal_linux();
