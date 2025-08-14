@@ -54,7 +54,7 @@ pub fn rodar_o_exercício(
     );
 
     /* Corpo do Exercício */
-    let pa = PA::new(
+    let mut pa = PA::new(
         obter_número_inteiro(
             &cabeçalho_do_programa, 
             "pa"
@@ -65,21 +65,103 @@ pub fn rodar_o_exercício(
         )
     );
 
-    println!(
-        "{:?}\n",
-        pa
+    mostrar_os_10_primeiros_da_pa(
+        &mut pa
     );
 
+    loop {
+        let quantidade_de_novos_termos: u32 = obter_quantidade_de_novos_termos(
+            &cabeçalho_do_programa
+        );
+
+        if quantidade_de_novos_termos == 0 {
+            break;
+        } else {
+
+        }
+    }
+
     /* Fim do Exercício */
-    // sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    // println!(
-    //     "\nVoltando ao menu de exercícios...\n"
-    // );
+    println!(
+        "\nVoltando ao menu de exercícios...\n"
+    );
 
-    // sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    // clean_terminal_linux();
+    clean_terminal_linux();
+}
+
+fn obter_quantidade_de_novos_termos(
+    cabeçalho_do_programa: &String
+) -> u32 {
+    loop {
+        println!(
+            "[0 o programa encerra!]\nQuantos termos quer ver a mais?"
+        );
+
+        let mut input = String::new();
+
+        match stdin().read_line(
+            &mut input
+        ) {
+            Ok(_) => {
+                match input.trim().parse::<u32>() {
+                    Ok(número) => {
+                        clean_terminal_linux();
+                    
+                        
+                    }
+                    Err(_) => {
+                        clean_terminal_linux();
+
+                        println!(
+                            "{}\n{}",
+                            cabeçalho_do_programa,
+                            descrição_do_exercício()
+                        );
+
+                        println!(
+                            "Erro! Digite apenas números!\n"
+                        );
+                    }
+                }
+            }
+            Err(_) => (),
+        }
+    }
+}
+
+fn mostrar_os_10_primeiros_da_pa(
+    pa: &mut PA
+) {
+    let mut dez_primeiros_termos_da_pa: Vec<u32> = vec![
+        pa.número, pa.próximo_termo
+    ];
+
+    for _quantidade in 1..9 {
+        pa.buscar_o_próximo_termo();
+
+        dez_primeiros_termos_da_pa.push(
+            pa.próximo_termo
+        );
+    }
+
+    sleep(Duration::from_millis(1000));
+
+    println!(
+        "Mostrando os 10 primeiros termos:\n"
+    );
+
+    sleep(Duration::from_millis(1500));
+
+    println!(
+        "{:?}\n",
+        dez_primeiros_termos_da_pa
+    );
+
+    sleep(Duration::from_millis(1500));
 }
 
 fn obter_número_inteiro(
@@ -118,7 +200,7 @@ fn obter_número_inteiro(
                             );
 
                             return número;
-                            
+
                         } else {
                             clean_terminal_linux();
 
