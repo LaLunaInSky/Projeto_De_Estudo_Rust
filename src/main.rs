@@ -118,7 +118,10 @@ fn main() {
     /* Não precisa mexer */
     let último_exercício = &total_de_exercícios;
 
-    let cabeçalho_do_programa = String::from("- Gerenciador De Projetos De Estudo Rust -\n             Por LaLunaInSky               \n");
+    let cabeçalho_do_programa = format!(
+        "- Gerenciador De Projetos De Estudo Rust -\n{:^42}\n",
+        "Por LaLunaInSky"
+    );
 
     // Rodar o menu de exercícios
     // menu_de_opções_de_exercícios(&cabeçalho_do_programa, total_de_exercícios);
