@@ -26,21 +26,34 @@ fn formatar_descrição(
 ) -> String {
     let mut descrição = descrição;
     let mut quantidade = 1;
+    let mut espaços: Vec<usize> = vec![];
 
     for (index, char) in descrição.chars().enumerate() {
-        println!(
-            "{} - {} - {}",
-            quantidade,
-            char,
-            index
-        );
-
+        // println!(
+        //     "{} - {} - {}",
+        //     quantidade,
+        //     char,
+        //     index
+        // );
         
+        if char == ' ' {
+            espaços.push(
+                index
+            );
+        }
         
         if quantidade < 42 {
             quantidade += 1; 
         } else {
+            println!(
+                "{:?}\n",
+                espaços
+            );
+
+            
+
             quantidade = 1;
+            espaços = vec![];
         }
     }
 
