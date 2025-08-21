@@ -1,60 +1,90 @@
-/* importação das bibliotecas  */
 use std::{
-    io,
-    thread,
+    io::stdin,
+    thread::sleep,
     time::Duration
 };
 
 use crate::recursos::limpar_terminal::limpar_terminal;
 
-/* Uma função que imprime no terminal o número do exercício e a descrição do mesmo */
-fn descrição_do_exercícios() {
-    println!("Descrição do exercício 001:");
-    println!(
-        " Um programa que lê dois números inteiro e\nmostra a soma entre os mesmos."
-    );
+fn descrição_do_exercícios() -> String {
+    format!(
+        "Descrição do exercício 001:
+ Um programa que lê dois números inteiro e\nmostra a soma entre os mesmos.
+"
+    )
 }
 
-/* A função principal do exercício, contento o corpo main deste módulo, o único a ser público */
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+struct Números {
+    números: Vec<u32>,
+    soma_dos_números: u32
+}
 
-    descrição_do_exercícios();
+impl Números {
+    fn new(
+        números: Vec<u32>
+    ) -> Self {
+        let mut soma_dos_números: u32 = 0;
 
-    println!();
+        for número in &números {
+            soma_dos_números += número;
+        }
 
-    let mut números_digitados: Vec<i32> = vec![];
+        Self {
+            números,
+            soma_dos_números
+        }
+    }
+}
+
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    println!(
+        "{}\n{}",
+        cabeçalho_do_programa,
+        descrição_do_exercícios()
+    );
+
+    /* Corpo do Exercício */
+    let mut números_digitados: Vec<u32> = vec![];
 
     for indice in 1..3 {
-        números_digitados.push(obter_a_entrada_de_um_número_inteiro(indice, &cabeçalho_do_programa));
+        números_digitados.push(
+            obter_a_entrada_de_um_número_inteiro(
+                indice, 
+                &cabeçalho_do_programa
+            )
+        );
     }
 
-    números_digitados.push(
-        soma_de_dois_números_inteiros(números_digitados[0], números_digitados[1])
+    let números = Números::new(
+        números_digitados
     );
 
     println!(
         "A soma dos números {} + {} é igual a {}!",
-        números_digitados[0], números_digitados[1], números_digitados[2]
+        números.números[0],
+        números.números[1],
+        números.soma_dos_números
     );
 
-    thread::sleep(Duration::from_millis(2000));
+    /* Fim do Exercício */
+    sleep(Duration::from_millis(2000));
 
-    println!("\nVoltando para o menu de exercícios...");
+    println!(
+        "\nVoltando para o menu de exercícios...\n"
+    );
 
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
     limpar_terminal();
 }
 
-fn soma_de_dois_números_inteiros(primeiro_número: i32, segundo_número: i32) -> i32 {
-    primeiro_número + segundo_número
-}
-
 fn obter_a_entrada_de_um_número_inteiro(
-    indice_da_chamada_do_input: i32,
+    indice_da_chamada_do_input: u8,
     cabeçalho_do_programa: &String
-) -> i32 {
+) -> u32 {
     loop {
         println!(
             "Digite o {indice_da_chamada_do_input}º número inteiro: "
@@ -62,31 +92,39 @@ fn obter_a_entrada_de_um_número_inteiro(
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(&mut input) {
             Ok(_) => {
-                match input.trim().parse::<i32>() {
-                    Ok(number) => {
+                match input.trim().parse::<u32>() {
+                    Ok(número) => {
                         limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        println!(
+                            "{}\n{}",
+                            cabeçalho_do_programa,
+                            descrição_do_exercícios()
+                        );
 
-                        descrição_do_exercícios();
-
-                        println!("\nNúmero Digitado com Sucesso!\n");
-                        return number;
+                        println!(
+                            "O número {},\nfoi adicionado com sucesso!\n",
+                            número
+                        );
+                        
+                        return número;
                     }
                     Err(_) => {
-                        limpar_terminal();
+                        println!(
+                            "{}\n{}",
+                            cabeçalho_do_programa,
+                            descrição_do_exercícios()
+                        );
 
-                        println!("{}", cabeçalho_do_programa);
-
-                        descrição_do_exercícios();
-
-                        println!("\nErro! Digite novamente um número válido!\n")
+                        println!(
+                            "Erro! Digite novamente um número válido!\n"
+                        )
                     }
                 }
             },
-            Err(_) => println!("\nErro! Digite novamente um número válido!\n"),
+            Err(_) => (),
         }
 
         
