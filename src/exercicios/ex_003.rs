@@ -1,42 +1,100 @@
 use std::{
-    process::Command,
-    io,
-    thread,
+    io::stdin,
+    thread::sleep,
     time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::{clean_terminal_linux, recursos::{
+    descricao_de_exercicio::descrição_de_exercício, exercicio_informacoes::Exercício_Informações, limpar_terminal::limpar_terminal
+}};
 
-fn descrição_do_exercícios() {
-    println!("Descrição do exercício 003:");
-    println!(
-        " Um programa que lê um número inteiro e\nmostra na tela o seu sucessor e seu\nantecessor."
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */    
+    let exercício_informações = Exercício_Informações::new(
+        cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("003"), 
+            String::from("Um programa que lê um número inteiro e\nmostra na tela o seusucessor e seu\nantecessor.")   
+        )
     );
+
+    loop {
+        exercício_informações.mostrar_informações();
+
+        /* Corpo do Exercício */
+        let número_digitado = obter_um_número_inteiro(
+            &exercício_informações
+        );
+
+        antecessor_e_sucessor_do_número_inteiro(&número_digitado);
+    
+        let resposta_sobre_continuar = perguntar_se_quer_rodar_novamente(
+            &exercício_informações
+        );
+
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
+
+    /* Fim do Exercício */
+    sleep(Duration::from_millis(3000));
+
+    println!(
+        "\nVoltando para o menu de exercícios...\n"
+    );
+
+    sleep(Duration::from_millis(3000));
+
+    limpar_terminal();
 }
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+fn perguntar_se_quer_rodar_novamente(
+    exercício_informações: &Exercício_Informações
+) -> bool {
+    loop {
+        println!(
+            "Quer iniciar novamente o exercício? [S/N]"
+        );
 
-    descrição_do_exercícios();
+        let mut input = String::new();
 
-    println!();
+        match stdin().read_line(
+            &mut input
+        ) {
+            Ok(_) => {
+                let resposta_da_pergunta = input.trim().to_lowercase();
 
-    let número_digitado = obter_um_número_inteiro(&cabeçalho_do_programa);
+                let resposta_da_pergunta = resposta_da_pergunta.as_str();
 
-    antecessor_e_sucessor_do_número_inteiro(&número_digitado);
+                match resposta_da_pergunta {
+                    "s" => {
+                        clean_terminal_linux();
+                        
+                        return true;
+                    }
+                    "n" => return false,
+                    _ => {
+                        limpar_terminal();
 
-    thread::sleep(Duration::from_millis(3000));
+                        exercício_informações.mostrar_informações();
 
-    println!("Voltando para o menu de exercícios...");
-
-    thread::sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+                        println!(
+                            "Erro! Apenas é aceito S [sim] ou N [não]!\n"
+                        );
+                    }
+                }
+            }
+            Err(_) => (),
+        }
+    }
 }
 
-fn antecessor_e_sucessor_do_número_inteiro(número_inteiro: &u32) {
+fn antecessor_e_sucessor_do_número_inteiro(
+    número_inteiro: &u32
+) {
     println!(
         "O Sucessor é.....: {}\nO Antescessor é..: {}\n",
         (número_inteiro - 1),
@@ -44,48 +102,53 @@ fn antecessor_e_sucessor_do_número_inteiro(número_inteiro: &u32) {
     );
 }
 
-fn obter_um_número_inteiro(cabeçalho_do_programa: &String) -> u32 {
+fn obter_um_número_inteiro(
+    exercício_informações: &Exercício_Informações
+) -> u32 {
     loop {
-        println!("Digite um número inteiro: ");
+        println!(
+            "Digite um número inteiro: "
+        );
     
         let mut input = String::new();
     
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(&mut input) {
             Ok(_) => {
                 match input.trim().parse::<u32>() {
-                    Ok(number) => {
-                        if number == 0 {
-                            clean_terminal_linux();
+                    Ok(número) => {
+                        if número == 0 {
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
+                            exercício_informações.mostrar_informações();
 
-                            descrição_do_exercícios();
-
-                            println!("\nErro! Digite um número válido!\n");
+                            println!(
+                                "Erro! Digite um número válido!\n"
+                            );
                         } else {
-                            clean_terminal_linux();
+                            limpar_terminal();
+
+                            exercício_informações.mostrar_informações();
                             
-                            println!("{}", cabeçalho_do_programa);
+                            println!(
+                                "O Número {},\nfoi adicionado com sucesso!\n",
+                                número
+                            );
                             
-                            descrição_do_exercícios();
-                            
-                            println!("\nNúmero {} foi adicionado com sucesso!\n", number);
-                            
-                            return number;
+                            return número;
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercícios();
-
-                        println!("\nErro! Digite um número válido!\n");
+                        println!(
+                            "Erro! Digite um número válido!\n"
+                        );
                     }
                 }
             }
-            Err(error) => println!("Error: {}", error),
+            Err(_) => (),
         }
     }
 }
