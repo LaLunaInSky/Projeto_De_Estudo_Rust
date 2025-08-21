@@ -1,13 +1,10 @@
+use crate::recursos::limpar_terminal::limpar_terminal;
+
 use std::{
     io::stdin,
     thread::sleep,
     time::Duration,
-    process::Command,
 };
-
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
 
 // ex_069!
 fn descrição_do_exercício() -> String {
@@ -36,13 +33,13 @@ pub fn rodar_o_exercício(
 
 
     /* Fim do Exercício */
-    // sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    // println!(
-    //     "\nVoltando ao menu de exercícios...\n"
-    // );
+    println!(
+        "\nVoltando ao menu de exercícios...\n"
+    );
 
-    // sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    // clean_terminal_linux();
+    limpar_terminal();
 }

@@ -1,18 +1,15 @@
 use std::{
-    process::Command,
-    io,
-    thread,
+    io::stdin,
+    thread::sleep,
     time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::limpar_terminal::limpar_terminal;
 
-fn descrição_do_exercícios() {
-    println!("Descrição do exercício 002:");
-    println!(
-        " Um programa que lê a entrada do teclado\ne mostra no terminal o seu tipo primitivo,\ne outras as informação possíveis sobre o\nque foi digitado.
+fn descrição_do_exercícios() -> String {
+    format!(
+        "Descrição do exercício 002:
+ Um programa que lê a entrada do teclado\ne mostra no terminal o seu tipo primitivo,\ne outras as informação possíveis sobre o\nque foi digitado.
 
 Exemplo:
 
@@ -23,74 +20,141 @@ Exemplo:
 * Se é alfanumérico
 * Se está em maiúscula
 * Se está em minúscula
-* Se está capitalizada"
-    );
+* Se está capitalizada
+"
+    )
 }
 
 pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
+    /* Começo do Exercício */
     loop {
-        println!("{}", cabeçalho_do_programa);
-    
-        descrição_do_exercícios();
-    
-        println!();
-    
-        let resposta_e_input = obter_a_entrada_do_teclado(&cabeçalho_do_programa);
+        println!(
+            "{}\n{}",
+            cabeçalho_do_programa,
+            descrição_do_exercícios()
+        );
 
-        if resposta_e_input == "n" {
+        /* Corpo do Exercício */
+        let frase_digitada = obter_uma_frase(
+            &cabeçalho_do_programa
+        );
+
+        analisar_a_frase(
+            &frase_digitada
+        );
+    
+        let resposta_da_pergunta = perguntar_se_quer_adicionar_outra_frase(
+            &cabeçalho_do_programa
+        );
+
+        if !resposta_da_pergunta {
             break;
         }
     }
 
-    println!("{}", cabeçalho_do_programa);
+    /* Fim do Exercício */
+    sleep(Duration::from_millis(3000));
 
     println!("\nVoltando para o menu de exercícios...");
 
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    clean_terminal_linux();
+    limpar_terminal();
 }
 
-fn obter_a_entrada_do_teclado(cabeçalho_do_programa: &String) -> String {
-    println!(
-        "Digite algo, pode conter números ou não:"
-    );
+fn perguntar_se_quer_adicionar_outra_frase(
+    cabeçalho_do_programa: &String
+) -> bool {
+    loop {
+        println!(
+            "Gostaria de digitar outra frase? [S/N]"
+        );
 
-    let mut input = String::new();
+        let mut input = String::new();
 
-    match io::stdin().read_line(&mut input) {
-        Ok(_) => {
-            loop {
-                clean_terminal_linux();
+        match stdin().read_line(
+            &mut input
+        ) {
+            Ok(_) => {
+                let resposta_da_pergunta = input.trim().to_lowercase();
 
-                println!("{}", cabeçalho_do_programa);
+                let resposta_da_pergunta = resposta_da_pergunta.as_str();
 
-                analise_da_entrada_digitada(&input.trim());
+                match resposta_da_pergunta {
+                    "s" => {
+                        limpar_terminal();
 
-                println!("\nGostaria de digitar outra frase (S/N)? ");
-
-                let mut input_02 = String::new();
-
-                match io::stdin().read_line(&mut input_02) {
-                    Ok(_) => {
-                        if input_02.trim().to_lowercase() == "s" || input_02.trim().to_lowercase() == "n" {
-                            clean_terminal_linux();
-                            
-                            return input_02.trim().to_lowercase();
-                        }
+                        return true;
                     }
-                    Err(error) => println!("Error: {}", error),
+                    "n" => return false,
+                    _ => {
+                        limpar_terminal();
+
+                        println!(
+                            "{}\n{}",
+                            cabeçalho_do_programa,
+                            descrição_do_exercícios()
+                        );
+
+                        println!(
+                            "Erro! Apenas é aceito S [sim] ou N [não]!\n"
+                        );
+                    }
                 }
             }
+            Err(_) => (),
         }
-        Err(error) => println!("Error: {}", error),
     }
-
-    input
 }
 
-fn analise_da_entrada_digitada(entrada_digitada: &str) {
-    println!("\nAnalisando o que foi digitado:\n'{}'", entrada_digitada);
+fn obter_uma_frase(
+    cabeçalho_do_programa: &String
+) -> String {
+    loop {
+        println!(
+            "Digite algo, pode conter números:"
+        );
+
+        let mut input = String::new();
+
+        match stdin().read_line(
+            &mut input
+        ) {
+            Ok(_) => {
+                let frase = input.trim().to_string();
+
+                limpar_terminal();
+
+                println!(
+                    "{}\n{}", 
+                    cabeçalho_do_programa,
+                    descrição_do_exercícios()
+                );
+
+                println!(
+                    "A frase {},\nfoi adicionada com sucesso!\n",
+                    frase
+                );
+
+                return frase;
+            }
+            Err(_) => (),
+        }
+    }
+}
+
+fn analisar_a_frase(
+    entrada_digitada: &String
+) {
+    let entrada_digitada = entrada_digitada.as_str();
+    
+    sleep(Duration::from_millis(1000));
+
+    println!(
+        "Analisando o que foi digitado:\n\'{}\'",
+        entrada_digitada
+    );
+    
     let mut entrada_sem_espaços = String::new();
     let mut chars: Vec<char> = vec![];
 
@@ -106,70 +170,139 @@ fn analise_da_entrada_digitada(entrada_digitada: &str) {
         }
 
     } else {
-        entrada_sem_espaços.push_str(entrada_digitada);
+        entrada_sem_espaços.push_str(
+            entrada_digitada
+        );
     }
 
-    thread::sleep(Duration::from_millis(1000));
+    sleep(Duration::from_millis(1000));
 
     match entrada_sem_espaços.parse::<i64>() {
         Ok(number) => {
-            println!("\nO seu Tipo Primitivo é: {}", retornar_o_tipo_primitivo(&number));
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "\nO seu Tipo Primitivo é: {}", 
+                retornar_o_tipo_primitivo(
+                    &number
+                )
+            );
+            sleep(Duration::from_millis(1000));
 
-            println!("É apenas número?......: SIM");
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "É apenas número?......: SIM"
+            );
+            sleep(Duration::from_millis(1000));
 
-            println!("Possui espaços?.......: {}", retornar_se_possui_espaços(&entrada_digitada));
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "Possui espaços?.......: {}", 
+                retornar_se_possui_espaços(
+                    &entrada_digitada
+                )
+            );
+            sleep(Duration::from_millis(1000));
 
-            println!("É alfabético?.........: NÃO");
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "É alfabético?.........: NÃO"
+            );
+            sleep(Duration::from_millis(1000));
 
-            println!("É alfanumérico?.......: NÃO");
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "É alfanumérico?.......: NÃO"
+            );
+            sleep(Duration::from_millis(1000));
 
-            println!("Está em maiúscula?....: NÃO");
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "Está em maiúscula?....: NÃO"
+            );
+            sleep(Duration::from_millis(1000));
 
-            println!("Está em minúscula?....: NÃO");
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "Está em minúscula?....: NÃO"
+            );
+            sleep(Duration::from_millis(1000));
 
-            println!("Está capitalizada?....: NÃO");
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "Está capitalizada?....: NÃO"
+            );
+            sleep(Duration::from_millis(1000));
         }
         Err(_) => {
-            println!("\nO seu Tipo Primitivo é: {}", retornar_o_tipo_primitivo(&entrada_digitada));
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "\nO seu Tipo Primitivo é: {}", 
+                retornar_o_tipo_primitivo(
+                    &entrada_digitada
+                )
+            );
+            sleep(Duration::from_millis(1000));
 
-            println!("É apenas número?......: NÃO");
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "É apenas número?......: NÃO"
+            );
+            sleep(Duration::from_millis(1000));
 
-            println!("Possui espaços?.......: {}", retornar_se_possui_espaços(&entrada_digitada));
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "Possui espaços?.......: {}", 
+                retornar_se_possui_espaços(
+                    &entrada_digitada
+                )
+            );
+            sleep(Duration::from_millis(1000));
 
-            println!("É alfabético?.........: {}", if retorna_se_a_string_possui_números(&entrada_digitada) == "SIM" {"NÃO"} else {"SIM"});
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "É alfabético?.........: {}", 
+                if retorna_se_a_string_possui_números(
+                    &entrada_digitada
+                ) == "SIM" {"NÃO"} else {"SIM"}
+            );
+            sleep(Duration::from_millis(1000));
 
-            println!("É alfanumérico?.......: {}", retorna_se_a_string_possui_números(&entrada_digitada));
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "É alfanumérico?.......: {}", 
+                retorna_se_a_string_possui_números(
+                    &entrada_digitada
+                )
+            );
+            sleep(Duration::from_millis(1000));
 
-            println!("Está em maiúscula?....: {}", verificar_se_a_string_é_maiúscula(&entrada_digitada));
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "Está em maiúscula?....: {}", 
+                verificar_se_a_string_é_maiúscula(
+                    &entrada_digitada
+                )
+            );
+            sleep(Duration::from_millis(1000));
 
-            println!("Está em minúscula?....: {}", verificar_se_a_string_é_minúscula(&entrada_digitada));
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "Está em minúscula?....: {}", 
+                verificar_se_a_string_é_minúscula(
+                    &entrada_digitada
+                )
+            );
+            sleep(Duration::from_millis(1000));
 
-            println!("Está capitalizada?....: {}", verificar_se_a_string_está_capitalizada(&entrada_digitada));
-            thread::sleep(Duration::from_millis(1000));
+            println!(
+                "Está capitalizada?....: {}", 
+                verificar_se_a_string_está_capitalizada(
+                    &entrada_digitada
+                )
+            );
+            sleep(Duration::from_millis(1000));
         }
     }    
+
+    println!();
+
+    sleep(Duration::from_millis(1500));
 }
 
-fn retornar_o_tipo_primitivo<T>(_: &T) -> String {
+fn retornar_o_tipo_primitivo<T>(
+    _: &T
+) -> String {
     std::any::type_name::<T>().to_string()
 }
 
-fn retornar_se_possui_espaços(entrada_digitada: &str) -> String {
+fn retornar_se_possui_espaços(
+    entrada_digitada: &str
+) -> String {
     if entrada_digitada.contains(" ") {
         return String::from("SIM");
     } else {
@@ -177,8 +310,12 @@ fn retornar_se_possui_espaços(entrada_digitada: &str) -> String {
     }
 }
 
-fn retorna_se_a_string_possui_números(entrada_digitada: &str) -> String {
-    let lista_de_número_primários = vec!["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+fn retorna_se_a_string_possui_números(
+    entrada_digitada: &str
+) -> String {
+    let lista_de_número_primários = vec![
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
+    ];
 
     for número in lista_de_número_primários {
         if entrada_digitada.contains(número) {
@@ -189,7 +326,9 @@ fn retorna_se_a_string_possui_números(entrada_digitada: &str) -> String {
     String::from("NÃO")
 }
 
-fn verificar_se_a_string_é_maiúscula(entrada_digitada: &str) -> String {
+fn verificar_se_a_string_é_maiúscula(
+    entrada_digitada: &str
+) -> String {
     if entrada_digitada == entrada_digitada.to_uppercase() {
         return String::from("SIM");
     } else {
@@ -197,7 +336,9 @@ fn verificar_se_a_string_é_maiúscula(entrada_digitada: &str) -> String {
     }
 }
 
-fn verificar_se_a_string_é_minúscula(entrada_digitada: &str) -> String {
+fn verificar_se_a_string_é_minúscula(
+    entrada_digitada: &str
+) -> String {
     if entrada_digitada == entrada_digitada.to_lowercase() {
         return String::from("SIM");
     } else {
@@ -205,7 +346,9 @@ fn verificar_se_a_string_é_minúscula(entrada_digitada: &str) -> String {
     }
 }
 
-fn verificar_se_a_string_está_capitalizada(entrada_digitada: &str) -> String {
+fn verificar_se_a_string_está_capitalizada(
+    entrada_digitada: &str
+) -> String {
     if verificar_se_a_string_é_maiúscula(&entrada_digitada) == "NÃO" && verificar_se_a_string_é_minúscula(&entrada_digitada) == "NÃO" && entrada_digitada.len() > 1 {
         let palavras_digitadas: Vec<&str> = entrada_digitada.split(" ").collect();
 

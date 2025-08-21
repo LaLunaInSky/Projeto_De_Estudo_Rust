@@ -6,6 +6,7 @@ use std::{
 };
 
 mod exercicios;
+pub mod recursos;
 
 fn construir_a_lista_de_exercícios(cabeçalho_do_programa: &String, total_de_exercícios: &u32) {
     let mut nome_de_todos_os_exercícios = vec![];
@@ -124,8 +125,8 @@ fn main() {
     );
 
     // Rodar o menu de exercícios
-    // menu_de_opções_de_exercícios(&cabeçalho_do_programa, total_de_exercícios);
+    menu_de_opções_de_exercícios(&cabeçalho_do_programa, total_de_exercícios);
 
     // Rodar apenas o exercício X
-    exercicios::executar_o_exercício_x(*último_exercício, &cabeçalho_do_programa);
+    // exercicios::executar_o_exercício_x(*último_exercício, &cabeçalho_do_programa);
 }

@@ -2,14 +2,10 @@
 use std::{
     io,
     thread,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-/* Uma função que limpa o termninal no linux */
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::limpar_terminal::limpar_terminal;
 
 /* Uma função que imprime no terminal o número do exercício e a descrição do mesmo */
 fn descrição_do_exercícios() {
@@ -48,7 +44,7 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
 
     thread::sleep(Duration::from_millis(3000));
 
-    clean_terminal_linux();
+    limpar_terminal();
 }
 
 fn soma_de_dois_números_inteiros(primeiro_número: i32, segundo_número: i32) -> i32 {
@@ -70,7 +66,7 @@ fn obter_a_entrada_de_um_número_inteiro(
             Ok(_) => {
                 match input.trim().parse::<i32>() {
                     Ok(number) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
                         println!("{}", cabeçalho_do_programa);
 
@@ -80,7 +76,7 @@ fn obter_a_entrada_de_um_número_inteiro(
                         return number;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
                         println!("{}", cabeçalho_do_programa);
 
