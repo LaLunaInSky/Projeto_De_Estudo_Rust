@@ -1,106 +1,153 @@
 use std::{
-    io,
-    thread,
-    time::Duration, 
-    process::Command
+    io::stdin,
+    thread::sleep,
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::Exercício_Informações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
+
+mod notas;
+
+use notas::Notas;
+
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = Exercício_Informações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("005"),
+            String::from("Um programa que lê duas notas de um\naluno(a), calcula e mostra a média das\nnotas.")
+        )
+    );
+
+    loop {
+        exercício_informações.mostrar_informações();
+
+        /* Corpo do Exercício */
+        let mut notas: Vec<f32> = vec![];
+
+        for nota in 1..3 {
+            notas.push(
+                obter_input_de_nota(
+                    nota, 
+                    &exercício_informações
+                )
+            );
+        }
+
+        let notas = Notas::new(notas);
+
+        analisar_notas(
+            &notas
+        );
+
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
+
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
+
+    /* Fim do Exercício */
+    sleep(Duration::from_millis(3000));
+
+    println!(
+        "\nVoltando para o menu de exercícios...\n"
+    );
+
+    sleep(Duration::from_millis(3000));
+
+    limpar_terminal();
 }
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 005:");
+fn analisar_notas(
+    notas: &Notas
+) {
     println!(
-        " Um programa que lê duas notas de um\naluno(a), calcula e mostra a média das\nnotas."
+        "Analisando as notas {:.1} e {:.1}...\n", 
+        notas.notas[0],
+        notas.notas[1]
+    );
+
+    sleep(Duration::from_millis(2000));
+
+    println!(
+        "A média é {:.1}!\n",
+        notas.média_final
     );
 }
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
-
-    descrição_do_exercício();
-
-    println!();
-
-    let mut notas: Vec<f32> = vec![];
-
-    for nota in 1..3 {
-        notas.push(obter_input_de_nota(nota, &cabeçalho_do_programa));
-    }
-
-    clean_terminal_linux();
-
-    println!("{}", cabeçalho_do_programa);
-    
-    descrição_do_exercício();
-
-    println!("\nAnalisando as notas {:.2} e {:.2}...\n", &notas[0], &notas[1]);
-
-    thread::sleep(Duration::from_millis(2000));
-
-    println!("A média é {:.2}!", ((&notas[0] + &notas[1]) / 2.0));
-
-    thread::sleep(Duration::from_millis(3000));
-
-    println!("\nVoltando para o menu de exercícios...\n");
-
-    thread::sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
-}
-
-fn obter_input_de_nota(index_da_nota: u8, cabeçalho_do_programa: &String) -> f32 {
+fn obter_input_de_nota(
+    index_da_nota: u8, 
+    exercício_informações: &Exercício_Informações
+) -> f32 {
     loop {
-        println!("Digite {}ª Nota: ", index_da_nota);
+        println!(
+            "Digite {}ª Nota: ", 
+            index_da_nota
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
-
                 match input.trim().parse::<f32>() {
-                    Ok(number) => {
+                    Ok(número) => {
 
-                        if number > 0.0 && number <= 10.0 {
-                            let number = format!("{:.2}", number);
+                        if número > 0.0 
+                            && 
+                           número <= 10.0 
+                        {
+                            let número_formatado = format!("{:.1}", número);
 
-                            match number.parse::<f32>() {
-                                Ok(number) => {
-                                    clean_terminal_linux();
+                            match número_formatado.parse::<f32>() {
+                                Ok(número_final) => {
+                                    limpar_terminal();
 
-                                    println!("{}", cabeçalho_do_programa);
+                                    exercício_informações.mostrar_informações();
 
-                                    descrição_do_exercício();
+                                    println!(
+                                        "A Nota {:.1},\nfoi adicionada com sucesso!\n",
+                                        número_final
+                                    );
 
-                                    println!("\nA Nota {} foi adicionada com sucesso!\n", number);
-
-                                    return number;
+                                    return número_final;
                                 }
-                                Err(_) => println!("Erro!"),
+                                Err(_) => (),
                             }
                         } else {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
+                            exercício_informações.mostrar_informações();
 
-                            descrição_do_exercício();
-
-                            println!("\nErro! Apenas é aceito notas de 0.0 à 10.0!\n");
+                            println!(
+                                "Erro! Apenas é aceito 0.0 à 10.0!\n"
+                            );
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Apenas é aceito números!\n");
+                        println!(
+                            "Erro! Digite apenas números!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }

@@ -1,104 +1,125 @@
 use std::{
-    io,
-    thread,
+    io::stdin,
+    thread::sleep,
     time::Duration,
-    process::Command
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::Exercício_Informações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 004:");
-    println!(
-        " Um programa que lê um número inteiro e\nmostra o seu dobro, triplo e a raiz\nquadrada."
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = Exercício_Informações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("004"),
+            String::from("Um programa que lê um número inteiro e\nmostra o seu dobro, triplo e a raiz\nquadrada.")
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
-
-    descrição_do_exercício();
-
-    println!();
-
-    let número_do_input = obter_input_de_um_número_inteiro(&cabeçalho_do_programa);
-
-    thread::sleep(Duration::from_millis(2000));
-
-    analisador_deo_número_inteiro(&número_do_input);
-
-    thread::sleep(Duration::from_millis(3000));
-
-    println!("\nVoltando para o menu de exercícios...\n");
-
-    thread::sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
-}
-
-fn obter_input_de_um_número_inteiro(cabeçalho_do_programa: &String) -> u32 {
     loop {
-        println!("Digite um número inteiro:");
+        exercício_informações.mostrar_informações();
+
+        /* Corpo do Exercício */
+        let número_do_input = obter_um_número_inteiro(
+            &exercício_informações
+        );
+
+        analisar_o_número_inteiro(
+            número_do_input
+        );
+
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
+
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
+
+    /* Fim do exercício */
+    sleep(Duration::from_millis(3000));
+
+    println!(
+        "\nVoltando para o menu de exercícios...\n"
+    );
+
+    sleep(Duration::from_millis(3000));
+
+    limpar_terminal();
+}
+
+fn obter_um_número_inteiro(
+    exercício_informações: &Exercício_Informações
+) -> u32 {
+    loop {
+        println!(
+            "Digite um número inteiro:"
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<u32>() {
-                    Ok(number) => {
-                        clean_terminal_linux();
+                    Ok(número) => {
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
+                        println!(
+                            "O número {},\nfoi adicionado com sucesso!",
+                            número
+                        );
 
-                        println!();
-
-                        println!("Analisando o número {}...", number);
-
-                        return number;
+                        return número;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!();
-
-                        println!("Erro! Entrada digitada não é válida!\n");
+                        println!(
+                            "Erro! Entrada digitada não é válida!\n"
+                        );
                     }
                 }
             }
-            Err(error) => println!("Error: {}", error),
+            Err(_) => (),
         }
     }
 }
 
-fn analisador_deo_número_inteiro(número_inteiro: &u32) {
-    println!();
-
-    thread::sleep(Duration::from_millis(1000));
+fn analisar_o_número_inteiro(
+    número_inteiro: u32
+) {
+    sleep(Duration::from_millis(1000));
 
     println!(
-        "O Dobro é..........: {}",
+        "\nO Dobro é..........: {}",
         (número_inteiro * 2)
     );
 
-    thread::sleep(Duration::from_millis(1000));
+    sleep(Duration::from_millis(1000));
 
     println!(
         "O triplo é.........: {}",
         (número_inteiro * 3)
     );
 
-    thread::sleep(Duration::from_millis(1000));
+    sleep(Duration::from_millis(1000));
 
     println!(
-        "A Raiz Quadrada é..: {}",
+        "A Raiz Quadrada é..: {}\n",
         número_inteiro.isqrt()
     );
 }
