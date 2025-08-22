@@ -1,126 +1,159 @@
 use std::{
-    io,
-    process::Command,
-    thread,
+    io::stdin,
+    thread::sleep,
     time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
-
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 006:");
-    println!(
-        " Um programa que lê um valor em metros e o\nexibe convertido em todos os tipos a\nseguir:
-
-km <- hm <- dam <- m -> dm -> cm -> mm"
-    );
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    exercicio_informacoes::Exercício_Informações,
+    descricao_de_exercicio::descrição_de_exercício,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
 pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+    /* Começo do Exercício */
+    let exercício_informações = Exercício_Informações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("006"),
+            String::from("Um programa que lê um valor em metros e o\nexibe convertido em todos os tipos a\nseguir:
 
-    descrição_do_exercício();
+km <- hm <- dam <- m -> dm -> cm -> mm")
+        )
+    );
 
-    println!();
+    loop {
+        exercício_informações.mostrar_informações();
 
-    let número_input_em_metros = obter_o_número_em_float(&cabeçalho_do_programa);
+        /* Corpo do Exercício */
+        let número_input_em_metros = obter_o_número_float(
+            &exercício_informações
+        );
 
-    converter_o_valor_de_metros(&número_input_em_metros);
+        converter_o_valor_de_metros(
+            &número_input_em_metros
+        );
+    
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    thread::sleep(Duration::from_millis(3000));
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
 
-    println!("\nVoltando para o menu de exercícios...\n");
+    /* Fim do Exercício */
+    sleep(Duration::from_millis(3000));
 
-    thread::sleep(Duration::from_millis(3000));
+    println!(
+        "\nVoltando para o menu de exercícios...\n"
+    );
 
-    clean_terminal_linux();
+    sleep(Duration::from_millis(3000));
+
+    limpar_terminal();
 }
 
-fn converter_o_valor_de_metros(valor_em_metros: &f32) {
-    println!("\nO valor {}m foi adicionado com sucesso!\n\nConvertendo o valor...\n", valor_em_metros);
+fn converter_o_valor_de_metros(
+    valor_em_metros: &f32
+) {
+    println!(
+        "Convertendo o valor...\n"
+    );
 
-    thread::sleep(Duration::from_millis(2000));
+    sleep(Duration::from_millis(2000));
 
     println!(
         "km...: {}", 
         (valor_em_metros / 1000.0)
     );
 
-    thread::sleep(Duration::from_millis(500));
+    sleep(Duration::from_millis(500));
 
     println!(
         "hm...: {}", 
         (valor_em_metros / 100.0)
     );
 
-    thread::sleep(Duration::from_millis(500));
+    sleep(Duration::from_millis(500));
 
     println!(
         "dam..: {}", 
         (valor_em_metros / 10.0)
     );
 
-    thread::sleep(Duration::from_millis(500));
+    sleep(Duration::from_millis(500));
 
     println!(
         "m....: {}", 
         valor_em_metros
     );
 
-    thread::sleep(Duration::from_millis(500));
+    sleep(Duration::from_millis(500));
 
     println!(
         "dm...: {}", 
         (valor_em_metros * 10.0)
     );
 
-    thread::sleep(Duration::from_millis(500));
+    sleep(Duration::from_millis(500));
 
     println!(
         "cm...: {}", 
         (valor_em_metros * 100.0)
     );
 
-    thread::sleep(Duration::from_millis(500));
+    sleep(Duration::from_millis(500));
 
     println!(
-        "mm...: {}", 
+        "mm...: {}\n", 
         (valor_em_metros * 1000.0)
     );
+
+    sleep(Duration::from_millis(1500));
 }
 
-fn obter_o_número_em_float(cabeçalho_do_programa: &String) -> f32 {
+fn obter_o_número_float(
+    exercício_informações: &Exercício_Informações
+) -> f32 {
     loop {
-        println!("Digite um valor em metros:");
+        println!(
+            "Digite um valor em metros:"
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<f32>() {
-                    Ok(number) => {
-                        clean_terminal_linux();
+                    Ok(número) => {
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
+                        println!(
+                            "O número {},\nfoi adicionado com sucesso!\n",
+                            número
+                        );
 
-                        return number;
+                        return número;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Digite um valor válido!\n");
+                        println!(
+                            "Erro! Digite apenas número reais!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }
