@@ -4,12 +4,20 @@ use std::{
     time::Duration
 };
 
-use crate::recursos::limpar_terminal::limpar_terminal;
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::Exercício_Informações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn descrição_do_exercícios() -> String {
-    format!(
-        "Descrição do exercício 002:
- Um programa que lê a entrada do teclado\ne mostra no terminal o seu tipo primitivo,\ne outras as informação possíveis sobre o\nque foi digitado.
+pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
+    /* Começo do Exercício */
+    let exercício_informações = Exercício_Informações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("002"),
+            String::from("Um programa que lê a entrada do teclado\ne mostra no terminal o seu tipo primitivo,\ne outras as informação possíveis sobre o\nque foi digitado.
 
 Exemplo:
 
@@ -20,31 +28,24 @@ Exemplo:
 * Se é alfanumérico
 * Se está em maiúscula
 * Se está em minúscula
-* Se está capitalizada
-"
-    )
-}
+* Se está capitalizada")
+        )
+    );
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    /* Começo do Exercício */
     loop {
-        println!(
-            "{}\n{}",
-            cabeçalho_do_programa,
-            descrição_do_exercícios()
-        );
+        exercício_informações.mostrar_informações();
 
         /* Corpo do Exercício */
         let frase_digitada = obter_uma_frase(
-            &cabeçalho_do_programa
+            &exercício_informações
         );
 
         analisar_a_frase(
             &frase_digitada
         );
     
-        let resposta_da_pergunta = perguntar_se_quer_adicionar_outra_frase(
-            &cabeçalho_do_programa
+        let resposta_da_pergunta = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
         );
 
         if !resposta_da_pergunta {
@@ -62,53 +63,8 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     limpar_terminal();
 }
 
-fn perguntar_se_quer_adicionar_outra_frase(
-    cabeçalho_do_programa: &String
-) -> bool {
-    loop {
-        println!(
-            "Gostaria de digitar outra frase? [S/N]"
-        );
-
-        let mut input = String::new();
-
-        match stdin().read_line(
-            &mut input
-        ) {
-            Ok(_) => {
-                let resposta_da_pergunta = input.trim().to_lowercase();
-
-                let resposta_da_pergunta = resposta_da_pergunta.as_str();
-
-                match resposta_da_pergunta {
-                    "s" => {
-                        limpar_terminal();
-
-                        return true;
-                    }
-                    "n" => return false,
-                    _ => {
-                        limpar_terminal();
-
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercícios()
-                        );
-
-                        println!(
-                            "Erro! Apenas é aceito S [sim] ou N [não]!\n"
-                        );
-                    }
-                }
-            }
-            Err(_) => (),
-        }
-    }
-}
-
 fn obter_uma_frase(
-    cabeçalho_do_programa: &String
+    exercício_informações: &Exercício_Informações
 ) -> String {
     loop {
         println!(
@@ -125,11 +81,7 @@ fn obter_uma_frase(
 
                 limpar_terminal();
 
-                println!(
-                    "{}\n{}", 
-                    cabeçalho_do_programa,
-                    descrição_do_exercícios()
-                );
+                exercício_informações.mostrar_informações();
 
                 println!(
                     "A frase {},\nfoi adicionada com sucesso!\n",

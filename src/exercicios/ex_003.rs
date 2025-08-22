@@ -4,9 +4,10 @@ use std::{
     time::Duration
 };
 
-use crate::{clean_terminal_linux, recursos::{
-    descricao_de_exercicio::descrição_de_exercício, exercicio_informacoes::Exercício_Informações, limpar_terminal::limpar_terminal
-}};
+use crate::recursos::{
+    descricao_de_exercicio::descrição_de_exercício, exercicio_informacoes::Exercício_Informações, limpar_terminal::limpar_terminal,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
@@ -30,7 +31,7 @@ pub fn rodar_o_exercício(
 
         antecessor_e_sucessor_do_número_inteiro(&número_digitado);
     
-        let resposta_sobre_continuar = perguntar_se_quer_rodar_novamente(
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
             &exercício_informações
         );
 
@@ -49,47 +50,6 @@ pub fn rodar_o_exercício(
     sleep(Duration::from_millis(3000));
 
     limpar_terminal();
-}
-
-fn perguntar_se_quer_rodar_novamente(
-    exercício_informações: &Exercício_Informações
-) -> bool {
-    loop {
-        println!(
-            "Quer iniciar novamente o exercício? [S/N]"
-        );
-
-        let mut input = String::new();
-
-        match stdin().read_line(
-            &mut input
-        ) {
-            Ok(_) => {
-                let resposta_da_pergunta = input.trim().to_lowercase();
-
-                let resposta_da_pergunta = resposta_da_pergunta.as_str();
-
-                match resposta_da_pergunta {
-                    "s" => {
-                        clean_terminal_linux();
-                        
-                        return true;
-                    }
-                    "n" => return false,
-                    _ => {
-                        limpar_terminal();
-
-                        exercício_informações.mostrar_informações();
-
-                        println!(
-                            "Erro! Apenas é aceito S [sim] ou N [não]!\n"
-                        );
-                    }
-                }
-            }
-            Err(_) => (),
-        }
-    }
 }
 
 fn antecessor_e_sucessor_do_número_inteiro(
