@@ -5,7 +5,7 @@ use std::{
 };
 
 use crate::recursos::{
-    descricao_de_exercicio::descrição_de_exercício, exercicio_informacoes::{self, Exercício_Informações}, limpar_terminal::limpar_terminal, perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+    descricao_de_exercicio::descrição_de_exercício, exercicio_informacoes::Exercício_Informações, limpar_terminal::limpar_terminal, perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
 };
 
 mod numeros;

@@ -2,13 +2,19 @@ use std::{
     io::stdin,
     thread::sleep,
     time::Duration,
-    process::Command,
 };
 
 mod exercicios;
 pub mod recursos;
 
-fn construir_a_lista_de_exercícios(cabeçalho_do_programa: &String, total_de_exercícios: &u32) {
+use recursos::{
+    limpar_terminal::limpar_terminal
+};
+
+fn construir_a_lista_de_exercícios(
+    cabeçalho_do_programa: &String, 
+    total_de_exercícios: &u32
+) {
     let mut nome_de_todos_os_exercícios = vec![];
 
     for quantidade_de_exercícios in 1..(total_de_exercícios + 1) {
@@ -29,11 +35,20 @@ fn construir_a_lista_de_exercícios(cabeçalho_do_programa: &String, total_de_ex
         nome_de_todos_os_exercícios.push(nome);
     }
 
-    println!("{}", cabeçalho_do_programa);
+    println!(
+        "{}",
+        cabeçalho_do_programa
+    );
     
-    println!("          Lista de Exercícios\n");
+    println!(
+        "{:^42}\n",
+        "Lista de Exercícios"
+    );
     
-    for (index, exercicio) in nome_de_todos_os_exercícios.into_iter().enumerate() {
+    for (
+        index, 
+        exercicio
+    ) in nome_de_todos_os_exercícios.into_iter().enumerate() {
         if index > 0 && index % 5 == 4{
             print!("{exercicio}\n");
         } else {
@@ -46,12 +61,16 @@ fn construir_a_lista_de_exercícios(cabeçalho_do_programa: &String, total_de_ex
     );
 }
 
-fn menu_de_opções_de_exercícios(cabeçalho_do_programa: &String, total_de_exercícios: u32) {
+fn menu_de_opções_de_exercícios(
+    cabeçalho_do_programa: &String,
+    total_de_exercícios: u32
+) {
     let mut complemento_da_pergunta = String::new();
     
     loop {
-
-        construir_a_lista_de_exercícios(&cabeçalho_do_programa, &total_de_exercícios);    
+        construir_a_lista_de_exercícios(
+            &cabeçalho_do_programa, 
+            &total_de_exercícios);    
 
         println!(
             "{}Qual exercício você escolhe?",
@@ -60,58 +79,67 @@ fn menu_de_opções_de_exercícios(cabeçalho_do_programa: &String, total_de_exe
     
         let mut input = String::new();
     
-        match stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 if input.trim().to_lowercase() == "sair" {
                     break;
                 }
 
                 match input.trim().parse::<u32>() {
-                    Ok(number) => {
-                        if number >= 1 && number <= total_de_exercícios {
-                            clean_terminal_linux();
+                    Ok(número) => {
+                        if número >= 1 && número <= total_de_exercícios {
+                            limpar_terminal();
                             
-                            println!("{}", cabeçalho_do_programa);
+                            println!(
+                                "{}",
+                                cabeçalho_do_programa
+                            );
                             
-                            println!("\nAbrindo o exercício {}...\n", number);
+                            println!(
+                                "\nAbrindo o exercício {}...\n",
+                                número
+                            );
     
                             sleep(Duration::from_millis(2000));
     
-                            clean_terminal_linux();
+                            limpar_terminal();
     
-                            exercicios::executar_o_exercício_x(number, &cabeçalho_do_programa);
+                            exercicios::executar_o_exercício_x(
+                                número, 
+                                &cabeçalho_do_programa
+                            );
 
                             complemento_da_pergunta = String::new();
 
-                            clean_terminal_linux();
+                            limpar_terminal();
                         } else {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
                             complemento_da_pergunta = format!(
                                 "Erro! Exercício {} não encontrado!\n\n",
-                                number
+                                número
                             )
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        complemento_da_pergunta = String::from("Erro! Valor inválido digitado!\n\n");
+                        complemento_da_pergunta = String::from(
+                            "Erro! Valor inválido digitado!\n\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Error!"),
+            Err(_) => (),
         }
     }
 
 }
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
-
 fn main() {
-    clean_terminal_linux();
+    limpar_terminal();
 
     /* Alterar para o número do último exercício em modelagem */
     let total_de_exercícios: u32 = 63;
@@ -129,4 +157,6 @@ fn main() {
 
     // Rodar apenas o exercício X
     // exercicios::executar_o_exercício_x(*último_exercício, &cabeçalho_do_programa);
+
+    
 }
