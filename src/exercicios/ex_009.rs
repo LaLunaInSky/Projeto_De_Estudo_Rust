@@ -1,150 +1,173 @@
 use std::{
-    io,
-    process::Command,
-    thread,
+    io::stdin,
+    thread::sleep,
     time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::Exercício_Informações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 009:");
-    println!(
-        " Um programa que lê a largura e a altura\n de uma parade em metros, calcula a sua\nárea e a quantidade de tinta necessária\npara pintá-la, sabendo que cada litro de\ntinta pinta uma área de 2m²."
+mod parede;
+
+use parede::Parede;
+
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = Exercício_Informações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("009"),
+            String::from("Um programa que lê a largura e a altura\n de uma parade em metros, calcula a sua\nárea e a quantidade de tinta necessária\npara pintá-la, sabendo que cada litro de\ntinta pinta uma área de 2m².")
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+    loop{
+        exercício_informações.mostrar_informações();
 
-    descrição_do_exercício();
-    
-    println!();
+        /* Corpo do Exercício */
+        let parede = Parede::new(
+            obter_o_tamanho_de_uma_parede_em_metros(
+                "largura", 
+                &exercício_informações
+            ),
+            obter_o_tamanho_de_uma_parede_em_metros(
+                "altura", 
+                &exercício_informações
+            )
+        );
+        
+        analisar_a_parede(
+            &parede
+        );
 
-    /* Corpo do exercício main */
-    let mut tamanho_da_parede: Vec<f32> = vec![];
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    for tamanho in 1..3 {
-        if tamanho == 1 {
-            tamanho_da_parede.push(obter_o_tamanho_de_uma_parede_em_metros("altura", &cabeçalho_do_programa));
-        } else {
-            tamanho_da_parede.push(obter_o_tamanho_de_uma_parede_em_metros("largura", &cabeçalho_do_programa));
+        if !resposta_sobre_continuar {
+            break;
         }
     }
 
-    let area_da_parede = cacular_a_area_da_parede(&tamanho_da_parede[0], &tamanho_da_parede[1]);
+    /* Fim do Exercício */
+    sleep(Duration::from_millis(3000));
 
-    
+    println!(
+        "\nVoltando para o menu de exercícios...\n"
+    );
+
+    sleep(Duration::from_millis(3000));
+
+    limpar_terminal();
+}
+
+fn analisar_a_parede(
+    parede: &Parede
+) {
+    sleep(Duration::from_millis(1000));
+
     println!(
         "Calculando a área da parade com:\nAltura: {:.1}m\nLargura: {:.1}m\n",
-        tamanho_da_parede[0],
-        tamanho_da_parede[1]
+        parede.altura,
+        parede.largura
     );
     
-    thread::sleep(Duration::from_millis(2000));
+    sleep(Duration::from_millis(1500));
     
     println!(
-        "Sua área é de {}m²,",
-        area_da_parede
+        "Sua área é de {}m²\n",
+        parede.área
     );
 
-    thread::sleep(Duration::from_millis(2000));
+    sleep(Duration::from_millis(1500));
 
-    calcular_quantidade_de_tinta(&area_da_parede);
-
-    /* Fim do Exercício */
-    thread::sleep(Duration::from_millis(3000));
-
-    println!("\nVoltando para o menu de exercícios...\n");
-
-    thread::sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    calcular_quantidade_de_tinta_nescessária(
+        &parede
+    );
 }
 
-fn calcular_quantidade_de_tinta(area_da_parade: &f32) {
+fn calcular_quantidade_de_tinta_nescessária(
+    parede: &Parede
+) {
     let um_litro_de_tinta_pinta_x_area = 2.0;
 
-    let quantidade_de_litros_de_tinta_que_precisará = area_da_parade / um_litro_de_tinta_pinta_x_area;
+    let quantidade_de_litros_de_tinta_que_precisará = parede.área / um_litro_de_tinta_pinta_x_area;
 
     println!(
-        "Logo precisará de {} litros de tinta!",
+        "Logo precisará de {} litros de tinta!\n",
         quantidade_de_litros_de_tinta_que_precisará
     );
+
+    sleep(Duration::from_millis(1100));
 }
 
-fn cacular_a_area_da_parede(altura_da_parede: &f32, largura_da_parede: &f32) -> f32 {
-    let area = altura_da_parede * largura_da_parede;
-
-    let area_formatada = format!(
-        "{:.1}", area
-    );
-
-    match area_formatada.parse::<f32>() {
-        Ok(number) => return number,
-        Err(_) => println!("Erro!"),
-    }
-
-    return 0.0;
-}
-
-fn obter_o_tamanho_de_uma_parede_em_metros(comprimento: &str, cabeçalho_do_programa: &String) -> f32 {
+fn obter_o_tamanho_de_uma_parede_em_metros(
+    comprimento_desejado: &str, 
+    exercício_informações: &Exercício_Informações
+) -> f32 {
     loop {
-        println!("Qual o {} da parede? ( em metros )", comprimento.to_uppercase());
+        println!(
+            "Qual o {} da parede? ( em metros )",
+            comprimento_desejado.to_uppercase()
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<f32>() {
                     Ok(number) => {
                         if number > 0.0 {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
-
-                            descrição_do_exercício();
+                            exercício_informações.mostrar_informações();
 
                             let número_formatado = format!(
                                 "{:.1}", number
                             );
 
                             match número_formatado.parse::<f32>() {
-                                Ok(número) => {
+                                Ok(número_final) => {
                                     println!(
-                                        "\nA {} de {}m foi adicionado com\nsucesso!\n", 
-                                        comprimento.to_uppercase(),
-                                        número
+                                        "A {} de {}m,\nfoi adicionada com sucesso!\n", 
+                                        comprimento_desejado.to_uppercase(),
+                                        número_final
                                     );
             
-                                    return número;
+                                    return número_final;
                                 }
-                                Err(_) => println!("Erro!"),
+                                Err(_) => (),
                             }
                         } else {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
+                            exercício_informações.mostrar_informações();
 
-                            descrição_do_exercício();
-
-                            println!("\nErro! Digite um valor maior que zero!\n");
+                            println!(
+                                "Erro! Digite um valor maior que zero!\n"
+                            );
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Digite um valor válido!\n");
+                        println!(
+                            "Erro! Digite um número real!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }
