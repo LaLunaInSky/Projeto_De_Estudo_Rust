@@ -1,109 +1,139 @@
 use std::{
-    io,
-    process::Command,
-    thread,
+    io::stdin,
+    thread::sleep,
     time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::Exercício_Informações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 008:");
-    println!(
-        " Um programa que lê quanto dinheiro uma\npessoa tem na carteira e mostra quantos\nDólares ela pode comprar.
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = Exercício_Informações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("008"), 
+            String::from("Um programa que lê quanto dinheiro uma\npessoa tem na carteira e mostra quantos\nDólares ela pode comprar.
 
-Considere US$1,00 = R$3,27"
-    );
-}
-
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
-
-    descrição_do_exercício();
-
-    println!();
-
-    let quantia_na_carteira = obter_a_quantia_de_dinheiro_na_carteira(&cabeçalho_do_programa);
-
-    println!(
-        "\nO valor de R${:.2} adicionado com\nsucesso.\n",
-        quantia_na_carteira
+Considere US$1,00 = R$3,27")
+        )
     );
 
-    converter_valor_em_real_para_dolar(&quantia_na_carteira);
+    loop {
+        exercício_informações.mostrar_informações();
 
-    thread::sleep(Duration::from_millis(3000));
+        /* Corpo do Exercício */
+        let quantia_na_carteira = obter_a_quantia_de_dinheiro_na_carteira(
+            &exercício_informações
+        );
 
-    println!("\nVoltando para o menu de exercícios...\n");
+        converter_valor_em_real_para_dolar(
+            &quantia_na_carteira
+        );
+    
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    thread::sleep(Duration::from_millis(3000));
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
+    
+    /* Fim do Exercício */
+    sleep(Duration::from_millis(3000));
 
-    clean_terminal_linux();
+    println!(
+        "\nVoltando para o menu de exercícios...\n"
+    );
+
+    sleep(Duration::from_millis(3000));
+
+    limpar_terminal();
 }
 
-fn converter_valor_em_real_para_dolar(valor_em_real: &f32) {
+fn converter_valor_em_real_para_dolar(
+    valor_em_real: &f32
+) {
     let cotação_do_dolar = 3.27;
 
-    let valor_em_dolar = (valor_em_real/ cotação_do_dolar);
+    let valor_em_dolar = valor_em_real/ cotação_do_dolar;
 
-    thread::sleep(Duration::from_millis(1500));
+    sleep(Duration::from_millis(1200));
 
     println!(
-        "Na cotação atual você poderá comprar\nU${:.2}.",
+        "Na cotação atual você poderá comprar\nU${:.2}.\n",
         valor_em_dolar
     );
+
+    sleep(Duration::from_millis(1500));
 }
 
-fn obter_a_quantia_de_dinheiro_na_carteira(cabeçalho_do_programa: &String) -> f32 {
+fn obter_a_quantia_de_dinheiro_na_carteira(
+    exercício_informações: &Exercício_Informações
+) -> f32 {
     loop{
-        println!("Quanto de dinheiro você tem na carteira?");
+        println!(
+            "Quanto de dinheiro você tem na carteira?"
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<f32>() {
-                    Ok(number) => {
-                        if number > 0.0 {
-                            clean_terminal_linux();
+                    Ok(número) => {
+                        if número > 0.0 {
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
-
-                            descrição_do_exercício();
+                            exercício_informações.mostrar_informações();
 
                             let número_formatado = format!(
-                                "{:.2}",  number
+                                "{:.2}",  número
                             );
 
                             match número_formatado.parse::<f32>() {
-                                Ok(número) => return número,
-                                Err(_) => println!("Erro!"),
+                                Ok(número_final) => {
+                                    println!(
+                                        "O quantia de R${:.2},\nfoi adicionada com sucesso!\n",
+                                        número_final
+                                    );
+
+                                    return número_final;
+                                },
+                                Err(_) => (),
                             }
 
                         } else {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
+                            exercício_informações.mostrar_informações();
 
-                            descrição_do_exercício();
-
-                            println!("\nErro! Digite um valor maior que zero!\n");
+                            println!(
+                                "Erro! Digite um valor maior que zero!\n"
+                            );
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Digite um valor válido!\n");
+                        println!(
+                            "Erro! Digite um valor válido!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     } 
 }
