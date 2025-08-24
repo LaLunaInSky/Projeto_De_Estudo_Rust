@@ -1,107 +1,143 @@
 use std::{
-    io,
-    process::Command,
-    thread,
+    io::stdin,
+    thread::sleep,
     time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::Exercício_Informações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 011:");
-    println!(
-        " Um programa que lê o salário de um\nfuncionário e mostra o seu novo salário\ncom 15% de aumento."
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = Exercício_Informações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("011"),
+            String::from("Um programa que lê o salário de um\nfuncionário e mostra o seu novo salário\ncom 15% de aumento.")
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+    loop {
+        exercício_informações.mostrar_informações();
 
-    descrição_do_exercício();
+        /* Corpo do Exercício */
+        let salário_do_funcionário = obter_o_salario(
+            &exercício_informações
+        );
 
-    println!();
+        calcular_o_aumento_do_salario(
+            &salário_do_funcionário
+        );
 
-    /* Corpo do exercício main */
-    let salário_do_funcionário = obter_o_salario(&cabeçalho_do_programa);
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    calcular_o_aumento_do_salario(&salário_do_funcionário);
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
 
     /* Fim do Exercício */
-    thread::sleep(Duration::from_millis(3000));
-
-    println!("\nVoltando ao menu de exercícios...\n");
-
-    thread::sleep(Duration::from_millis(3000));  
-
-    clean_terminal_linux();  
-}
-
-fn calcular_o_aumento_do_salario(salário: &f32) {
-    println!("Calculando o aumento de 15%...\n");
-
-    thread::sleep(Duration::from_millis(2000));
-
-    let novo_salário = salário + (salário * (15.0 / 100.0));
+    sleep(Duration::from_millis(3000));
 
     println!(
-        "O novo salário é de R${:.2}.",
-        novo_salário
+        "\nVoltando ao menu de exercícios...\n"
     );
+
+    sleep(Duration::from_millis(3000));  
+
+    limpar_terminal();
 }
 
-fn obter_o_salario(cabeçalho_do_programa: &String) -> f32 {
+fn calcular_o_aumento_do_salario(
+    salário: &f32
+) {
+    sleep(Duration::from_millis(1000));
+
+    println!(
+        "Calculando o aumento de 15%...\n"
+    );
+
+    sleep(Duration::from_millis(1500));
+
+    let novo_salário = salário + (
+        salário * (15.0 / 100.0)
+    );
+
+    println!(
+        "O novo salário é de R${:.2}.\n",
+        novo_salário
+    );
+
+    sleep(Duration::from_millis(1100));
+}
+
+fn obter_o_salario(
+    exercício_informações: &Exercício_Informações
+) -> f32 {
     loop {
-        println!("Digite o salário do funcionário:");
+        println!(
+            "Digite o salário do funcionário:"
+        );
     
         let mut input = String::new();
     
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<f32>() {
                     Ok(salário) => {
                         if salário > 0.0 {
-                            clean_terminal_linux();
-    
-                            println!("{}", cabeçalho_do_programa);
-    
-                            descrição_do_exercício();
+                            limpar_terminal();
+
+                            exercício_informações.mostrar_informações();
 
                             let salário_formatado = format!(
-                                "{:.2}", salário
+                                "{:.2}", 
+                                salário
                             );
 
                             match salário_formatado.parse::<f32>() {
                                 Ok(salário_final) => {
-                                    println!("\nO salário do funcionário de R${:.2}\nadicionado com sucesso.\n", salário_final);
+                                    println!(
+                                        "O salário de R${:.2}\nfoi adicionado com sucesso.\n",
+                                        salário_final
+                                    );
                                 
                                     return salário_final;
                                 }
                                 Err(_) => println!("Erro!"),
                             }
                         } else {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
+                            exercício_informações.mostrar_informações();
 
-                            descrição_do_exercício();
-
-                            println!("\nErro! Digite um valor maior que zero!\n");
+                            println!(
+                                "Erro! Digite um valor maior que zero!\n"
+                            );
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Digite um valor válido!\n");
+                        println!(
+                            "Erro! Digite um número real!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }

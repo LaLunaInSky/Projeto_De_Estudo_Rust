@@ -1,161 +1,191 @@
 use std::{
-    io,
-    thread,
-    time::Duration,
-    process::Command
+    io::stdin,
+    thread::sleep,
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::Exercício_Informações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 013:");
-    println!(
-        " Um programa que pergunta a quantidade de\nKm percorridos por um carro alugado e a\nquantidade de dias pelos quais ele foi\nalugado. 
- O programa irá calcular o preço à ser\npago, sabendo que o carro custa R$60.00\npor dia e R$0.15 por Km rodado."
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = Exercício_Informações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("013"),
+            String::from("Um programa que pergunta a quantidade de\nKm percorridos por um carro alugado e a\nquantidade de dias pelos quais ele foi\nalugado. 
+ O programa irá calcular o preço à ser\npago, sabendo que o carro custa R$60.00\npor dia e R$0.15 por Km rodado.")
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+    loop {
+        exercício_informações.mostrar_informações();
 
-    descrição_do_exercício();
+        /* Corpo do Exercício */
+        let distância_percorrida = obter_a_quantidade_de_kms_percorridos(
+            &exercício_informações
+        );
 
-    println!();
+        let quantidade_de_dias = obter_a_quantidade_de_dias_permanecidos(
+            &exercício_informações
+        ) as f32;
 
-    /* Corpo do Exercício - fn main */
-    let distância_percorrida = obter_a_quantidade_de_kms_percorridos(&cabeçalho_do_programa);
+        calcular_o_valor_a_ser_pago(
+            &distância_percorrida, 
+            &quantidade_de_dias
+        );
 
-    let quantidade_de_dias = obter_a_quantidade_de_dias_permanecidos(cabeçalho_do_programa);
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    thread::sleep(Duration::from_millis(1500));
-
-    calcular_o_valor_a_ser_pago(&distância_percorrida, &quantidade_de_dias);
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
 
     /* Fim do Exercício */
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
     println!(
         "\nVoltando ao menu de exercícios...\n"
     );
 
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    clean_terminal_linux(); 
+    limpar_terminal(); 
 }
 
-fn calcular_o_valor_a_ser_pago(distânica: &f32, dias: &f32) {
-    println!("Calculando o preço final a ser pago...\n");
+fn calcular_o_valor_a_ser_pago(
+    distânica: &f32,
+    dias: &f32
+) {
+    sleep(Duration::from_millis(1000));
 
-    thread::sleep(Duration::from_millis(2500));
+    println!(
+        "Calculando o preço final a ser pago...\n"
+    );
+
+    sleep(Duration::from_millis(1500));
 
     let total_a_pagar: f32 = (60.0 * dias) + (0.15 * *distânica);
 
     println!(
-        "O total fica em R${:.2}.",
+        "O total fica em R${:.2}.\n",
         total_a_pagar
     );
+
+    sleep(Duration::from_millis(1100));
 }
 
-fn obter_a_quantidade_de_dias_permanecidos(cabeçalho_do_programa: &String) -> f32 {
+fn obter_a_quantidade_de_dias_permanecidos(
+    exercício_informaçoes: &Exercício_Informações
+) -> u8 {
     loop {
-        println!("Quantos dias você ficou com o carro?");
+        println!(
+            "Quantos dias você ficou com o carro?"
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<u8>() {
                     Ok(dias) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
-
-                        descrição_do_exercício();
+                        exercício_informaçoes.mostrar_informações();
 
                         println!(
-                            "\nTotal de {} dias,\nAdicionado com sucesso!\n",
+                            "Total de {} dias,\nAdicionado com sucesso!\n",
                             dias
                         );
 
-                        let dias_string = format!("{}", dias);
-
-                        match dias_string.parse::<f32>() {
-                            Ok(distância_final) => return distância_final,
-                            Err(_) => println!("Erro!"),
-                        }
+                        return dias;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informaçoes.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Digite um valor válido!\n");
+                        println!(
+                            "Erro! Digite um número inteiro!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }
 
-fn obter_a_quantidade_de_kms_percorridos(cabeçalho_do_programa: &String) -> f32 {
+fn obter_a_quantidade_de_kms_percorridos(
+    exercício_informações: &Exercício_Informações
+) -> f32 {
     loop {
-        println!("Quantos quilômetros(Km) você percorreu\ncom o carro?");
+        println!(
+            "Quantos quilômetros(Km) você percorreu\ncom o carro?"
+        );
     
         let mut input = String::new();
     
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<f32>() {
                     Ok(distância) => {
                         if distância > 0.0 {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
-
-                            descrição_do_exercício();
+                            exercício_informações.mostrar_informações();
 
                             let distância_formatada = format!(
-                                "{:.2}", distância
+                                "{:.2}",
+                                distância
                             );
 
                             match distância_formatada.parse::<f32>() {
                                 Ok(distância_final) => {
                                     println!(
-                                        "\nDistância de {:.2}Km\nAdicionada com sucesso!\n",
+                                        "Distância de {:.2}Km\nfoi adicionada com sucesso!\n",
                                         distância_final
                                     );
 
                                     return distância_final
                                 }
-                                Err(_) => println!("Erro!"),
+                                Err(_) => (),
                             }
                         } else {
-                            clean_terminal_linux();
-                        
-                            println!("{}", cabeçalho_do_programa);
+                            limpar_terminal();
 
-                            descrição_do_exercício();
+                            exercício_informações.mostrar_informações();
 
-                            println!("\nErro! Digite um valor maior que zero!\n");
+                            println!(
+                                "Erro! Digite um valor maior que zero!\n"
+                            );
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
-                        
-                        descrição_do_exercício();
+                        exercício_informações.mostrar_informações();
 
-                        println!("\nErro! Digite um valor válido!\n");
+                        println!(
+                            "Erro! Digite um número real!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => ()
         }
     }
 }

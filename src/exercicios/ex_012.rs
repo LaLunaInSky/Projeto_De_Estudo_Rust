@@ -1,97 +1,133 @@
 use std::{
-    io,
-    thread,
+    io::stdin,
+    thread::sleep,
     time::Duration,
-    process::Command
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::Exercício_Informações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 012:");
-    println!(
-        " Um programa que converte uma temperatura\nem °C para °F."
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = Exercício_Informações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("012"),
+            String::from("Um programa que converte uma temperatura\nem °C para °F.")
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+    loop {
+        exercício_informações.mostrar_informações();
 
-    descrição_do_exercício();
+        /* Corpo do Exercício */
+        let temperatura_em_celsius = obter_a_temperatura(
+            &exercício_informações
+        );
 
-    println!();
+        converter_celsius_em_fahrenheit(
+            &temperatura_em_celsius
+        );
+    
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    /* Corpo do exercício main */
-    let temperatura_em_celsius = obter_a_temperatura(&cabeçalho_do_programa);
-
-    thread::sleep(Duration::from_millis(1500));
-
-    converter_celsius_em_fahrenheit(&temperatura_em_celsius);
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
 
     /* Fim do Exercício */
-    thread::sleep(Duration::from_millis(3000));
-
-    println!("\nVoltando ao menu de exercícios...\n");
-
-    thread::sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
-}
-
-fn converter_celsius_em_fahrenheit(temperatura_em_celsius: &f32) {
-    println!("Convertendo para Farenheit...\n");
-
-    thread::sleep(Duration::from_millis(2000));
-
-    let temperatura_em_farenheit: f32 = (*temperatura_em_celsius * (9.0 / 5.0)) + 32.0;
+    sleep(Duration::from_millis(3000));
 
     println!(
-        "A temperatura é de {:.1}°F",
-        temperatura_em_farenheit
+        "\nVoltando ao menu de exercícios...\n"
     );
+
+    sleep(Duration::from_millis(3000));
+
+    limpar_terminal();
 }
 
-fn obter_a_temperatura(cabeçalho_do_programa: &String) -> f32 {
+fn converter_celsius_em_fahrenheit(
+    temperatura_em_celsius: &f32
+) {
+    sleep(Duration::from_millis(1000));
+
+    println!(
+        "Convertendo para Farenheit...\n"
+    );
+
+    sleep(Duration::from_millis(1500));
+
+    let temperatura_em_farenheit: f32 = (
+        *temperatura_em_celsius * (9.0 / 5.0)
+    ) + 32.0;
+
+    println!(
+        "A temperatura é de {:.1}°F\n",
+        temperatura_em_farenheit
+    );
+
+    sleep(Duration::from_millis(1100));
+}
+
+fn obter_a_temperatura(
+    exercício_informações: &Exercício_Informações
+) -> f32 {
     loop {
-        println!("Digite a temperatuda em °C:");
+        println!(
+            "Digite a temperatuda em °C:"
+        );
     
         let mut input = String::new();
     
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<f32>() {
                     Ok(temperatura) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        let temperatura_formatada = format!("{:.1}", temperatura);
+                        let temperatura_formatada = format!(
+                            "{:.1}", 
+                            temperatura
+                        );
                         
                         match temperatura_formatada.parse::<f32>() {
                             Ok(temperatura_final) => {
-                                println!("\nTemperatura de {:.1}°C,\nAdicionada com sucesso!\n", temperatura_final);
+                                println!(
+                                    "Temperatura de {:.1}°C,\nfoi adicionada com sucesso!\n", 
+                                    temperatura_final
+                                );
 
                                 return temperatura_final
                             }
-                            Err(_) => println!("Erro!"),
+                            Err(_) => (),
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Digite um valor válido!\n");
+                        println!(
+                            "Erro! Digite um número real!\n"
+                        );
                     }
                  }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }
