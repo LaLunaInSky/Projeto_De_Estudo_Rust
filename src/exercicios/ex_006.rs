@@ -11,6 +11,10 @@ use crate::recursos::{
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
 };
 
+mod comprimentos;
+
+use comprimentos::Comprimentos;
+
 pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     /* Começo do Exercício */
     let exercício_informações = Exercício_Informações::new(
@@ -27,12 +31,14 @@ km <- hm <- dam <- m -> dm -> cm -> mm")
         exercício_informações.mostrar_informações();
 
         /* Corpo do Exercício */
-        let número_input_em_metros = obter_o_número_float(
-            &exercício_informações
+        let comprimentos = Comprimentos::new(
+            obter_o_número_float(
+                &exercício_informações
+            )
         );
 
-        converter_o_valor_de_metros(
-            &número_input_em_metros
+        analisar_os_comprimentos(
+            &comprimentos
         );
     
         let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
@@ -56,63 +62,65 @@ km <- hm <- dam <- m -> dm -> cm -> mm")
     limpar_terminal();
 }
 
-fn converter_o_valor_de_metros(
-    valor_em_metros: &f32
+fn analisar_os_comprimentos(
+    comprimentos: &Comprimentos
 ) {
+    sleep(Duration::from_millis(1000));
+
     println!(
         "Convertendo o valor...\n"
     );
 
-    sleep(Duration::from_millis(2000));
+    sleep(Duration::from_millis(1500));
 
     println!(
         "km...: {}", 
-        (valor_em_metros / 1000.0)
+        comprimentos.km
     );
 
     sleep(Duration::from_millis(500));
 
     println!(
         "hm...: {}", 
-        (valor_em_metros / 100.0)
+        comprimentos.hm
     );
 
     sleep(Duration::from_millis(500));
 
     println!(
         "dam..: {}", 
-        (valor_em_metros / 10.0)
+        comprimentos.dam
     );
 
     sleep(Duration::from_millis(500));
 
     println!(
         "m....: {}", 
-        valor_em_metros
+        comprimentos.m
     );
 
     sleep(Duration::from_millis(500));
 
     println!(
         "dm...: {}", 
-        (valor_em_metros * 10.0)
+        comprimentos.dm
     );
 
     sleep(Duration::from_millis(500));
 
     println!(
         "cm...: {}", 
-        (valor_em_metros * 100.0)
+        comprimentos.cm
     );
 
     sleep(Duration::from_millis(500));
 
     println!(
         "mm...: {}\n", 
-        (valor_em_metros * 1000.0)
+        comprimentos.mm
     );
 
-    sleep(Duration::from_millis(1500));
+    sleep(Duration::from_millis(1100));
 }
 
 fn obter_o_número_float(
