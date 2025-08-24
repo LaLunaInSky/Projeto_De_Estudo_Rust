@@ -1,114 +1,151 @@
 use std::{
-    io,
-    thread,
-    time::Duration,
-    process::Command
+    io::stdin,
+    thread::sleep,
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::Exercício_Informações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 015:");
-    println!(
-        " Um programa que lê o comprimento do\ncateto oposto e do cateto adjacente de um\ntriângulo retângulo, e depois calcula o\ncomprimento da hipotenusa."
+mod tipos_de_cateto;
+mod triangulos;
+
+use tipos_de_cateto::TiposDeCateto;
+use triangulos::Triângulo;
+
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = Exercício_Informações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("015"),
+            String::from("Um programa que lê o comprimento do\ncateto oposto e do cateto adjacente de um\ntriângulo retângulo, e depois calcula o\ncomprimento da hipotenusa.")
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+    loop {
+        exercício_informações.mostrar_informações();
 
-    descrição_do_exercício();
+        /* Corpo do Exercício */
+        let triângulo = Triângulo::new(
+            obter_o_tamanho_do_cateto(
+                TiposDeCateto::Oposto, 
+                &exercício_informações
+            ),
+            obter_o_tamanho_do_cateto(
+                TiposDeCateto::Adjacente, 
+                &exercício_informações
+            )
+        );
 
-    println!();
+        calcular_a_hipotenusa(
+            &triângulo
+        );
 
-    /* Corpo do Exercício - fn main */
-    let mut tamanho_dos_catetos: Vec<u32> = vec![];
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    tamanho_dos_catetos.push(obter_o_tamanho_do_cateto("oposto".to_string(), &cabeçalho_do_programa));
-
-    tamanho_dos_catetos.push(obter_o_tamanho_do_cateto("adjacente".to_string(), &cabeçalho_do_programa));
-
-    calcular_a_hipotenusa(&tamanho_dos_catetos[0], &tamanho_dos_catetos[1]);
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
 
     /* Fim do Exercício */
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
     println!(
         "\nVoltando ao menu de exercícios...\n"
     );
 
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    clean_terminal_linux();
+    limpar_terminal();
 }
 
-fn calcular_a_hipotenusa(cateto_oposto: &u32, cateto_adjacente: &u32) {
-    thread::sleep(Duration::from_millis(1500));
-
-    println!("Calculando a hipotenusa...\n");
-
-    thread::sleep(Duration::from_millis(3000));
-
-    let hipotenusa: f64 = (((*cateto_adjacente * *cateto_adjacente) + (*cateto_oposto * *cateto_oposto)) as f64).sqrt();
+fn calcular_a_hipotenusa(
+    triângulo: &Triângulo
+) {
+    sleep(Duration::from_millis(1000));
 
     println!(
-        "O triângulo retângulo com os catetos:\nOposto: {}\nAdjacente: {}\nSua Hipotenusa é de {}.",
-        cateto_oposto,
-        cateto_adjacente,
-        hipotenusa
+        "Calculando a hipotenusa...\n"
     );
 
-    thread::sleep(Duration::from_millis(2000));
+    sleep(Duration::from_millis(1500));
+
+    println!(
+        "O triângulo retângulo com os catetos,
+Oposto..........: {}
+Adjacente.......: {}
+A Hipotenusa é..: {:.2}
+",
+        triângulo.cateto_oposto,
+        triângulo.cateto_adjacente,
+        triângulo.hipotenusa
+    );
+
+    sleep(Duration::from_millis(1100));
 }
 
-fn obter_o_tamanho_do_cateto(nome_do_cateto: String, cabeçalho_do_programa: &String) -> u32 {
+fn obter_o_tamanho_do_cateto(
+    tipo_do_cateto: TiposDeCateto, 
+    exercício_informações: &Exercício_Informações
+) -> u32 {
     loop {
-        println!("Digite o tamanho do cateto {}:", nome_do_cateto);
+        println!(
+            "Digite o tamanho do cateto {}:", 
+            if tipo_do_cateto == TiposDeCateto::Adjacente {"Adjacente"} else {"Oposto"}
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<u32>() {
                     Ok(cateto) => {
                         if cateto > 0 {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
-
-                            descrição_do_exercício();
+                            exercício_informações.mostrar_informações();
 
                             println!(
-                                "\nO cateto {} de {},\nAdicionado com sucesso!\n",
-                                nome_do_cateto,
+                                "O cateto {} de {},\nfoi adicionado com sucesso!\n",
+                                if tipo_do_cateto == TiposDeCateto::Adjacente {"Adjacente"} else {"Oposto"},
                                 cateto
                             );
 
                             return cateto;
                         } else {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
+                            exercício_informações.mostrar_informações();
 
-                            descrição_do_exercício();
-
-                            println!("\nErro! Digite um valor maior que zero!\n");
+                            println!(
+                                "Erro! Digite um valor maior que zero!\n"
+                            );
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Digite um valor válido!\n");
+                        println!(
+                            "Erro! Digite um número inteiro!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }

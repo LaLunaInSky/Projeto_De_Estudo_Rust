@@ -1,94 +1,123 @@
 use std::{
-    io,
-    thread,
-    time::Duration,
-    process::Command
+    io::stdin,
+    thread::sleep,
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::Exercício_Informações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 014:");
-    println!(
-        " Um programa que lê um número Real e\nmostra na tela a sua porção inteira.
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = Exercício_Informações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("014"),
+            String::from("Um programa que lê um número Real e\nmostra na tela a sua porção inteira.
 
-ex: 6.127 -> 6"
+ex: 6.127 -> 6")
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+    loop {
+        exercício_informações.mostrar_informações();
 
-    descrição_do_exercício();
+        /* Corpo de Exercício */
+        let número_real_digitado = obter_um_número_real(
+            &exercício_informações
+        );
 
-    println!();
+        analisar_o_número(
+            &número_real_digitado
+        );
 
-    /* Corpo de Exercício - fn main */
-    let número_real_digitado = obter_um_número_real(&cabeçalho_do_programa);
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    thread::sleep(Duration::from_millis(2000));
-
-    analisar_o_número_inteiro(&número_real_digitado);
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
 
     /* Fim do Exercício */
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
     println!(
         "\nVoltando ao menu de exercícios...\n"
     );
 
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    clean_terminal_linux();  
+    limpar_terminal();  
 }
 
-fn analisar_o_número_inteiro(número_real: &f32) {
-    println!("Analisando o número real...\n");
+fn analisar_o_número(
+    número_real: &f32
+) {
+    sleep(Duration::from_millis(1000));
 
-    thread::sleep(Duration::from_millis(2000));
+    println!(
+        "Analisando o número real...\n"
+    );
+
+    sleep(Duration::from_millis(1500));
 
     let número_inteiro = *número_real as u32;
 
     println!(
-        "O número inteiro é {:.0}.",
+        "O número inteiro é {:.0}.\n",
         número_inteiro 
     );
+
+    sleep(Duration::from_millis(1100));
 }
 
-fn obter_um_número_real(cabeçalho_do_programa: &String) -> f32 {
+fn obter_um_número_real(
+    exercício_informações: &Exercício_Informações
+) -> f32 {
     loop {
-        println!("Digite um número real:");
+        println!(
+            "Digite um número real:"
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<f32>() {
                     Ok(número) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nNúmero {} adicionado com sucesso!\n", número);
+                        println!(
+                            "Número {},\nfoi adicionado com sucesso!\n",
+                            número
+                        );
 
                         return número;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Digite um valor válido!\n");
+                        println!(
+                            "Erro! Digite um valor válido!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }
