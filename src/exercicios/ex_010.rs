@@ -1,110 +1,149 @@
 use std::{
-    io,
-    process::Command,
-    thread,
+    io::stdin,
+    thread::sleep,
     time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::Exercício_Informações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 010:");
-    println!(
-        " Um programa que lê o preço de um produto\ne mostra seu novo preço com 5% de desconto."
+// fn descrição_do_exercício() {
+//     println!("Descrição do exercício 010:");
+//     println!(
+//         " "
+//     );
+// }
+
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = Exercício_Informações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("010"),
+            String::from("Um programa que lê o preço de um produto\ne mostra seu novo preço com 5% de desconto.")
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+    loop {
+        exercício_informações.mostrar_informações();
 
-    descrição_do_exercício();
+        /* Corpo do Exercício*/
+        let preço_do_produto = obter_o_preco_de_um_produto(
+            &exercício_informações
+        );
 
-    println!();
+        calcular_o_desconto_do_produto(
+            &preço_do_produto
+        );
 
-    /* Corpo do exercício main*/
-    let preço_do_produto = obter_o_preco_de_um_produto(&cabeçalho_do_programa);
+        let resposta_da_pergunta = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    calcular_o_desconto_do_produto(&preço_do_produto);
+        if !resposta_da_pergunta {
+            break;
+        }
+    }
 
     /* Fim do Programa */
-    thread::sleep(Duration::from_millis(3000));
-
-    println!("\nVoltando ao menu de exercícios...\n");
-
-    thread::sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
-}
-
-fn calcular_o_desconto_do_produto(valor_do_produto: &f32) {
-    let valor_com_o_desconto = valor_do_produto - (valor_do_produto * (5.0 / 100.0));
-
-    println!("Calculando o desconto de 5%...\n");
-
-    thread::sleep(Duration::from_millis(2000));
+    sleep(Duration::from_millis(3000));
 
     println!(
-        "O produto fica R${:.2}",
-        valor_com_o_desconto
+        "\nVoltando ao menu de exercícios...\n"
     );
+
+    sleep(Duration::from_millis(3000));
+
+    limpar_terminal();
 }
 
-fn obter_o_preco_de_um_produto(cabeçalho_do_programa: &String) -> f32 {
+fn calcular_o_desconto_do_produto(
+    valor_do_produto: &f32
+) {
+    sleep(Duration::from_millis(1000));
+
+    let valor_com_o_desconto = valor_do_produto - (
+        valor_do_produto * (5.0 / 100.0)
+    );
+
+    println!(
+        "Calculando o desconto de 5%...\n"
+    );
+
+    sleep(Duration::from_millis(1500));
+
+    println!(
+        "O produto fica R${:.2}\n",
+        valor_com_o_desconto
+    );
+
+    sleep(Duration::from_millis(1100));
+}
+
+fn obter_o_preco_de_um_produto(
+    exercício_informações: &Exercício_Informações
+) -> f32 {
     loop {
-        println!("Digite o preço do produto:");
+        println!(
+            "Digite o preço do produto:"
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<f32>() {
-                    Ok(number) => {
-                        if number > 0.0 {
-                            clean_terminal_linux();
+                    Ok(número) => {
+                        if número > 0.0 {
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
-
-                            descrição_do_exercício();
+                            exercício_informações.mostrar_informações();
 
                             let número_formatado = format!(
-                                "{:.2}", number
+                                "{:.2}", número
                             );
 
                             match número_formatado.parse::<f32>() {
-                                Ok(número) => {
+                                Ok(número_final) => {
                                     println!(
-                                        "\nPreço de R${:.2} adicionado com sucesso!\n",
-                                        número
+                                        "Preço de R${:.2},\nfoi adicionado com sucesso!\n",
+                                        número_final
                                     );
 
-                                    return número;
+                                    return número_final;
                                 }
-                                Err(_) => println!("Erro!"),
+                                Err(_) => (),
                             }
                         } else {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
+                            exercício_informações.mostrar_informações();
 
-                            descrição_do_exercício();
-
-                            println!("\nErro! Digite um valor maior que zero!\n");
+                            println!(
+                                "Erro! Digite um valor maior que zero!\n"
+                            );
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Digite um valor válido!\n");
+                        println!(
+                            "Erro! Digite um número real!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }
