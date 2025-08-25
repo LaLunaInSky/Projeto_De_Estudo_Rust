@@ -1,9 +1,9 @@
-pub struct Exercício_Informações {
+pub struct ExercícioInformações {
     cabeçalho: String,
     descrição: String
 }
 
-impl Exercício_Informações {
+impl ExercícioInformações {
     pub fn new(
         cabeçalho: &String,
         descrição: String

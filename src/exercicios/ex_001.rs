@@ -5,7 +5,7 @@ use std::{
 };
 
 use crate::recursos::{
-    descricao_de_exercicio::descrição_de_exercício, exercicio_informacoes::Exercício_Informações, limpar_terminal::limpar_terminal, perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+    descricao_de_exercicio::descrição_de_exercício, exercicio_informacoes::ExercícioInformações, limpar_terminal::limpar_terminal, perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
 };
 
 mod numeros;
@@ -24,7 +24,7 @@ pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
-    let exercício_informações = Exercício_Informações::new(
+    let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
         descrição_de_exercício(
             String::from("001"),
@@ -80,7 +80,7 @@ pub fn rodar_o_exercício(
 }
 
 fn obter_a_entrada_de_um_número_inteiro(
-    exercício_informacoes: &Exercício_Informações,
+    exercício_informacoes: &ExercícioInformações,
     indice_da_chamada_do_input: u8
 ) -> u32 {
     loop {

@@ -1,12 +1,12 @@
 use crate::recursos::{
-    exercicio_informacoes::Exercício_Informações,
+    exercicio_informacoes::ExercícioInformações,
     limpar_terminal::limpar_terminal
 };
 
 use std::io::stdin;
 
 pub fn perguntar_se_quer_iniciar_novamente_o_exercício(
-    exercício_informações: &Exercício_Informações
+    exercício_informações: &ExercícioInformações
 ) -> bool {
     loop {
         println!(

@@ -1,108 +1,144 @@
 use std::{
-    io,
-    thread,
-    time::Duration,
-    process::Command
+    io::stdin,
+    thread::sleep,
+    time::Duration
 };
 
-use rand::random_range; 
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+mod alunos;
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 017:");
-    println!(
-        "Contexto:
+use alunos::Alunos;
+
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("017"),
+            String::from("Contexto:
  Um professor quer sortear um dos seus\nquatro alunos para apagar o quadro.
 
 Exercício:
- Um programa que ajude ele, lendo o nome\ndos quatro alunos e retornando o nome do\nescolhido."
+ Um programa que ajude ele, lendo o nome\ndos quatro alunos e retornando o nome do\nescolhido.")      
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+    loop {
+        exercício_informações.mostrar_informações();
 
-    descrição_do_exercício();
+        /* Corpo do Exercício */
+        let mut alunos = Alunos::new();
 
-    println!();
+        for quantidade in 1..5 {
+            alunos.adicionar_novo_aluno(
+                obter_o_nome_de_um_aluno(
+                    quantidade, 
+                    &exercício_informações
+                )
+            );
+        }
 
-    /* Corpo do Exercício - fn main */
-    let mut nome_do_alunos: Vec<String> = vec![]; 
+        sortear_um_nome(
+            &alunos
+        );
 
-    for número_do_indice in 1..5 {
-        nome_do_alunos.push(obter_o_nome_de_um_aluno(número_do_indice, &cabeçalho_do_programa));
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
+
+        if !resposta_sobre_continuar {
+            break;
+        }
     }
 
-    thread::sleep(Duration::from_millis(1500));
-
-    clean_terminal_linux();
-
-    println!("{}", cabeçalho_do_programa);
-
-    descrição_do_exercício();
-
-    println!(
-        "\nSorteando o nome entre os alunos:\n{}, {}, {} e {}\n",
-        nome_do_alunos[0], nome_do_alunos[1], nome_do_alunos[2], nome_do_alunos[3]
-    );
-
-    sortear_um_nome(&nome_do_alunos);
-
     /* Fim do Exercício */
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
     println!(
         "\nVoltando ao menu de exercícios...\n"
     );
 
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    clean_terminal_linux();
+    limpar_terminal();
 }
 
-fn sortear_um_nome(alunos: &Vec<String>) {
-    let número_sorteado: usize = random_range(0..4);
-
-    thread::sleep(Duration::from_millis(4000));
+fn sortear_um_nome(
+    alunos: &Alunos
+) {
+    sleep(Duration::from_millis(1000));
 
     println!(
-        "O Aluno sorteado é {}.",
-        alunos[número_sorteado]
+        "Sorteando o nome entre os alunos:"
     );
 
-    thread::sleep(Duration::from_millis(2500));
+    let index_da_última_ocorrência = alunos.lista_de_nomes.len();
+
+    for (
+        index, 
+        aluno
+    ) in alunos.lista_de_nomes.iter().enumerate() {
+        if index == (index_da_última_ocorrência - 1) {
+            print!(
+                "{}.\n\n",
+                aluno
+            )
+        } else {
+            print!(
+                "{}, ",
+                aluno
+            );
+        }
+    }
+
+    sleep(Duration::from_millis(1500));
+
+    println!(
+        "O Aluno sorteado é {}.\n",
+        alunos.sortear_nome_de_um_aluno()
+    );
+
+    sleep(Duration::from_millis(1100));
 }
 
-fn obter_o_nome_de_um_aluno(indice_dos_nome: u8, cabeçalho_do_programa: &String) -> String {
+fn obter_o_nome_de_um_aluno(
+    indice_da_chamada: u8,
+    exercício_informações: &ExercícioInformações
+) -> String {
     loop {
         println!(
             "Digite o nome do {}º Aluno:",
-            indice_dos_nome
+            indice_da_chamada
         );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
-                clean_terminal_linux();
+                limpar_terminal();
 
-                println!("{}", cabeçalho_do_programa);
+                exercício_informações.mostrar_informações();
 
-                descrição_do_exercício();
+                let nome_do_aluno = input.trim().to_lowercase();
 
                 println!(
-                    "\nO Aluno {},\nfoi adicionado com sucesso!\n",
-                    input.trim()
+                    "O Aluno {},\nfoi adicionado com sucesso!\n",
+                    nome_do_aluno
                 );
 
-                return (input.trim()).to_string();
+                return nome_do_aluno;
             }
-            Err(_) => {
-                println!("Erro!");
-            }
+            Err(_) => (),
         }
     }
 }

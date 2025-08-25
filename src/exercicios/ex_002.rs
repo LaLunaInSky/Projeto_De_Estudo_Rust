@@ -7,13 +7,13 @@ use std::{
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
     descricao_de_exercicio::descrição_de_exercício,
-    exercicio_informacoes::Exercício_Informações,
+    exercicio_informacoes::ExercícioInformações,
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
 };
 
 pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     /* Começo do Exercício */
-    let exercício_informações = Exercício_Informações::new(
+    let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
         descrição_de_exercício(
             String::from("002"),
@@ -64,7 +64,7 @@ Exemplo:
 }
 
 fn obter_uma_frase(
-    exercício_informações: &Exercício_Informações
+    exercício_informações: &ExercícioInformações
 ) -> String {
     loop {
         println!(

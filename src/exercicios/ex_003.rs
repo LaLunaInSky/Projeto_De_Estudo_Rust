@@ -5,7 +5,7 @@ use std::{
 };
 
 use crate::recursos::{
-    descricao_de_exercicio::descrição_de_exercício, exercicio_informacoes::Exercício_Informações, limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício, exercicio_informacoes::ExercícioInformações, limpar_terminal::limpar_terminal,
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
 };
 
@@ -13,7 +13,7 @@ pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */    
-    let exercício_informações = Exercício_Informações::new(
+    let exercício_informações = ExercícioInformações::new(
         cabeçalho_do_programa,
         descrição_de_exercício(
             String::from("003"), 
@@ -63,7 +63,7 @@ fn antecessor_e_sucessor_do_número_inteiro(
 }
 
 fn obter_um_número_inteiro(
-    exercício_informações: &Exercício_Informações
+    exercício_informações: &ExercícioInformações
 ) -> u32 {
     loop {
         println!(
