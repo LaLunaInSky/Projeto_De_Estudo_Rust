@@ -1,5 +1,8 @@
 use std::{
-    arch::x86_64::_mm_xor_si128, f64::consts::PI, io::stdin, thread::sleep, time::Duration
+    io::stdin, 
+    thread::sleep, 
+    time::Duration,
+    f64::consts::PI 
 };
 
 use crate::recursos::{
