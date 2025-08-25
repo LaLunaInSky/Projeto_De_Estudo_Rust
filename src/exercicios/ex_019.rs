@@ -1,113 +1,139 @@
 use std::{
-    io,
-    thread,
-    time::Duration,
-    process::Command
+    io::stdin,
+    thread::sleep,
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 019:");
-    println!(
-        " Um programa que lê o nome completo de\numa pessoa e mostra:
+mod nome;
+
+use nome::Nome;
+
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("019"),
+            String::from("Um programa que lê o nome completo de\numa pessoa e mostra:
         
 - O nome com todas as letras maiúsculas e\nminúsculas.
 - Quantas letras o nome todo possui (sem\nconsiderar espaços).
-- Quantas letras tem o primeiro nome."
+- Quantas letras tem o primeiro nome.")    
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+    loop {
+        exercício_informações.mostrar_informações();
 
-    descrição_do_exercício();
+        /* Corpo do Exercício - fn main */
+        let nome = Nome::new(
+            obter_o_nome_completo(
+                &exercício_informações
+            )
+        );
 
-    println!();
+        analisar_o_nome(
+            &nome
+        );
 
-    /* Corpo do Exercício - fn main */
-    let nome_digitado = obter_o_nome_completo(&cabeçalho_do_programa);
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    thread::sleep(Duration::from_millis(2000));
-
-    analisar_o_nome(&nome_digitado);
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
 
     /* Fim do Exercício */
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
     println!(
         "\nVoltando ao menu de exercícios...\n"
     );
 
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    clean_terminal_linux();
+    limpar_terminal();
 }
 
-fn analisar_o_nome(nome: &String) {
-    let nome_separado: Vec<&str> = nome.split_whitespace().collect();
-
-    let mut total_de_letras_do_nome_todo: u8 = 0;
-    let mut total_de_letras_do_primeiro_nome: u8 = 0;
-
-    for (index, palavra) in nome_separado.iter().enumerate() {
-        if index == 0 {
-            total_de_letras_do_primeiro_nome += palavra.len() as u8;
-        }
-
-        total_de_letras_do_nome_todo += palavra.len() as u8;
-    }
+fn analisar_o_nome(
+    nome: &Nome
+) { 
+    sleep(Duration::from_millis(1000));
 
     println!(
-        " O seu nome em minúsculo é:\n{}\n",
-        nome.to_lowercase()
+        "Analisando o nome...\n"
     );
 
-    thread::sleep(Duration::from_millis(2000));
+    sleep(Duration::from_millis(1500));
+    
+    println!(
+        "O seu nome em minúsculo é:\n{}\n",
+        nome.obter_o_nome_em_minúscula()
+    );
+
+    sleep(Duration::from_millis(1000));
 
     println!(
-        " O seu nome em maiúscula é:\n{}\n",
-        nome.to_uppercase()
+        "O seu nome em maiúscula é:\n{}\n",
+        nome.obter_o_nome_em_maiúscula()
     );
 
-    thread::sleep(Duration::from_millis(2000));
+    sleep(Duration::from_millis(1000));
 
     println!(
-        " O seu nome tem {} letras, sem contar os\nespaços!\n",
-        total_de_letras_do_nome_todo
+        "O seu nome tem {} letras, sem contar os\nespaços!\n",
+        nome.obter_o_total_de_letras_no_nome()
     );
 
-    thread::sleep(Duration::from_millis(2000));
+    sleep(Duration::from_millis(1000));
 
     println!(
-        " O seu primeiro nome tem {} letras.",
-        total_de_letras_do_primeiro_nome
+        "O seu primeiro nome tem {} letras.\n",
+        nome.obter_o_total_de_letras_do_primeiro_nome()
     );
 
-    thread::sleep(Duration::from_millis(2000));
+    sleep(Duration::from_millis(1100));
 }
 
-fn obter_o_nome_completo(cabeçalho_do_programa: &String) -> String {
+fn obter_o_nome_completo(
+    exercício_informações: &ExercícioInformações
+) -> String {
     loop {
-        println!("Digite o seu nome completo:");
+        println!(
+            "Digite o seu nome completo:"
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
-                clean_terminal_linux();
+                limpar_terminal();
 
-                println!("{}", cabeçalho_do_programa);
+                exercício_informações.mostrar_informações();
 
-                descrição_do_exercício();
+                let nome_digitado = input.trim().to_lowercase();
 
-                println!("\nOlá {}!\n", input.trim());
+                println!(
+                    "O nome {},\nfoi adicionado com sucesso!\n",
+                    nome_digitado
+                );
 
-                return (input.trim()).to_string();
+                return nome_digitado;
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }

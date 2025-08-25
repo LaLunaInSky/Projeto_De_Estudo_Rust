@@ -122,7 +122,7 @@ fn obter_o_nome_do_aluno(
                 let nome_do_aluno = input.trim().to_lowercase();
 
                 println!(
-                    "\nO Aluno {},\nfoi adiconado com sucesso!\n",
+                    "O Aluno {},\nfoi adiconado com sucesso!\n",
                     nome_do_aluno
                 );
 
