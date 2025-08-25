@@ -1,145 +1,163 @@
 use std::{
-    io,
-    thread,
-    time::Duration,
-    process::Command
+    io::stdin,
+    thread::sleep,
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 020:");
-    println!(
-        " Um programa que lê um número de 0 a 9999\ne mostra no terminal cada um dos dígitos\nseparados.
+mod numero;
+
+use numero::Número;
+
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("020"),
+            String::from("Um programa que lê um número de 0 a 9999\ne mostra no terminal cada um dos dígitos\nseparados.
 
 Exemplo: 
  1834
  unidade.: 4
  dezena..: 3
  centena.: 8
- milhar..: 1"
+ milhar..: 1")
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+    loop {
+        exercício_informações.mostrar_informações();
 
-    descrição_do_exercício();
+        /* Corpo do Exercício */
+        let número = Número::new(
+            obter_o_número_inteiro(
+                &exercício_informações
+            )   
+        );
 
-    println!();
+        analisar_o_número(
+            &número
+        );
 
-    /* Corpo do Exercício - fn main */
-    let número_digitado: String = obter_o_número_inteiro(&cabeçalho_do_programa);
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    separar_o_número(&número_digitado);
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
 
     /* Fim do Exercício */
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
     println!(
         "\nVoltando ao menu de exercícios...\n"
     );
 
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    clean_terminal_linux();
+    limpar_terminal();
 }
 
-fn separar_o_número(número: &String) {
-    let mut número_separado: Vec<char> = vec![];
+fn analisar_o_número(
+    número: &Número
+) {
+    sleep(Duration::from_millis(1000));
 
-    for char in número.chars() {
-        número_separado.push(char);
-    }
+    println!(
+        "Analisando o número...\n"
+    );
 
-    let mut unidade = String::from("-");
-    let mut dezena = String::from("-");
-    let mut centena = String::from("-");
-    let mut milhar = String::from("-");
+    sleep(Duration::from_millis(1500));
 
-    if número.len() == 4 {
-        unidade = número_separado[3].to_string();
-        dezena = número_separado[2].to_string();
-        centena = número_separado[1].to_string();
-        milhar = número_separado[0].to_string();
-    } else if número.len() == 3 {
-        unidade = número_separado[2].to_string();
-        dezena = número_separado[1].to_string();
-        centena = número_separado[0].to_string();
-    } else if número.len() == 2 {
-        unidade = número_separado[1].to_string();
-        dezena = número_separado[0].to_string();
-    } else if número.len() == 1 {
-        unidade = número_separado[0].to_string();
-    }
+    println!(
+        "Unidade.: {}", 
+        número.unidade
+    );
 
-    thread::sleep(Duration::from_millis(2000));
+    sleep(Duration::from_millis(500));
 
-    println!("Analisando o número...\n");
+    println!(
+        "Dezena..: {}",
+        número.dezena
+    );
 
-    thread::sleep(Duration::from_millis(2500));
+    sleep(Duration::from_millis(500));
 
-    println!("Unidade.: {}", unidade);
+    println!(
+        "Centena.: {}",
+        número.centena
+    );
 
-    thread::sleep(Duration::from_millis(1000));
+    sleep(Duration::from_millis(500));
 
-    println!("Dezena..: {}", dezena);
+    println!(
+        "Milhar..: {}\n", 
+        número.milhar
+    );
 
-    thread::sleep(Duration::from_millis(1000));
-
-    println!("Centena.: {}", centena);
-
-    thread::sleep(Duration::from_millis(1000));
-
-    println!("Milhar..: {}", milhar);
-
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(1500));
 }
 
-fn obter_o_número_inteiro(cabeçalho_do_programa: &String) -> String {
+fn obter_o_número_inteiro(
+    exercício_informações: &ExercícioInformações
+) -> u16 {
     loop {
-        println!("Digite um número inteiro [0 à 9999]:");
+        println!(
+            "Digite um número inteiro [0 à 9999]:"
+        );
 
         let mut input = String::new();
     
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<u16>() {
                     Ok(número) => {
                         if número <= 9999 {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
+                            exercício_informações.mostrar_informações();
 
-                            descrição_do_exercício();
+                            println!(
+                                "O número {},\nfoi adicionado com sucesso!\n",
+                                número
+                            );
 
-                            println!("\nNúmero {},\nadicionado com sucesso!\n", número);
-
-                            return format!("{}", número);
+                            return número;
                         } else {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
+                            exercício_informações.mostrar_informações();
 
-                            descrição_do_exercício();
-
-                            println!("\nErro! Digite um número que vá até 9999!\n");
+                            println!(
+                                "Erro! Digite um número de até 9999!\n"
+                            );
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
-
-                        descrição_do_exercício();
+                        exercício_informações.mostrar_informações();
                     
-                        println!("\nErro! Digite um valor válido!\n");
+                        println!(
+                            "Erro! Digite um número inteiro!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }

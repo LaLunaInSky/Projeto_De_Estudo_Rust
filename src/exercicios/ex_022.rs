@@ -1,91 +1,115 @@
 use std::{
-    io,
-    thread,
-    time::Duration,
-    process::Command
+    io::stdin,
+    thread::sleep,
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercíco 022:");
-    println!(
-        " Um programa que lê o nome de uma pessoa e\nretorna se ela tem \"SILVA\" no nome."
+mod nome;
+
+use nome::Nome;
+
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("022"),
+            String::from("Um programa que lê o nome de uma pessoa e\nretorna se ela tem \"SILVA\" no nome.")
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+    loop {
+        exercício_informações.mostrar_informações();
 
-    descrição_do_exercício();
+        /* Corpo do Exercício - fn main */
+        let nome = Nome::new(
+            obter_o_nome_da_pessoa(
+                &exercício_informações
+            )
+        );
 
-    println!();
+        analisar_o_nome_digitado(
+            &nome
+        );
 
-    /* Corpo do Exercício - fn main */
-    let nome_digitado = obter_o_nome_da_pessoa(&cabeçalho_do_programa);
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    analisar_o_nome_digitado(&nome_digitado);
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
 
     /* Fim do Exercício */
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
     println!(
         "\nVoltando ao menu de exercícios...\n"
     );
 
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    clean_terminal_linux();
+    limpar_terminal();
 }
 
-fn analisar_o_nome_digitado(nome_digitado: &String) {
-    let nome_digitado = nome_digitado.to_lowercase();
-
-    let mut resultado_da_analise = String::from("não ");
-
-    if nome_digitado.contains("silva") {
-        resultado_da_analise = String::from("");
-    }
-
-    thread::sleep(Duration::from_millis(1500));
-
-    println!("Analisando do nome digitado...\n");
-
-    thread::sleep(Duration::from_millis(3500));
+fn analisar_o_nome_digitado(
+    nome: &Nome
+) {
+    sleep(Duration::from_millis(1000));
 
     println!(
-        "No nome {},\n{}existe \"SILVA\" no nome!",
-        nome_digitado.to_uppercase(),
-        resultado_da_analise
+        "Analisando do nome...\n"
     );
 
-    thread::sleep(Duration::from_millis(2500));
+    sleep(Duration::from_millis(1500));
+
+    println!(
+        "No nome {},\n{}existe \"SILVA\" no nome!\n",
+        nome.nome.to_uppercase(),
+        if !nome.possui_silva {"Não "} else {""}
+    );
+
+    sleep(Duration::from_millis(1100));
 }
 
-fn obter_o_nome_da_pessoa(cabeçalho_do_programa: &String) -> String {
+fn obter_o_nome_da_pessoa(
+    exercício_informações: &ExercícioInformações
+) -> String {
     loop {
-        println!("Digite o um nome com sobrenome:");
+        println!(
+            "Digite o um nome e um sobrenome:"
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
-                clean_terminal_linux();
+                limpar_terminal();
 
-                println!("{}", cabeçalho_do_programa);
+                exercício_informações.mostrar_informações();
 
-                descrição_do_exercício();
+                let nome = input.trim().to_lowercase();
 
                 println!(
-                    "\nO nome {},\nfoi adicionado com sucesso!\n",
-                    input.trim()
+                    "O nome {},\nfoi adicionado com sucesso!\n",
+                    nome
                 );
             
-                return (input.trim()).to_string();
+                return nome;
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }

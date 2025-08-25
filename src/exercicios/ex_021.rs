@@ -1,93 +1,120 @@
 use std::{
-    io,
-    thread,
-    time::Duration,
-    process::Command
+    io::stdin,
+    thread::sleep,
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 021:");
-    println!(
-        " Um programa que lê o nome de uma cidade e\nretorna se ela começa ou não com o nome\n\"SANTO\"."
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("021"),
+            String::from("Um programa que lê o nome de uma cidade e\nretorna se ela começa ou não com o nome\n\"SANTO\".")
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+    loop {
+        exercício_informações.mostrar_informações();
 
-    descrição_do_exercício();
+        /* Corpo do Exercício */
+        let nome_da_cidade = obter_o_nome_de_uma_cidade(
+            &exercício_informações
+        );
 
-    println!();
+        analisar_o_nome_da_cidade(
+            &nome_da_cidade
+        );
 
-    /* Corpo do Exercício - fn main */
-    let nome_da_cidade = obter_o_nome_de_uma_cidade(&cabeçalho_do_programa);
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    analisar_o_nome_da_cidade(&nome_da_cidade);
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
 
     /* Fim de Exercício */
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
     println!(
         "\nVoltando ao menu de exercícios...\n"
     );
 
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
-    clean_terminal_linux();
+    limpar_terminal();
 }
 
-fn analisar_o_nome_da_cidade(nome_da_cidade: &String) {
-    thread::sleep(Duration::from_millis(2000));
-
-    println!("Analisando a cidade...\n");
-
-    thread::sleep(Duration::from_millis(2500));
-
+fn analisar_o_nome_da_cidade(
+    nome_da_cidade: &String
+) {
     let nome_da_cidade = nome_da_cidade.to_lowercase();
 
-    let nome_da_cidade_separado: Vec<&str> = nome_da_cidade.split(" ").collect();
+    let nome_da_cidade_separado: Vec<&str> = nome_da_cidade.split_whitespace().collect();
 
     let mut resposta_da_analise = String::from("não ");
+
+    sleep(Duration::from_millis(1000));
+
+    println!(
+        "Analisando a cidade...\n"
+    );
+
+    sleep(Duration::from_millis(1500));
+
 
     if nome_da_cidade_separado[0].contains("santo") {
         resposta_da_analise = String::from("")
     }
 
     println!(
-        "A cidade {},\n{}começa com \"SANTO\"!",
+        "A cidade {},\n{}começa com \"SANTO\"!\n",
         nome_da_cidade.to_uppercase(),
         resposta_da_analise
     );
 
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(1100));
 }
 
-fn obter_o_nome_de_uma_cidade(cabeçalho_do_programa: &String) -> String {
+fn obter_o_nome_de_uma_cidade(
+    exercício_informações: &ExercícioInformações
+) -> String {
     loop {
-        println!("Digite o nome de um cidade:");
+        println!(
+            "Digite o nome de um cidade:"
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
-                clean_terminal_linux();
+                limpar_terminal();
 
-                println!("{}", cabeçalho_do_programa);
+                exercício_informações.mostrar_informações();
 
-                descrição_do_exercício();
+                let nome_da_cidade = input.trim().to_lowercase();
 
                 println!(
-                    "\nA cidade {},\nfoi adicionada com sucesso!\n",
-                    input.trim()
+                    "A cidade {},\nfoi adicionada com sucesso!\n",
+                    nome_da_cidade
                 );
 
-                return (input.trim()).to_string();
+                return nome_da_cidade;
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }
