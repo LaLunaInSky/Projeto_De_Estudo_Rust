@@ -1,53 +1,62 @@
 use std::{
-    io,
-    thread,
-    time::Duration,
-    f64::consts::PI,
-    process::Command
+    arch::x86_64::_mm_xor_si128, f64::consts::PI, io::stdin, thread::sleep, time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::descrição_de_exercício,
+    exercicio_informacoes::Exercício_Informações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 016:");
-    println!(
-        " Um programa que lê um ângulo qualquer e\nmostra no terminal o valor do seno,\ncosseno e tangente desse ângulo."
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = Exercício_Informações::new(
+        &cabeçalho_do_programa,
+        descrição_de_exercício(
+            String::from("016"),
+            String::from("Um programa que lê um ângulo qualquer e\nmostra no terminal o valor do seno,\ncosseno e tangente desse ângulo.")
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+    loop {
+        exercício_informações.mostrar_informações();
 
-    descrição_do_exercício();
+        /* Corpo do Exercício */
+        let angulo_inforamado = obter_o_angulo(
+            &exercício_informações
+        );
 
-    println!();
+        calcular_o_seno_o_cosseno_e_a_tangente_do_angulo(
+            &angulo_inforamado
+        );
 
-    /* Corpo do Exercício - fn main */
-    let angulo_inforamado = obter_o_angulo(&cabeçalho_do_programa);
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    thread::sleep(Duration::from_millis(1500));
-
-    println!("Analisando o ângulo...\n");
-
-    thread::sleep(Duration::from_millis(2500));
-
-    calcular_o_seno_o_cosseno_e_a_tangente_do_angulo(&angulo_inforamado);
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
 
     /* Fim do Exercício */
-    thread::sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(3000));
 
     println!(
         "\nVoltando ao menu de exercícios...\n"
     );
 
-    thread::sleep(Duration::from_millis(3000));    
+    sleep(Duration::from_millis(3000));    
 
-    clean_terminal_linux();
+    limpar_terminal();
 }
 
-fn calcular_o_seno_o_cosseno_e_a_tangente_do_angulo(angulo: &f64) {
+fn calcular_o_seno_o_cosseno_e_a_tangente_do_angulo(
+    angulo: &f64
+) {
     let x = (angulo * PI) / 180.0;
     let seno: f64 = x.sin();
     let cosseno = x.cos();
@@ -56,85 +65,95 @@ fn calcular_o_seno_o_cosseno_e_a_tangente_do_angulo(angulo: &f64) {
     if *angulo != 90.0 {
         tangente = Some(x.tan());
     }
+
+    sleep(Duration::from_millis(1000));
+
+    println!(
+        "Analisando o ângulo...\n"
+    );
+
+    sleep(Duration::from_millis(1500));
     
     println!(
         "O seno......: {:.4}",
         seno
     );
 
-    thread::sleep(Duration::from_millis(800));
+    sleep(Duration::from_millis(500));
 
     println!(
         "O cosseno...: {:.4}",
         cosseno
     );
 
-    thread::sleep(Duration::from_millis(800));
+    sleep(Duration::from_millis(500));
 
     match tangente {
         Some(result) => {
             println!(
-                "A tangente..: {:.4}",
+                "A tangente..: {:.4}\n",
                 result
             );
         }
         None => {
             println!(
-                "A tangente..: -",
+                "A tangente..: -\n",
                 
             );
         }
     }
 
 
-    thread::sleep(Duration::from_millis(800));
+    sleep(Duration::from_millis(1100));
 }
 
-fn obter_o_angulo(cabeçalho_do_programa: &String) -> f64 {
+fn obter_o_angulo(
+    exercício_informações: &Exercício_Informações
+) -> f64 {
     loop {
-        println!("Digite um ângulo:");
+        println!(
+            "Digite um ângulo:"
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<u8>() {
                     Ok(angulo) => {
                         if angulo <= 90 {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
-
-                            descrição_do_exercício();
+                            exercício_informações.mostrar_informações();
 
                             println!(
-                                "\nÂngulo de {}° graus,\nAdicionado com sucesso!\n",
+                                "Ângulo de {}° graus,\nfoi adicionado com sucesso!\n",
                                 angulo
                             );
 
                             return angulo as f64;
                         } else {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
+                            exercício_informações.mostrar_informações();
 
-                            descrição_do_exercício();
-
-                            println!("\nErro! Digite um ângulo que vai até 90°!\n");
+                            println!(
+                                "Erro! Digite um ângulo de até 90°!\n"
+                            );
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Digite um valor válido!\n");
+                        println!("\nErro! Digite um número real!\n");
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }
