@@ -1,108 +1,114 @@
 use std::{
-    io,
+    io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 024:");
-    println!(
-        " Um programa que lê o nome completo de\numa pessoa, mostrando em seguida o\nprimeiro e o último nome separadamente.
+mod nome_completo;
+
+use nome_completo::NomeCompleto;
+
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("024"),
+            String::from("Um programa que lê o nome completo de\numa pessoa, mostrando em seguida o\nprimeiro e o último nome separadamente.
 
 Exemplo: 
 \"Ana Maria de Souza\"
 - primeiro.: Ana
-- último...: Souza"
-    );
-}
-
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
-
-    descrição_do_exercício();
-
-    println!();
-
-    /* Corpo do Exercício - fn main */
-    let nome_completo_digitado = obter_nome_completo_da_pessoa(&cabeçalho_do_programa);
-
-    analisar_o_nome_informado(&nome_completo_digitado);
-
-    /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
+- último...: Souza")
+        )
     );
 
-    sleep(Duration::from_millis(3000));
+    loop {
+        exercício_informações.mostrar_informações();
 
-    clean_terminal_linux();
-}
+        /* Corpo do Exercício */
+        let nome_completo = NomeCompleto::new(
+            obter_nome_completo_da_pessoa(
+                &exercício_informações
+            )
+        );
 
-fn analisar_o_nome_informado(nome_informado: &String) {
-    let mut primeiro_nome = String::from("-");
-    let mut último_nome = String::from("-");
+        analisar_o_nome_informado(
+            &nome_completo
+        );
 
-    let nome_separado: Vec<&str> = nome_informado.split(" ").collect();
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    for (index, nome) in nome_separado.iter().enumerate() {
-        if index == 0 {
-            primeiro_nome = nome.to_string();
+        if !resposta_sobre_continuar {
+            break;
         }
-        
-        último_nome = nome.to_string();
     }
 
-    sleep(Duration::from_millis(1200));
+    /* Fim do Exercício */
+    rodar_final_do_exercício();
+}
 
-    println!("Analisando o nome...\n");
-
-    sleep(Duration::from_millis(2500));
-
-    println!(
-        "Primeiro Nome: {}",
-        primeiro_nome
-    );
-
-    sleep(Duration::from_millis(900));
+fn analisar_o_nome_informado(
+    nome_completo: &NomeCompleto
+) {
+    sleep(Duration::from_millis(1000));
 
     println!(
-        "Último Nome..: {}",
-        último_nome
+        "Analisando o nome..."
     );
 
     sleep(Duration::from_millis(1500));
 
+    println!(
+        "
+Primeiro..Nome: {}
+Último....Nome: {}
+",
+        nome_completo.primeiro_nome.to_uppercase(),
+        nome_completo.último_nome.to_uppercase()
+    );
+
+    sleep(Duration::from_millis(1100));
 }
 
-fn obter_nome_completo_da_pessoa(cabeçalho_do_programa: &String) -> String {
+fn obter_nome_completo_da_pessoa(
+    exercício_informações: &ExercícioInformações
+) -> String {
     loop {
-        println!("Digite o nome completo de uma pessoa:");
+        println!(
+            "Digite o nome completo de uma pessoa:"
+        );
 
         let mut input = String::new();
     
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(&mut input) {
             Ok(_) => {
-                clean_terminal_linux();
+                limpar_terminal();
 
-                println!("{}", cabeçalho_do_programa);
+                exercício_informações.mostrar_informações();
 
-                descrição_do_exercício();
+                let nome = input.trim().to_lowercase();
 
                 println!(
-                    "\nO nome {},\nfoi adicionado com sucesso!\n",
-                    input.trim()
+                    "O nome {},\nfoi adicionado com sucesso!\n",
+                    nome
                 );
 
-                return (input.trim()).to_string();
+                return nome;
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }

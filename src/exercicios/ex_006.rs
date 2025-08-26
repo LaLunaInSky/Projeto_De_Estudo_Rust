@@ -7,8 +7,9 @@ use std::{
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
     exercicio_informacoes::ExercícioInformações,
-    descricao_de_exercicio::descrição_de_exercício,
-    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
 };
 
 mod comprimentos;
@@ -19,7 +20,7 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     /* Começo do Exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        descrição_de_exercício(
+        criar_descrição_do_exercício(
             String::from("006"),
             String::from("Um programa que lê um valor em metros e o\nexibe convertido em todos os tipos a\nseguir:
 
@@ -51,15 +52,7 @@ km <- hm <- dam <- m -> dm -> cm -> mm")
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando para o menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    limpar_terminal();
+    rodar_final_do_exercício();
 }
 
 fn analisar_os_comprimentos(
