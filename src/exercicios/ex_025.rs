@@ -1,164 +1,135 @@
 use std::{
-    io,
+    io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-use rand::random_range;
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+mod jogo;
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 025:");
-    println!(
-        " Um programa que faça o computador \"pensar\"\nem um número inteiro entre 0 e 5 e peça\npara o usuário tentar descobrir qual foi o\nnúmero escolhido pelo computador.\n O programa deverá escrever na tela se o\nusuário venceu ou perdeu."
+use jogo::Jogo;
+
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("025"),
+            String::from("Um programa que faça o computador \"pensar\"\nem um número inteiro entre 0 e 5 e peça\npara o usuário tentar descobrir qual foi o\nnúmero escolhido pelo computador.\n O programa deverá escrever na tela se o\nusuário venceu ou perdeu.")
+        )
     );
-}
-
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
-
-    descrição_do_exercício();
-
-    println!();
 
     /* Corpo do Exercíco - fn main */
     loop {
-        let número_sorteado = obter_um_número_inteiro_random();
+        exercício_informações.mostrar_informações();
 
-        let palpite = obter_o_palpite(&cabeçalho_do_programa);
+        let jogo = Jogo::new(
+            obter_o_palpite(
+                &exercício_informações
+            )
+        );
 
-        analisar_o_palpite(&palpite, &número_sorteado);
+        analisar_o_palpite(
+            &jogo
+        );
 
-        sleep(Duration::from_millis(1500));
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(&exercício_informações);
 
-        let resposta_do_jogar_de_novo = jogar_de_novo(&cabeçalho_do_programa);
-
-        if resposta_do_jogar_de_novo == false {
+        if !resposta_sobre_continuar {
             break;
         }
     }
+
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
+    rodar_final_do_exercício();
+}
+
+fn analisar_o_palpite(
+    jogo: &Jogo
+) {
+    sleep(Duration::from_millis(1000));
 
     println!(
-        "\nVoltando ao menu de exercícios...\n"
+        "Analisando o palpite..."
     );
 
-    sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(1500));
 
-    clean_terminal_linux();
-}
-
-fn jogar_de_novo(cabeçalho_do_programa: &String) -> bool {
-    loop {
-        println!("Quer tentar outra vez? [S/N]");
-
-        let mut input = String::new();
-
-        match io::stdin().read_line(&mut input) {
-            Ok(_) => {
-                let resposta = input.trim().to_lowercase();
-
-                if resposta == "s" || resposta == "n" {
-                    if resposta == "s" {
-                        clean_terminal_linux();
-
-                        println!("{}", cabeçalho_do_programa);
-
-                        descrição_do_exercício();
-
-                        println!();
-
-                        return true;
-                    } else {
-                        return false
-                    }
-                } else {
-                    clean_terminal_linux();
-
-                    println!("{}", cabeçalho_do_programa);
-
-                    descrição_do_exercício();
-
-                    println!("\nErro! Digite S (Sim) ou N (Não)!\n");
-                }
-            }
-            Err(_) => println!("Erro!"),
-        }
-    }
-}
-
-fn analisar_o_palpite(palpite: &u8, número_sorteado: &u8) {
-    println!("Analisando...\n");
-
-    sleep(Duration::from_millis(2000));
-    
-    println!("Computado.: {}", número_sorteado);
-    println!("Usuário...: {}", palpite);
+    println!(
+        "
+Computador.: {}
+Usuário....: {}
+",
+        jogo.computador_número,
+        jogo.usuário_número
+    );
 
     println!(
         "Você {}!\n",
-        if número_sorteado == palpite {"ACERTOU"} else {"ERROU"}
+        if jogo.usuário_acertou {"ACERTOU"} else {"ERROU"}
     );
+
+    sleep(Duration::from_millis(1100));
 }
 
-fn obter_o_palpite(cabeçalho_do_programa: &String) -> u8 {
+fn obter_o_palpite(
+    exercício_informações: &ExercícioInformações
+) -> u8 {
     loop {
-        println!("Adivinhe o número [0 à 5]:");
+        println!(
+            "[Adivinhe o número entre 0 e 5]\nQual o seu palpite?"
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<u8>() {
                     Ok(número) => {
-                        if número >= 0 && número <= 5 {
-                            clean_terminal_linux();
+                        if número <= 5 {
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
-
-                            descrição_do_exercício();
+                            exercício_informações.mostrar_informações();
 
                             println!(
-                                "\nPalpite: {}\n",
+                                "O número {},\nfoi adicionado com sucesso!\n",
                                 número
                             );
 
                             return número; 
                         } else {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
+                            exercício_informações.mostrar_informações();
 
-                            descrição_do_exercício();
-
-                            println!("\nErro! Digite um número entre 0 e 5!\n");
+                            println!(
+                                "Erro! Digite um número entre 0 e 5!\n"
+                            );
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Digite apenas número!\n");
+                        println!(
+                            "Erro! Digite apenas número!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
-}
-
-fn obter_um_número_inteiro_random() -> u8 {
-    let número_sorteado: u8 = random_range(0..6);
-
-    println!("Escolhi um número, tente adivinhar qual é!\n");
-
-    return número_sorteado;
 }

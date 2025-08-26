@@ -1,91 +1,114 @@
 use std::{
-    io,
+    io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 026:");
-    println!(
-        " Um programa que lê a velocidade de\num carro, se o mesmo ultrapassar 80Km/h,\nmostre uma mensagem dizendo que ele foi\nmultado.
- A multa vai custar R$7,00 por cada\nquilometro acima do limite."
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("026"),
+            String::from("Um programa que lê a velocidade de\num carro, se o mesmo ultrapassar 80Km/h,\nmostre uma mensagem dizendo que ele foi\nmultado.
+ A multa vai custar R$7,00 por cada\nquilometro acima do limite.")
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
-    println!("{}", cabeçalho_do_programa);
+    loop {
+        exercício_informações.mostrar_informações();
 
-    descrição_do_exercício();
+        /* Corpo do Exercício */
+        let velocidade_do_carro = obter_a_velocidade_do_carro(
+            &exercício_informações
+        );
 
-    println!();
+        verificar_se_a_velocidade_passou_do_limite(
+            &velocidade_do_carro
+        );
 
-    /* Corpo do Exercício - fn main */
-    let velocidade_do_carro = obter_a_velocidade_do_carro(&cabeçalho_do_programa);
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    verificar_se_a_velocidade_passou_do_limite(&velocidade_do_carro);
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando o menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
-fn calcular_o_valor_da_multa(velocidade_do_carro: &f32) {
+fn calcular_o_valor_da_multa(
+    velocidade_do_carro: &f32
+) {
     let valor_da_multa = (velocidade_do_carro - 80.0) * 7.0;
 
-    sleep(Duration::from_millis(1200));
-
-    println!("Calculando o valor da multa...\n");
-        
-    sleep(Duration::from_millis(2200));
+    sleep(Duration::from_millis(1000));
 
     println!(
-        "O valor da multa é de R${:.2}",
+        "Calculando o valor da multa...\n"
+    );
+        
+    sleep(Duration::from_millis(1500));
+
+    println!(
+        "O valor da multa é de R${:.2}\n",
         valor_da_multa
     );
 }
 
-fn verificar_se_a_velocidade_passou_do_limite(velocidade_do_carro: &f32) {
-    sleep(Duration::from_millis(2000));
+fn verificar_se_a_velocidade_passou_do_limite(
+    velocidade_do_carro: &f32
+) {
+    sleep(Duration::from_millis(1000));
 
     if *velocidade_do_carro > 80.0 {
-        println!("O Carro foi multado!\n");
+        println!(
+            "O Carro foi multado!\n"
+        );
 
         calcular_o_valor_da_multa(&velocidade_do_carro);
 
     } else {
-        println!("Não se esqueca do sinto de segurança!");
+        println!(
+            "Não se esqueca do sinto de segurança!\n"
+        );
     }
 
-    sleep(Duration::from_millis(2500));
+    sleep(Duration::from_millis(1100));
 }
 
-fn obter_a_velocidade_do_carro(cabeçalho_do_programa: &String) -> f32 {
+fn obter_a_velocidade_do_carro(
+    exercício_informações: &ExercícioInformações
+) -> f32 {
     loop {
-        println!("Digite a velocidade do carro:");
+        println!(
+            "Digite a velocidade do carro:"
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<f32>() {
                     Ok(velocidade) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
-
-                        descrição_do_exercício();
+                        exercício_informações.mostrar_informações();
 
                         let velocidade_formatada = format!(
                             "{:.1}",
@@ -95,27 +118,27 @@ fn obter_a_velocidade_do_carro(cabeçalho_do_programa: &String) -> f32 {
                         match velocidade_formatada.parse::<f32>() {
                             Ok(velocidade_final) => {
                                 println!(
-                                    "\nVelocidade de {:.1}km/h,\nadiconada com sucesso!\n",
+                                    "Velocidade de {:.1}km/h,\nfoi adiconada com sucesso!\n",
                                     velocidade_final
                                 );
 
                                 return velocidade_final;
                             }
-                            Err(_) => println!("Erro!"),
+                            Err(_) => (),
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Digite um número válido!\n");
+                        println!(
+                            "Erro! Digite um número válido!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }

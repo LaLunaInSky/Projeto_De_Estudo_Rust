@@ -8,13 +8,13 @@ use crate::recursos::{
 };
 
 pub fn rodar_final_do_exercício() {
-    sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(1500));
 
     println!(
         "\nVoltando ao menu de exercícios...\n"
     );
 
-    sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(2000));
 
     limpar_terminal();
 }
