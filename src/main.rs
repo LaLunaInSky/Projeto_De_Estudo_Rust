@@ -18,18 +18,18 @@ fn construir_a_lista_de_exercícios(
     let mut nome_de_todos_os_exercícios = vec![];
 
     for quantidade_de_exercícios in 1..(total_de_exercícios + 1) {
-        let mut número_formatado = String::new();
+        let mut _número_formatado = String::new();
         
         if quantidade_de_exercícios < 10 {
-            número_formatado = format!("00{}", quantidade_de_exercícios);
+            _número_formatado = format!("00{}", quantidade_de_exercícios);
         } else if quantidade_de_exercícios < 100 {
-            número_formatado = format!("0{}", quantidade_de_exercícios);
+            _número_formatado = format!("0{}", quantidade_de_exercícios);
         } else {
-            número_formatado = format!("{}", quantidade_de_exercícios);
+            _número_formatado = format!("{}", quantidade_de_exercícios);
         }
 
         let nome = format!(
-            "ex_{}", número_formatado
+            "ex_{}", _número_formatado
         );
 
         nome_de_todos_os_exercícios.push(nome);
@@ -145,7 +145,7 @@ fn main() {
     let total_de_exercícios: u32 = 63;
 
     /* Não precisa mexer */
-    let último_exercício = &total_de_exercícios;
+    let _último_exercício = &total_de_exercícios;
 
     let cabeçalho_do_programa = format!(
         "- Gerenciador De Projetos De Estudo Rust -\n{:^42}\n",
@@ -156,7 +156,7 @@ fn main() {
     menu_de_opções_de_exercícios(&cabeçalho_do_programa, total_de_exercícios);
 
     // Rodar apenas o exercício X
-    // exercicios::executar_o_exercício_x(*último_exercício, &cabeçalho_do_programa);
+    // exercicios::executar_o_exercício_x(*_último_exercício, &cabeçalho_do_programa);
 
     
 }

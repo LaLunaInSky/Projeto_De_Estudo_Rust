@@ -1,36 +1,44 @@
 use std::{
-    io,
+    io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 028:");
-    println!(
-        " Um programa que pergunta a distância de\numa viagem em Km. Calcula o preço da\npassagem, cobrando  R$0,50 por Km para\nviagens de até 200Km e R$0,45 para\nviagens mais longas."
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("028"),
+            String::from("Um programa que pergunta a distância de\numa viagem em Km. Calcula o preço da\npassagem, cobrando  R$0,50 por Km para\nviagens de até 200Km e R$0,45 para\nviagens mais longas.")
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     loop {
-        /* Começo do Exercício */
-        println!("{}", cabeçalho_do_programa);
-    
-        descrição_do_exercício();
-    
-        println!();
+        exercício_informações.mostrar_informações();
     
         /* Corpo do Exercício - fn main */
-        let distância_da_viagem = obter_a_distância_da_viagem(&cabeçalho_do_programa);
+        let distância_da_viagem = obter_a_distância_da_viagem(
+            &exercício_informações
+        );
     
-        calcular_o_preço_da_viagem(&distância_da_viagem);
+        calcular_o_preço_da_viagem(
+            &distância_da_viagem
+        );
     
-        let resposta_sobre_continuar_o_exercício = perguntar_se_quer_recomeçar_o_exercício(&cabeçalho_do_programa);
+        let resposta_sobre_continuar_o_exercício = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
         if resposta_sobre_continuar_o_exercício == false {
             break;
@@ -38,82 +46,49 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     }    
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
-fn perguntar_se_quer_recomeçar_o_exercício(cabeçalho_do_programa: &String) -> bool {
-    loop {
-        println!("Quer calcular o preço de outra viagem?\n[S/N]");
-
-        let mut input = String::new();
-    
-        match io::stdin().read_line(&mut input) {
-            Ok(_) => {
-                let resposta_da_pergunta = input.trim().to_lowercase();
-
-                if resposta_da_pergunta == "s" || resposta_da_pergunta == "n" {
-                    if resposta_da_pergunta == "s" {
-                        clean_terminal_linux();
-
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
-                    clean_terminal_linux();
-
-                    println!("{}", cabeçalho_do_programa);
-
-                    descrição_do_exercício();
-
-                    println!(
-                        "\nErro! Digite apenas S [Sim] ou N [Não]!\n"
-                    );
-                }
-            }
-            Err(_) => println!("Erro!"),
-        }
-    }
-}
-
-fn calcular_o_preço_da_viagem(distância_da_viagem: &f32) {
-    let mut valor_da_viagem: f32 = 0.0;
+fn calcular_o_preço_da_viagem(
+    distância_da_viagem: &f32
+) {
+    let mut _valor_da_viagem: f32 = 0.0;
 
     if *distância_da_viagem <= 200.0 {
-        valor_da_viagem = *distância_da_viagem * 0.50;
+        _valor_da_viagem = *distância_da_viagem * 0.50;
     } else {
-        valor_da_viagem = *distância_da_viagem * 0.45;
+        _valor_da_viagem = *distância_da_viagem * 0.45;
     }
 
+    sleep(Duration::from_millis(1000));
+
+    println!(
+        "Calculando o preço da viagem...\n"
+    );
+
     sleep(Duration::from_millis(1500));
-
-    println!("Calculando o preço da viagem...\n");
-
-    sleep(Duration::from_millis(2500));
 
     println!(
         "O preço final é de R${:.2}.\n",
-        valor_da_viagem
+        _valor_da_viagem
     );
 
-    sleep(Duration::from_millis(1500));
+    sleep(Duration::from_millis(1100));
 }
 
-fn obter_a_distância_da_viagem(cabeçalho_do_programa: &String) -> f32 {
+fn obter_a_distância_da_viagem(
+    exercício_informações: &ExercícioInformações
+) -> f32 {
     loop {
-        println!("Digite a distância da viagem em kms:");
+        println!(
+            "Digite a distância da viagem em kms:"
+        );
 
         let mut input = String::new();
-        match io::stdin().read_line(&mut input) {
 
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<f32>() {
                     Ok(distância) => {
@@ -124,34 +99,32 @@ fn obter_a_distância_da_viagem(cabeçalho_do_programa: &String) -> f32 {
 
                         match distância_formatada.parse::<f32>() {
                             Ok(distância_final) => {
-                                clean_terminal_linux();
+                                limpar_terminal();
 
-                                println!("{}", cabeçalho_do_programa);
-
-                                descrição_do_exercício();
+                                exercício_informações.mostrar_informações();
 
                                 println!(
-                                    "\nA distância de {:.2}km,\nfoi adicionada com sucesso!\n",
+                                    "A distância de {:.2}km,\nfoi adicionada com sucesso!\n",
                                     distância_final
                                 );
 
                                 return distância_final;
                             }
-                            Err(_) => println!("Erro!"),
+                            Err(_) => (),
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Digite um valor válido!\n");
+                        println!(
+                            "Erro! Digite um número real!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }
