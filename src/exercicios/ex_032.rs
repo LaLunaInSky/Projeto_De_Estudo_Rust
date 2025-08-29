@@ -78,7 +78,7 @@ Os segmentos {:?},
 {}podem formar um triângulo!
 ",
         segmentos.get_lista_de_segmentos(),
-        if segmentos.get_forma_um_triângulo() {"Não "} else {""}
+        if !segmentos.get_forma_um_triângulo() {"Não "} else {""}
     );
 
     sleep(Duration::from_millis(1100));
