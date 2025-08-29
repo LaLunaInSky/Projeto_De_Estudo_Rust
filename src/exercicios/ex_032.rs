@@ -1,154 +1,130 @@
 use std::{
-    io,
+    io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 032:");
-    println!(
-        " Um programa que lê o comprimento de três\nretas e retorna se elas podem ou não\nformar um triângulo."
+mod segmentos;
+
+use segmentos::Segmentos;
+
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("032"),
+            String::from("Um programa que lê o comprimento de três\nretas e retorna se elas podem ou não\nformar um triângulo.")
+        )
     );
-}
-
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
+    
     loop {
-        /* Começo do Exercício */
-        println!("{}", cabeçalho_do_programa);
+        exercício_informações.mostrar_informações();
 
-        descrição_do_exercício();
-
-        println!();
-
-        /* Corpo do Exercício - fn main */
-        let mut segmentos_de_um_suposto_triângulo: Vec<u32> = vec![];
+        /* Corpo do Exercício */
+        let mut segmentos = Segmentos::new();
 
         for indice in 1..4 {
-            segmentos_de_um_suposto_triângulo.push(
+            segmentos.adicionar_novo_segmento(
+                (indice - 1) as usize,
                 obter_um_segmento_de_um_suposto_triângulo(
-                    &cabeçalho_do_programa, 
-                    &indice
+                    &exercício_informações, 
+                    indice
                 )
             );
         }
 
-        analisar_se_os_segmentos_formam_um_triângulo(&segmentos_de_um_suposto_triângulo);
+        analisar_os_segmentos(
+            &mut segmentos
+        );
 
-        let resposta_sobre_continuar = perguntar_se_quer_adicionar_outros_segmentos(&cabeçalho_do_programa);
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-        if resposta_sobre_continuar == false {
+        if !resposta_sobre_continuar {
             break;
         }
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
-fn perguntar_se_quer_adicionar_outros_segmentos(cabeçalho_do_programa: &String) -> bool {
-    loop {
-        println!("\nQuer adicionar outros segmentos? [S/N]");
-
-        let mut input = String::new();
-
-        match io::stdin().read_line(&mut input) {
-            Ok(_) => {
-                let resposta_da_pergunta = input.trim().to_lowercase();
-
-                if resposta_da_pergunta == "s" || resposta_da_pergunta == "n" {
-                    if resposta_da_pergunta == "s" {
-                        clean_terminal_linux();
-    
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
-                    clean_terminal_linux();
-
-                    println!("{}", cabeçalho_do_programa);
-
-                    descrição_do_exercício();
-
-                    println!("\nErro! Apenas é aceito S [sim] ou N [não]!\n")
-                }
-            }
-            Err(_) => println!("Erro!"),
-        }
-    }
-}
-
-fn analisar_se_os_segmentos_formam_um_triângulo(segmentos: &Vec<u32>) {
-    let mut resposta_da_analise = String::from("NÃO ");
-
-    if segmentos[0] + segmentos[1] > segmentos [2] && segmentos[0] + segmentos[2] > segmentos[1] && segmentos[1] + segmentos[2] > segmentos[0] {
-        resposta_da_analise = String::from("");
-    }
-
+fn analisar_os_segmentos(
+    segmentos: &mut Segmentos
+) {
     sleep(Duration::from_millis(1000));
 
-    println!("Analisando os segmentos..\n");
-
-    sleep(Duration::from_millis(2500));
-
     println!(
-        "Os segmentos {:?},\n{}podem formar um triângulo!",
-        segmentos, resposta_da_analise
+        "Analisando os segmentos.."
     );
 
     sleep(Duration::from_millis(1500));
+
+    println!(
+        "
+Os segmentos {:?},
+{}podem formar um triângulo!
+",
+        segmentos.get_lista_de_segmentos(),
+        if segmentos.get_forma_um_triângulo() {"Não "} else {""}
+    );
+
+    sleep(Duration::from_millis(1100));
 }
 
-fn obter_um_segmento_de_um_suposto_triângulo(cabeçalho_do_programa: &String, indice_da_chamada: &u8) -> u32 {
+fn obter_um_segmento_de_um_suposto_triângulo(
+    exercício_informações: &ExercícioInformações, 
+    indice_da_chamada: u8
+) -> u32 {
     loop {
-        println!("Digite o {indice_da_chamada}º Segmento:");
+        println!(
+            "Digite o {}º Segmento:",
+            indice_da_chamada
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<u32>() {
                     Ok(segmento) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
-
-                        descrição_do_exercício();
+                        exercício_informações.mostrar_informações();
 
                         println!(
-                            "\nO segmento {},\nfoi adicionado com sucesso!\n",
+                            "O segmento {},\nfoi adicionado com sucesso!\n",
                             segmento
                         );
 
                         return segmento;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
-
-                        descrição_do_exercício();
+                        exercício_informações.mostrar_informações();
 
                         println!(
-                            "\nErro! Digite apenas números!\n"
+                            "Erro! Digite apenas números!\n"
                         );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }
