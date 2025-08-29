@@ -1,164 +1,134 @@
 use std::{
-    io,
+    io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 030:");
-    println!(
-        " Um programa que lê três números, e mostra\nqual é o MAIOR e qual é o MENOR entre\neles."
+mod numeros;
+
+use numeros::Números;
+
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("030"),
+            String::from("Um programa que lê três números, e mostra\nqual é o MAIOR e qual é o MENOR entre\neles.")
+        )
     );
-}
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     loop {
-        /* Começo do Exercício */
-        println!("{}", cabeçalho_do_programa);
+        exercício_informações.mostrar_informações();
 
-        descrição_do_exercício();
-
-        println!();
-
-        /* Corpo do Exercício - fn main */
-        let mut números_digitados: Vec<u32> = vec![];
+        /* Corpo do Exercício */
+        let mut números = Números::new();
 
         for index in 1..4 {
-            números_digitados.push(obter_um_número_inteiro(&index, &cabeçalho_do_programa));
+            números.adicionar_um_número_na_lista(
+                obter_um_número_inteiro(
+                    index, 
+                    &exercício_informações
+                )
+            );
         }
 
-        analisar_qual_é_o_maior_e_o_menor_número_na_lista(&números_digitados);
+        analisar_os_números(
+            &números
+        );
 
-        sleep(Duration::from_millis(1500));
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-        let resposta_da_pergunta_sobre_continuar = perguntar_se_quer_rodar_novamente_o_exercício(&cabeçalho_do_programa);
-
-        if resposta_da_pergunta_sobre_continuar == false {
+        if !resposta_sobre_continuar {
             break;
         }    
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
+    rodar_final_do_exercício();
+}
 
+fn analisar_os_números(
+    números: &Números
+) {
+    sleep(Duration::from_millis(1000));
+
+    println!("Analisando os números...\n");
+
+    sleep(Duration::from_millis(1500));
+    
     println!(
-        "\nVoltando ao menu de exercícios...\n"
+        "{:?}", 
+        números.get_lista_de_números()
     );
 
-    sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(500));
 
-    clean_terminal_linux();
+    println!(
+        "
+Maior.: {}
+Menor.: {}
+", 
+    números.get_número_maior(),
+    números.get_número_menor()
+);
+
+    sleep(Duration::from_millis(1100));
 }
 
-fn perguntar_se_quer_rodar_novamente_o_exercício(cabeçalho_do_programa: &String) -> bool {
+fn obter_um_número_inteiro(
+    index_da_chamada: u8, 
+    exercício_informações: &ExercícioInformações
+) -> u32 {
     loop {
-        println!("\nQuer adicionar novos número? [S/N]");
+        println!(
+            "Digite o {}º Número:", 
+            index_da_chamada
+        );
 
         let mut input = String::new();
 
-        match io::stdin().read_line(&mut input) {
-            Ok(_) => {
-                let resposta_da_pergunta = input.trim().to_lowercase();
-            
-                if resposta_da_pergunta == "s" || resposta_da_pergunta == "n" {
-                    if resposta_da_pergunta == "s" {
-                        clean_terminal_linux();
-
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
-                    clean_terminal_linux();
-
-                    println!("{}", cabeçalho_do_programa);
-
-                    descrição_do_exercício();
-
-                    println!("\nErro! Digite apenas S [sim] ou N [não]!\n");
-                }
-            }
-            Err(_) => println!("Erro!"),
-        }
-    }
-}
-
-fn analisar_qual_é_o_maior_e_o_menor_número_na_lista(números_inteiros: &Vec<u32>) {
-    let mut número_maior: u32 = 0;
-    let mut número_menor: u32 = 0;
-
-    for (index, número) in números_inteiros.iter().enumerate() {
-        if index == 0 {
-            número_menor = *número;
-            número_maior = *número;
-        } else {
-            if número < &número_menor {
-                número_menor = *número;
-            }
-
-            if número > &número_maior {
-                número_maior = *número;
-            }
-        }
-    }
-
-    sleep(Duration::from_millis(1000));
-
-    println!("Analisando os números...");
-
-    sleep(Duration::from_millis(1000));
-    
-    println!("{:?}\n", números_inteiros);
-
-    sleep(Duration::from_millis(3500));
-
-    println!("Maior.: {}", número_maior);
-
-    sleep(Duration::from_millis(1000));
-
-    println!("Menor.: {}", número_menor);
-}
-
-fn obter_um_número_inteiro(index: &u8, cabeçalho_do_programa: &String) -> u32 {
-    loop {
-        println!("Digite o {}º Número:", index);
-
-        let mut input = String::new();
-
-        match io::stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<u32>() {
                     Ok(número) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
-
-                        descrição_do_exercício();
+                        exercício_informações.mostrar_informações();
 
                         println!(
-                            "\nNúmero {},\nadicionado com sucesso!\n",
+                            "Número {},\nfoi adicionado com sucesso!\n",
                             número
                         );
 
                         return número;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Digite apenas número!\n");
+                        println!(
+                            "Erro! Digite apenas número!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }
