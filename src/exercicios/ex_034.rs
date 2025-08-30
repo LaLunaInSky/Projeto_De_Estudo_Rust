@@ -1,77 +1,81 @@
 use std:: {
-    io::stdin,
-    thread::sleep,
-    time::Duration,
-    process::Command
+    io::stdin
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 034:");
-    println!(
-        " Um programa que lê um número inteiro e\npergunta ao usuário qual base quer\nconverter:
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("034"),
+            String::from("Um programa que lê um número inteiro e\npergunta ao usuário qual base quer\nconverter:
 - 1 para binário
 - 2 para octal
-- 3 para hexadecimal"
+- 3 para hexadecimal")
+        )
     );
-}
-
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
+    
     loop {
-        /* Começo do Exercício */
-        println!("{}", cabeçalho_do_programa);
+        exercício_informações.mostrar_informações();
 
-        descrição_do_exercício();
-
-        println!();
-
-        /* Corpo do Exercício - fn main */
-        let número_inteiro_digitado = obter_um_número_inteiro(&cabeçalho_do_programa);
+        /* Corpo do Exercício */
+        let número_inteiro_digitado = obter_um_número_inteiro(
+            &exercício_informações
+        );
 
         mostrar_o_menu_de_opções();
 
-        let resposta_sobre_continuar = obter_a_opção_digitada(&cabeçalho_do_programa, &número_inteiro_digitado);
+        let resposta_sobre_continuar = obter_a_opção_digitada(
+            &exercício_informações,
+            &número_inteiro_digitado
+        );
 
-        if resposta_sobre_continuar == false {
+        if !resposta_sobre_continuar {
             break;
         }
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
-fn obter_a_opção_digitada(cabeçalho_do_programa: &String, número_digitado: &u32) -> bool {
+fn obter_a_opção_digitada(
+    exercício_informações: &ExercícioInformações, 
+    número_digitado: &u32
+) -> bool {
     loop {
-        let mut converção_na_base = String::new();
+        let mut _converção_na_base = String::new();
 
-        println!("\nQual opção você escolhe?");
+        println!(
+            "\nQual opção você escolhe?"
+        );
     
         let mut input = String::new();
         
-        match stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<u8>() {
                     Ok(opção_do_menu) => {
                         if opção_do_menu < 1 || opção_do_menu > 6 {
-                            clean_terminal_linux();
-    
-                            println!("{}", cabeçalho_do_programa);
+                            limpar_terminal();
+
+                            exercício_informações.mostrar_informações();
                             
-                            descrição_do_exercício();
-                            
-                            println!("\nVocê digitou o número {}\n", número_digitado);
+                            println!(
+                                "Você digitou o número {}\n",
+                                número_digitado
+                            );
 
                             mostrar_o_menu_de_opções();
 
@@ -81,65 +85,59 @@ fn obter_a_opção_digitada(cabeçalho_do_programa: &String, número_digitado: &
                                 return false;
 
                             } else if opção_do_menu == 4 {
-                                clean_terminal_linux();
+                                limpar_terminal();
 
                                 return  true;
 
                             } else if opção_do_menu == 3 {
-                                converção_na_base = format!(
+                                _converção_na_base = format!(
                                     "{:x}",
                                     número_digitado
                                 );
 
-                                clean_terminal_linux();
-    
-                                println!("{}", cabeçalho_do_programa);
-                                
-                                descrição_do_exercício();
+                                limpar_terminal();
+
+                                exercício_informações.mostrar_informações();
                                 
                                 println!(
-                                    "\nO número {} em HEXA é {}\n", 
+                                    "O número {} em HEXA é {}\n", 
                                     número_digitado,
-                                    converção_na_base
+                                    _converção_na_base
                                 );
 
                                 mostrar_o_menu_de_opções();
 
                             } else if opção_do_menu == 2 {
-                                converção_na_base = format!(
+                                _converção_na_base = format!(
                                     "{:o}",
                                     número_digitado
                                 );
 
-                                clean_terminal_linux();
-    
-                                println!("{}", cabeçalho_do_programa);
-                                
-                                descrição_do_exercício();
+                                limpar_terminal();
+
+                                exercício_informações.mostrar_informações();
                                 
                                 println!(
-                                    "\nO número {} em OCTAL é {}\n", 
+                                    "O número {} em OCTAL é {}\n", 
                                     número_digitado,
-                                    converção_na_base
+                                    _converção_na_base
                                 );
 
                                 mostrar_o_menu_de_opções();
                             } else {
-                                converção_na_base = format!(
+                                _converção_na_base = format!(
                                     "{:b}",
                                     número_digitado
                                 );
 
-                                clean_terminal_linux();
-    
-                                println!("{}", cabeçalho_do_programa);
-                                
-                                descrição_do_exercício();
+                                limpar_terminal();
+
+                                exercício_informações.mostrar_informações();
                                 
                                 println!(
-                                    "\nO número {} em BINÁRIO é {}\n", 
+                                    "O número {} em BINÁRIO é {}\n", 
                                     número_digitado,
-                                    converção_na_base
+                                    _converção_na_base
                                 );
 
                                 mostrar_o_menu_de_opções();
@@ -147,21 +145,24 @@ fn obter_a_opção_digitada(cabeçalho_do_programa: &String, número_digitado: &
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
-    
-                        println!("{}", cabeçalho_do_programa);
+                        limpar_terminal();
+
+                        exercício_informações.mostrar_informações();
                         
-                        descrição_do_exercício();
-                        
-                        println!("\nVocê digitou o número {}\n", número_digitado);
+                        println!(
+                            "Você digitou o número {}\n", 
+                            número_digitado
+                        );
 
                         mostrar_o_menu_de_opções();
     
-                        println!("\nErro! Digite apenas números!");
+                        println!(
+                            "\nErro! Digite apenas números!"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }
@@ -176,41 +177,45 @@ fn mostrar_o_menu_de_opções() {
     );
 }
 
-fn obter_um_número_inteiro(cabeçalho_do_programa: &String) -> u32 {
+fn obter_um_número_inteiro(
+    exercício_informações: &ExercícioInformações
+) -> u32 {
     loop {
-        println!("Digite um número inteiro:");
+        println!(
+            "Digite um número inteiro:"
+        );
 
         let mut input = String::new();
 
-        match stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<u32>() {
                     Ok(número) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
-
-                        descrição_do_exercício();
+                        exercício_informações.mostrar_informações();
 
                         println!(
-                            "\nO número {},\nfoi adicionado com sucesso!\n",
+                            "O número {},\nfoi adicionado com sucesso!\n",
                             número
                         );
 
                         return número;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
+                        exercício_informações.mostrar_informações();
 
-                        descrição_do_exercício();
-
-                        println!("\nErro! Digite apenas números inteiros!\n");
+                        println!(
+                            "Erro! Digite apenas números inteiros!\n"
+                        );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }
