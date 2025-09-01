@@ -1,106 +1,162 @@
 use std::{
     io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
+
+enum TiposDeTriângulos {
+    NENHUM,
+    EQUILATERO,
+    ISOSCELES,
+    ESCALENO
 }
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 039:");
-    println!(
-        " Refaça o EX_032 dos triângulos\nacrescentando recurso de mostrar que tipo\nde triângulo será formado:
-        
-- Equilátero: todos os lados iguais
-- Isósceles: dois lados iguais
-- Escaleno: todos os lados diferentes"
-    );
-}
-
-#[derive(Debug)]
 struct Segmentos {
-    lados: Vec<u32>,
-    é_um_triangulo: bool,
-    tipo_do_triângulo: String,
+    lista_segmentos: [u32; 3],
+    forma_um_triângulo: bool,
+    tipo_do_triângulo: TiposDeTriângulos,
 }
 
 impl Segmentos {
-    fn new(lados: Vec<u32>) -> Self {
-        let é_um_triangulo = verificar_se_formar_um_triângulo(&lados);
-
-        let mut tipo_do_triângulo = String::new();
-
-        if é_um_triangulo {
-            tipo_do_triângulo = verificar_o_tipo_do_triângulo(&lados);
-        }
-
+    fn new() -> Self {
         Self {
-            lados,
-            é_um_triangulo,
-            tipo_do_triângulo
+            lista_segmentos: [0, 0, 0],
+            forma_um_triângulo: false,
+            tipo_do_triângulo: TiposDeTriângulos::NENHUM
+        }
+    }
+
+    fn adicionar_um_segmento(
+        &mut self,
+        segmento: u32,
+        posição_na_lista: usize
+    ) {
+        self.lista_segmentos[posição_na_lista] = segmento;
+    
+        self.verificar_se_formar_um_triângulo();
+    }
+
+    fn verificar_se_formar_um_triângulo(
+        &mut self
+    ) {
+        if (
+            self.lista_segmentos[0] + self.lista_segmentos[1]
+        ) > self.lista_segmentos[2] 
+          && 
+        (
+            self.lista_segmentos[0] + self.lista_segmentos[2]
+        ) > self.lista_segmentos[1] 
+          && 
+        (
+            self.lista_segmentos[1] + self.lista_segmentos[2]
+        ) > self.lista_segmentos[0] 
+        {
+        
+            self.forma_um_triângulo = true;
+
+            self.verificar_o_tipo_do_triângulo();
+        }
+    }
+    
+    fn verificar_o_tipo_do_triângulo(
+        &mut self
+    ) {
+        if self.lista_segmentos[0] == self.lista_segmentos[1] 
+            && 
+           self.lista_segmentos[1] == self.lista_segmentos[2] 
+            && 
+           self.lista_segmentos[0] == self.lista_segmentos[2] 
+        {
+            
+            self.tipo_do_triângulo = TiposDeTriângulos::EQUILATERO;
+
+        } else if self.lista_segmentos[0] == self.lista_segmentos[1] 
+                   || 
+                  self.lista_segmentos[0] == self.lista_segmentos[2] 
+                   || 
+                  self.lista_segmentos[1] == self.lista_segmentos[2] 
+        {
+            
+            self.tipo_do_triângulo = TiposDeTriângulos::ISOSCELES;
+
+        } else {
+            
+            self.tipo_do_triângulo = TiposDeTriângulos::ESCALENO;
+        } 
+    }
+
+    fn get_lista_de_segmentos(
+        &self
+    ) -> [u32; 3] {
+        return self.lista_segmentos.clone();
+    }
+
+    fn get_forma_um_triângulo(
+        &self
+    ) -> bool {
+        return self.forma_um_triângulo;
+    }
+
+    fn get_tipo_do_triângulo(
+        &self
+    ) -> String {
+        match self.tipo_do_triângulo {
+            TiposDeTriângulos::EQUILATERO => return "EQUILÁTERO".to_string(),
+            TiposDeTriângulos::ISOSCELES => return "ISÓSCELES".to_string(),
+            TiposDeTriângulos::ESCALENO => return "ESCALENO".to_string(),
+            TiposDeTriângulos::NENHUM => return "NEHHUM".to_string(),
         }
     }
 }
 
-fn verificar_o_tipo_do_triângulo(
-    lados: &Vec<u32>
-) -> String {
-    if lados[0] == lados[1] && lados[1] == lados[2] && lados[0] == lados[2] {
-        return String::from(
-            "EQUILÁTERO"
-        );
-    } else if lados[0] == lados[1] || lados[0] == lados[2] || lados[1] == lados[2] {
-        return String::from(
-            "ISÓSCELES"
-        );
-    } else {
-        return String::from(
-            "ESCALENO"
-        );
-    }
-}
 
-fn verificar_se_formar_um_triângulo(
-    lados: &Vec<u32>
-) -> bool {
-    if (lados[0] + lados[1]) > lados[2] && (lados[0] + lados[2]) > lados[1] && (lados[1] + lados[2]) > lados[0] {
-        return true;
-    } else {
-        return false;
-    }
-} 
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("039"),
+            String::from("Refaça o EX_032 dos triângulos\nacrescentando recurso de mostrar que tipo\nde triângulo será formado:
+        
+- Equilátero: todos os lados iguais
+- Isósceles: dois lados iguais
+- Escaleno: todos os lados diferentes")
+        )
+    );
 
-pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     loop {
-        /* Começo do Exercício */
-        println!("{}", cabeçalho_do_programa);
+        exercício_informações.mostrar_informações();
 
-        descrição_do_exercício();
+        /* Corpo do Exercício */
+        let mut segmentos = Segmentos::new();
 
-        println!();
-
-        /* Corpo do Exercício - fn main */
-        let mut lados_digitados: Vec<u32> = vec![];
-
-        for lado in 1..4 {
-            lados_digitados.push(
+        for indice in 1..3 {
+            segmentos.adicionar_um_segmento(
                 obter_o_lado_de_um_suposto_triângulo(
-                    &cabeçalho_do_programa, 
-                    lado
-                )
+                    &exercício_informações, 
+                    indice
+                ),
+                (indice - 1) as usize
             );
         }
 
-        let suposto_triângulo = Segmentos::new(
-            lados_digitados
+        analisar_os_segmentos(
+            &segmentos
         );
 
-        analisar_os_segmentos(&suposto_triângulo);
-
-        let resposta_sobre_continuar = perguntar_se_quer_adicionar_novos_segmentos(&cabeçalho_do_programa);
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
         if !resposta_sobre_continuar {
             break;
@@ -108,122 +164,77 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
-fn analisar_os_segmentos(segmentos: &Segmentos) {
+fn analisar_os_segmentos(
+    segmentos: &Segmentos
+) {
     sleep(Duration::from_millis(1000));
 
     println!(
         "Analisando os segmentos...\n"
     );
 
-    sleep(Duration::from_millis(3000));
+    sleep(Duration::from_millis(1500));
 
     println!(
-        "O segmentos {:?},\n{}formam um triângulo!",
-        segmentos.lados,
-        if !segmentos.é_um_triangulo {"NÃO "} else {""}
+        "O segmentos {:?},\n{}formam um triângulo!\n",
+        segmentos.get_lista_de_segmentos(),
+        if !segmentos.get_forma_um_triângulo() {"NÃO "} else {""}
     );
 
-    if segmentos.é_um_triangulo {
+    if segmentos.get_forma_um_triângulo() {
         println!(
             "\nEste é um triângulo {}!\n",
-            segmentos.tipo_do_triângulo
+            segmentos.get_tipo_do_triângulo()
         )
-    } else {
-        println!();
     }
 
-    sleep(Duration::from_millis(1500));
-}
-
-fn perguntar_se_quer_adicionar_novos_segmentos(
-    cabeçalho_do_programa: &String
-) -> bool {
-    loop {
-        println!("Quer adicionar novos segmentos? [S/N]");
-
-        let mut input = String::new();
-
-        match stdin().read_line(&mut input) {
-            Ok(_) => {
-                let resposta_da_pergunta = input.trim().to_lowercase();
-
-                let resposta_da_pergunta = resposta_da_pergunta.as_str();
-
-                match resposta_da_pergunta {
-                    "s" => {
-                        clean_terminal_linux();
-
-                        return true;
-                    }
-                    "n" => return false,
-                    _ => {
-                        clean_terminal_linux();
-
-                        println!("{}", cabeçalho_do_programa);
-
-                        descrição_do_exercício();
-
-                        println!(
-                            "\nErro! Apenas é aceito S [sim] ou N [não]!\n"
-                        );
-                    }
-                }
-            }
-            Err(_) => println!("Erro!"),
-        }
-    }
+    sleep(Duration::from_millis(1100));
 }
 
 fn obter_o_lado_de_um_suposto_triângulo(
-    cabeçalho_do_programa: &String,
+    exercício_informações: &ExercícioInformações,
     index_da_chamada: u8
 ) -> u32 {
     loop {
-        println!("Digite o {index_da_chamada}º Segmento:");
+        println!(
+            "Digite o {}º Segmento:",
+            index_da_chamada
+        );
 
         let mut input = String::new();
 
-        match stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<u32>() {
                     Ok(segmento) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
-
-                        descrição_do_exercício();
+                        exercício_informações.mostrar_informações();
 
                         println!(
-                            "\nO segmento de {segmento},\nfoi adicionado com sucesso!\n"
+                            "O segmento de {},\nfoi adicionado com sucesso!\n",
+                            segmento
                         );
 
                         return segmento;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
-
-                        descrição_do_exercício();
+                        exercício_informações.mostrar_informações();
 
                         println!(
-                            "\nErro! Digite apenas números!\n"
+                            "Erro! Digite apenas números!\n"
                         );
                     }
                 }
             }
-            Err(_) => println!("Erro!"),
+            Err(_) => (),
         }
     }
 }
