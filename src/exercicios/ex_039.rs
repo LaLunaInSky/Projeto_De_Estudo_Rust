@@ -12,111 +12,10 @@ use crate::recursos::{
     final_do_exercicio::rodar_final_do_exercício
 };
 
-enum TiposDeTriângulos {
-    NENHUM,
-    EQUILATERO,
-    ISOSCELES,
-    ESCALENO
-}
+mod tipos_de_triangulos;
+mod segmentos;
 
-struct Segmentos {
-    lista_segmentos: [u32; 3],
-    forma_um_triângulo: bool,
-    tipo_do_triângulo: TiposDeTriângulos,
-}
-
-impl Segmentos {
-    fn new() -> Self {
-        Self {
-            lista_segmentos: [0, 0, 0],
-            forma_um_triângulo: false,
-            tipo_do_triângulo: TiposDeTriângulos::NENHUM
-        }
-    }
-
-    fn adicionar_um_segmento(
-        &mut self,
-        segmento: u32,
-        posição_na_lista: usize
-    ) {
-        self.lista_segmentos[posição_na_lista] = segmento;
-    
-        self.verificar_se_formar_um_triângulo();
-    }
-
-    fn verificar_se_formar_um_triângulo(
-        &mut self
-    ) {
-        if (
-            self.lista_segmentos[0] + self.lista_segmentos[1]
-        ) > self.lista_segmentos[2] 
-          && 
-        (
-            self.lista_segmentos[0] + self.lista_segmentos[2]
-        ) > self.lista_segmentos[1] 
-          && 
-        (
-            self.lista_segmentos[1] + self.lista_segmentos[2]
-        ) > self.lista_segmentos[0] 
-        {
-        
-            self.forma_um_triângulo = true;
-
-            self.verificar_o_tipo_do_triângulo();
-        }
-    }
-    
-    fn verificar_o_tipo_do_triângulo(
-        &mut self
-    ) {
-        if self.lista_segmentos[0] == self.lista_segmentos[1] 
-            && 
-           self.lista_segmentos[1] == self.lista_segmentos[2] 
-            && 
-           self.lista_segmentos[0] == self.lista_segmentos[2] 
-        {
-            
-            self.tipo_do_triângulo = TiposDeTriângulos::EQUILATERO;
-
-        } else if self.lista_segmentos[0] == self.lista_segmentos[1] 
-                   || 
-                  self.lista_segmentos[0] == self.lista_segmentos[2] 
-                   || 
-                  self.lista_segmentos[1] == self.lista_segmentos[2] 
-        {
-            
-            self.tipo_do_triângulo = TiposDeTriângulos::ISOSCELES;
-
-        } else {
-            
-            self.tipo_do_triângulo = TiposDeTriângulos::ESCALENO;
-        } 
-    }
-
-    fn get_lista_de_segmentos(
-        &self
-    ) -> [u32; 3] {
-        return self.lista_segmentos.clone();
-    }
-
-    fn get_forma_um_triângulo(
-        &self
-    ) -> bool {
-        return self.forma_um_triângulo;
-    }
-
-    fn get_tipo_do_triângulo(
-        &self
-    ) -> String {
-        match self.tipo_do_triângulo {
-            TiposDeTriângulos::EQUILATERO => return "EQUILÁTERO".to_string(),
-            TiposDeTriângulos::ISOSCELES => return "ISÓSCELES".to_string(),
-            TiposDeTriângulos::ESCALENO => return "ESCALENO".to_string(),
-            TiposDeTriângulos::NENHUM => return "NEHHUM".to_string(),
-        }
-    }
-}
-
+use segmentos::Segmentos;
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
@@ -140,7 +39,7 @@ pub fn rodar_o_exercício(
         /* Corpo do Exercício */
         let mut segmentos = Segmentos::new();
 
-        for indice in 1..3 {
+        for indice in 1..4 {
             segmentos.adicionar_um_segmento(
                 obter_o_lado_de_um_suposto_triângulo(
                     &exercício_informações, 
@@ -186,7 +85,7 @@ fn analisar_os_segmentos(
 
     if segmentos.get_forma_um_triângulo() {
         println!(
-            "\nEste é um triângulo {}!\n",
+            "Este é um triângulo {}!\n",
             segmentos.get_tipo_do_triângulo()
         )
     }
