@@ -1,46 +1,44 @@
 use std::{
-    io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
-
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 043:");
-    println!(
-        " Um programa que mostra no terminal uma\ncontagem regressiva para o estoura de\nfogos de artifícios, indo de 10 até 0,\ncom uma pausa de 1 segundo entre eles."
-    );
-}
+use crate::recursos::{
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
-    println!(
-        "{}", cabeçalho_do_programa
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("043"),
+            String::from("Um programa que mostra no terminal uma\ncontagem regressiva para o estoura de\nfogos de artifícios, indo de 10 até 0,\ncom uma pausa de 1 segundo entre eles.")
+        )
     );
 
-    descrição_do_exercício();
+    loop {
+        exercício_informações.mostrar_informações();
 
-    println!();
+        /* Corpo do Exercício */
+        obter_contagem_regressiva();
 
-    /* Corpo do Exercício */
-    obter_contagem_regressiva();
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
+
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
 fn obter_contagem_regressiva() {
@@ -56,5 +54,7 @@ fn obter_contagem_regressiva() {
 
     sleep(Duration::from_secs(1));
 
-    println!("Boom boom!");
+    println!("\nBoom boom!\n");
+
+    sleep(Duration::from_millis(1100));
 }

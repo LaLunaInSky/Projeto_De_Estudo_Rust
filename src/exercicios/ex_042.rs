@@ -1,120 +1,53 @@
 use std::{
     io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-use rand::random_range;
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+mod opcoes_de_jogadas;
+mod possiveis_ganhadores;
+mod jogadas;
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 042:");
-    println!(
-        " Um programa que faça o usuário jogar\nJOKENPÔ com o computador."
-    );
-}
-
-#[derive(Debug)]
-struct Jogadas {
-    jogador: String,
-    computador: String,
-    ganhador: String,
-}
-
-impl Jogadas {
-    fn new(
-        jogador: String, 
-        computador: String,
-    ) -> Self {
-        let ganhador = match jogador.as_str() {
-            "pedra" => {
-                match computador.as_str() {
-                    "pedra" => {
-                        String::from("empate")
-                    }
-                    "papel" => {
-                        String::from("computador")
-                    }
-                    "tesoura" => {
-                        String::from("usuário")
-                    }
-                    _ => String::new(),
-                }
-            }
-            "papel" => {
-                match computador.as_str() {
-                    "pedra" => {
-                        String::from("usuário")
-                    }
-                    "papel" => {
-                        String::from("empate")
-                    }
-                    "tesoura" => {
-                        String::from("computador")
-                    }
-                    _ => String::new(),
-                }
-            },
-            "tesoura" => {
-                match computador.as_str() {
-                    "pedra" => {
-                        String::from("computador")
-                    }
-                    "papel" => {
-                        String::from("usuário")
-                    }
-                    "tesoura" => {
-                        String::from("empate")
-                    }
-                    _ => String::new(),
-                }
-            }
-            _ => String::new(),
-        };
-
-        Self {
-            jogador,
-            computador,
-            ganhador
-        }
-    }
-}
+use opcoes_de_jogadas::OpçõesDeJogadas;
+use jogadas::Jogadas;
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("042"),
+            String::from("Um programa que faça o usuário jogar\nJOKENPÔ com o computador.")
+        )
+    );
+
     loop {
-        println!("{}", cabeçalho_do_programa);
+        exercício_informações.mostrar_informações();
 
-        descrição_do_exercício();
-
-        println!();
-
-        /* Corpo do Exercício - fn main */
-        let opções_de_jogadas = vec![
-            "pedra", "papel", "tesoura"
-        ];
-
+        /* Corpo do Exercício */
         let jogadas = Jogadas::new(
             obter_a_opção_da_escolha(
-                &cabeçalho_do_programa,
-                &opções_de_jogadas
-            ),
-            obter_a_escolha_do_computador(
-                &opções_de_jogadas
+                &exercício_informações
             )
         );
 
-        analisar_quem_ganhou(&jogadas);
-
-        let resposta_sobre_continuar = perguntar_se_quer_adicionar_novo_valore(
-            &cabeçalho_do_programa
+        analisar_jogada(
+            &jogadas
         );
+
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        ); 
 
         if !resposta_sobre_continuar {
             break;
@@ -122,155 +55,100 @@ pub fn rodar_o_exercício(
 
     }
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
-fn obter_a_escolha_do_computador(
-    opções_de_jogadas: &Vec<&str>
-) -> String {
-    let número_sortado = random_range(0..=2);
+fn analisar_jogada(
+    jogadas: &Jogadas
+) {
+    let ganhador = jogadas.get_ganhador();
 
-    let jogada_escolhida = format!(
-        "{}", opções_de_jogadas[número_sortado]
-    );
-    
-    return jogada_escolhida;
-}
-
-fn perguntar_se_quer_adicionar_novo_valore(
-    cabeçalho_do_programa: &String
-) -> bool {
-    loop {
-        println!("Quer adicionar uma nova jogada?\n[S/N]");
-
-        let mut input = String::new();
-
-        match stdin().read_line(&mut input) {
-            Ok(_) => {
-                let resposta_da_pergunta = input.trim().to_lowercase();
-                let resposta_da_pergunta = resposta_da_pergunta.as_str();
-
-                match resposta_da_pergunta {
-                    "s" => {
-                        clean_terminal_linux();
-
-                        return true;
-                    }
-                    "n" => return false,
-                    _ => {
-                        clean_terminal_linux();
-
-                        println!(
-                            "{}",
-                            cabeçalho_do_programa
-                        );
-
-                        descrição_do_exercício();
-
-                        println!(
-                            "\nErro! Apenas é aceito S [sim] ou N [não]!\n"
-                        );
-                    }
-                }
-            }
-            Err(_) => (),
-        }
-    }
-}
-
-fn analisar_quem_ganhou(jogadas: &Jogadas) {
     sleep(Duration::from_millis(1000));
 
     println!(
         "Analisando quem ganhou...\n"
     );
 
-    sleep(Duration::from_millis(2500));
+    sleep(Duration::from_millis(1500));
 
     println!(
-        "O usuário jogu {}\nE o computador jogou {}\nlogo...",
-        jogadas.jogador.to_uppercase(),
-        jogadas.computador.to_uppercase()
+        "Usuário.....: {}
+Computador..: {}
+
+Logo...",
+        jogadas.get_jogador().to_uppercase(),
+        jogadas.get_computador().to_uppercase()
     );
+
+    sleep(Duration::from_millis(1500));
 
     println!(
         "\n{}\n",
-        match jogadas.ganhador.as_str() {
+        match ganhador.as_str() {
             "empate" => {
                 format!(
                     "Ouve {}!",
-                    jogadas.ganhador.to_uppercase()
+                    ganhador.to_uppercase()
                 )
             }
             _ => {
                 format!(
                     "O ganhador foi o {}!",
-                    jogadas.ganhador.to_uppercase()
+                    ganhador.to_uppercase()
                 )
             }
         }
     );
 
-    sleep(Duration::from_millis(1200));
+    sleep(Duration::from_millis(1100));
 } 
 
 fn obter_a_opção_da_escolha(
-    cabeçalho_do_programa: &String,
-    opções_de_jogadas: &Vec<&str>
-) -> String {
+    exercício_informações: &ExercícioInformações
+) -> OpçõesDeJogadas {
     mostrador_de_escolha();
     
     loop {
-        println!("Qual você escolhe?");
+        println!(
+            "Qual você escolhe?"
+        );
 
         let mut input = String::new();
 
-        match stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
-                match input.trim().parse::<usize>() {
+                match input.trim().parse::<u8>() {
                     Ok(opção_escolhida) => {
                         match opção_escolhida {
                             1..=3 => {
-                                let jogada_escolhida = format!(
-                                    "{}",
-                                    opções_de_jogadas[opção_escolhida - 1]
-                                );
+                                let jogada_jogador = match opção_escolhida {
+                                    1 => OpçõesDeJogadas::PEDRA,
+                                    2 => OpçõesDeJogadas::PAPEL,
+                                    3 => OpçõesDeJogadas::TESOURA,
+                                    _ => OpçõesDeJogadas::PEDRA,
+                                };
 
-                                clean_terminal_linux();
+                                limpar_terminal();
 
-                                println!(
-                                    "{}",
-                                    cabeçalho_do_programa
-                                );
-
-                                descrição_do_exercício();
+                                exercício_informações.mostrar_informações();
 
                                 println!(
-                                    "\nA opção de {},\nfoi selecionada com sucesso!\n",
-                                    jogada_escolhida
+                                    "A opção de {},\nfoi selecionada com sucesso!\n",
+                                    match jogada_jogador {
+                                        OpçõesDeJogadas::PAPEL => String::from("papel"),
+                                        OpçõesDeJogadas::PEDRA => String::from("pedra"),
+                                        OpçõesDeJogadas::TESOURA => String::from("tesoura")
+                                    }
                                 );
 
-                                return jogada_escolhida;
+                                return jogada_jogador;
                             }
                             _ => {
-                                clean_terminal_linux();
+                                limpar_terminal();
 
-                                println!(
-                                    "{}",
-                                    cabeçalho_do_programa
-                                );
-
-                                descrição_do_exercício();
-
-                                println!();
+                                exercício_informações.mostrar_informações();
 
                                 mostrador_de_escolha();
 
@@ -281,16 +159,9 @@ fn obter_a_opção_da_escolha(
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}",
-                            cabeçalho_do_programa
-                        );
-
-                        descrição_do_exercício();
-
-                        println!();
+                        exercício_informações.mostrar_informações();
 
                         mostrador_de_escolha();
 
