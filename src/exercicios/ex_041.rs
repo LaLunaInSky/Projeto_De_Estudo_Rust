@@ -1,45 +1,50 @@
 use std::{
-    io::stdin,
-    thread::sleep,
-    time::Duration,
-    process::Command
+    io::stdin
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() {
-    println!("Descrição do exercício 041:");
-    println!(
-        " Um programa que calcula o valor a ser\npago por um produto, considerando o seu\npreço normal e condição de pagamento:
-        
-- À vista dinheiro/cheque: 10% desconto
-- À vista no cartão: 5% desconto
-- Em até 2x no cartão: preço normal
-- 3x ou mais no cartão: 20% de juros"
-    );
-}
+mod arredondador_de_numeros_reais;
+mod produto;
+
+use arredondador_de_numeros_reais::arrendondar_um_número_real;
+use produto::Produto;
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("041"),
+            String::from("Um programa que calcula o valor a ser\npago por um produto, considerando o seu\npreço normal e condição de pagamento:
+        
+- À vista dinheiro/cheque: 10% desconto
+- À vista no cartão: 5% desconto
+- Em até 2x no cartão: preço normal
+- 3x ou mais no cartão: 20% de juros")
+        )
+    );
+
     loop {
-        println!("{}", cabeçalho_do_programa);
-
-        descrição_do_exercício();
-
-        println!();
+        exercício_informações.mostrar_informações();
 
         /* Corpo do Exercício */
-        let valor_do_produto = obter_o_valor_do_produto(
-            &cabeçalho_do_programa
+        let mut produto = Produto::new(
+            obter_o_valor_do_produto(
+                &exercício_informações
+            )
         );
 
         let resposta_sobre_continuar = obter_a_opção_digitada(
-            &cabeçalho_do_programa, 
-            &valor_do_produto
+            &exercício_informações,
+            &mut produto
         );
 
         if !resposta_sobre_continuar {
@@ -48,111 +53,51 @@ pub fn rodar_o_exercício(
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
-}
-
-struct Produto {
-    valor: f32
-}
-
-impl Produto {
-    fn pix(&self) -> String {
-        let valor_com_10_de_desconto = self.valor - (self.valor * (10.0 / 100.0));
-
-        format!(
-            "No Pix é de R${:2}!",
-            valor_com_10_de_desconto
-        )
-    }
-
-    fn debito(&self) -> String {
-        let valor_com_5_de_desconto = self.valor - (self.valor * (5.0 / 100.0));
-
-        format!(
-            "No débito é de R${:.2}!",
-            valor_com_5_de_desconto
-        )
-    }
-
-    fn credito_2x(&self) -> String {
-        let valor_de_cada_parcela = self.valor / 2.0;
-
-        format!(
-            "No crédito em 2x fica R${:.2},\nde R${:.2}!",
-            valor_de_cada_parcela, self.valor
-        )
-    }
-
-    fn credito_x_parcelas(
-        &self, quantidade_de_parcelas: u8
-    ) -> String {
-        let valor_final_com_20_de_juros = self.valor + (self.valor * (20.0 / 100.0));
-
-        let valor_de_cada_parcela = valor_final_com_20_de_juros / (quantidade_de_parcelas as f32);
-        
-        format!(
-            "No crédito em {}x fica R${:.2},\nde R${:.2}!",
-            quantidade_de_parcelas,
-            valor_de_cada_parcela,
-            valor_final_com_20_de_juros
-        )
-    }
+    rodar_final_do_exercício();
 }
 
 fn obter_a_quantidade_de_parcelas(
-    cabeçalho_do_programa: &String
+    exercício_informações: &ExercícioInformações
 ) -> u8 {
     loop {
         println!("\n[12x parcelas é o máximo!]\nQuantas parcelas você quer?");
 
         let mut input = String::new();
 
-        match stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<u8>() {
                     Ok(quantidade) => {
                         if quantidade >= 3 && quantidade <= 12 {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
-
-                            descrição_do_exercício();
+                            exercício_informações.mostrar_informações();
 
                             println!(
-                                "\nA quantidade de {} parcelas,\nfoi adicionada com sucesso!",
+                                "A quantidade de {} parcelas,\nfoi adicionada com sucesso!\n",
                                 quantidade
                             );
 
                             return quantidade;
                         } else {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!("{}", cabeçalho_do_programa);
-
-                            descrição_do_exercício();
+                            exercício_informações.mostrar_informações();
 
                             println!(
-                                "\nErro! Aceito apenas parcelas de 3 à 12!"
+                                "Erro! Aceito apenas parcelas de 3 à 12!\n"
                             );
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
-
-                        descrição_do_exercício();
+                        exercício_informações.mostrar_informações();
 
                         println!(
-                            "\nErro! Digite apenas números!"
+                            "Erro! Digite apenas números!\n"
                         );
                     }
                 }
@@ -163,16 +108,15 @@ fn obter_a_quantidade_de_parcelas(
 }
 
 fn obter_a_opção_digitada(
-    cabeçalho_do_programa: &String,
-    valor_do_produto: &f32
+    exercício_informações: &ExercícioInformações,
+    produto: &mut Produto
 ) -> bool {
     menu_de_opções();
-    let produto = Produto {
-        valor: *valor_do_produto
-    };
 
     loop {
-        println!("Qual opção você escolhe?");
+        println!(
+            "Qual opção você escolhe?"
+        );
 
         let mut input = String::new();
 
@@ -182,81 +126,68 @@ fn obter_a_opção_digitada(
                     Ok(opção) => {
                         match opção {
                             1 => {
-                                clean_terminal_linux();
+                                limpar_terminal();
 
-                                println!("{}", cabeçalho_do_programa);
-
-                                descrição_do_exercício();
+                                exercício_informações.mostrar_informações();
 
                                 println!(
-                                    "\nProduto de R${:.2}...",
-                                    valor_do_produto
-                                );
-
-                                println!(
-                                    "{}\n",
-                                    produto.pix()
+                                    "Produto de R${:.2}...\nNo pix fica R${:.2}",
+                                    produto.get_preço_do_produto(),
+                                    produto.get_preço_no_pix()
                                 );
                                 
                                 menu_de_opções();
                             }
                             2 => {
-                                clean_terminal_linux();
+                                limpar_terminal();
 
-                                println!("{}", cabeçalho_do_programa);
-
-                                descrição_do_exercício();
+                                exercício_informações.mostrar_informações();
 
                                 println!(
-                                    "\nProduto de R${:.2}...",
-                                    valor_do_produto
-                                );
-
-                                println!(
-                                    "{}\n",
-                                    produto.debito()
+                                    "Produto de R${:.2}...\nNo débito fica R${:.2}",
+                                    produto.get_preço_do_produto(),
+                                    produto.get_preço_no_débito()
                                 );
                                 
                                 menu_de_opções();
                             }
                             3 => {
-                                clean_terminal_linux();
+                                limpar_terminal();
 
-                                println!("{}", cabeçalho_do_programa);
-
-                                descrição_do_exercício();
+                                exercício_informações.mostrar_informações();
 
                                 println!(
-                                    "\nProduto de R${:.2}...",
-                                    valor_do_produto
-                                );
-
-                                println!(
-                                    "{}\n",
-                                    produto.credito_2x()
+                                    "Produto de R${:.2}...\n\nNo crédito em 2x fica com\nparcelas de R${:.2}",
+                                    produto.get_preço_do_produto(),
+                                    produto.get_preço_no_crédito_2_vezes()
                                 );
                                 
                                 menu_de_opções();
                             }
                             4 => {
-                                let quantidade_de_parcelas = obter_a_quantidade_de_parcelas(&cabeçalho_do_programa);
-
-                                println!(
-                                    "\nProduto de R${:.2}...",
-                                    valor_do_produto
+                                let quantidade_de_parcelas = obter_a_quantidade_de_parcelas(
+                                    &exercício_informações
                                 );
 
+                                produto.calcular_preço_no_credito_x_vezes(
+                                    &produto.get_preço_do_produto(),
+                                    quantidade_de_parcelas
+                                );
+
+                                let preço_no_crédito_x_vezes = produto.get_preço_no_crédito_x_vezes();
+
                                 println!(
-                                    "{}\n",
-                                    produto.credito_x_parcelas(
-                                        quantidade_de_parcelas
-                                    )
+                                    "Produto de R${:.2}...\nNo crédito em {}x fica R${:.2}\ncom parcelas de R${:.2}",
+                                    produto.get_preço_do_produto(),
+                                    quantidade_de_parcelas,
+                                    preço_no_crédito_x_vezes[0],
+                                    preço_no_crédito_x_vezes[1]
                                 );
                                 
                                 menu_de_opções();
                             }
                             5 => {
-                                clean_terminal_linux();
+                                limpar_terminal();
 
                                 return true;
                             }
@@ -264,15 +195,13 @@ fn obter_a_opção_digitada(
                                 return false;
                             }
                             _ => {
-                                clean_terminal_linux();
+                                limpar_terminal();
 
-                                println!("{}", cabeçalho_do_programa);
-
-                                descrição_do_exercício();
+                                exercício_informações.mostrar_informações();
 
                                 println!(
-                                    "\nProduto de R${:.2}...\n",
-                                    valor_do_produto
+                                    "Produto de R${:.2}...\n",
+                                    produto.get_preço_do_produto()
                                 );
                                 
                                 menu_de_opções();
@@ -284,15 +213,13 @@ fn obter_a_opção_digitada(
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
-
-                        descrição_do_exercício();
+                        exercício_informações.mostrar_informações();
 
                         println!(
-                            "\nO valor de R${:.2}\n",
-                            valor_do_produto
+                            "O valor de R${:.2}...\n",
+                            produto.get_preço_do_produto()
                         );
                         
                         menu_de_opções();
@@ -309,49 +236,44 @@ fn obter_a_opção_digitada(
 }
 
 fn obter_o_valor_do_produto(
-    cabeçalho_do_programa: &String
+    exercício_informações: &ExercícioInformações
 ) -> f32 {
     loop {
-        println!("Digite o valor do produto:");
+        println!(
+            "Digite o valor do produto:"
+        );
 
         let mut input = String::new();
 
-        match stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<f32>() {
                     Ok(valor) => {
-                        let valor_formatado = format!(
-                            "{:.2}",
+                        let valor = arrendondar_um_número_real(
+                            valor,
+                            2
+                        );
+
+                        limpar_terminal();
+
+                        exercício_informações.mostrar_informações();
+
+                        println!(
+                            "O valor de R${:.2},\nfoi adicionado com sucesso!",
                             valor
                         );
 
-                        match valor_formatado.parse::<f32>() {
-                            Ok(valor_final) => {
-                                clean_terminal_linux();
-
-                                println!("{}", cabeçalho_do_programa);
-
-                                descrição_do_exercício();
-
-                                println!(
-                                    "\nO valor de R${:.2},\nfoi adicionado com sucesso!\n",
-                                    valor_final
-                                );
-
-                                return valor_final;
-                            }
-                            Err(_) => (),
-                        }
+                        return valor;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!("{}", cabeçalho_do_programa);
-
-                        descrição_do_exercício();
+                        exercício_informações.mostrar_informações();
 
                         println!(
-                            "\nErro! Digite apenas números!\n"
+                            "Erro! Digite apenas números!\n"
                         );
                     }
                 }
@@ -363,7 +285,8 @@ fn obter_o_valor_do_produto(
 
 fn menu_de_opções() {
     println!(
-        " [ 1 ] Pix: 10% de desconto
+        "
+ [ 1 ] Pix: 10% de desconto
  [ 2 ] Débito: 5% de desconto
  [ 3 ] 2x Crédito: SEM desconto
  [ 4 ] 3x ou mais Crédito: 20% de Juros
