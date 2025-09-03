@@ -1,56 +1,46 @@
-use std::{
-    io::stdin,
-    thread::sleep,
-    time::Duration,
-    process::Command
+use crate::recursos::{
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
 };
-
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
-
-fn descrição_do_exercício() {
-    println!(
-        "Descrição do exercício 044:"
-    );
-    println!(
-        " Um programa que mostra no terminal todos\nos números pares que estão no intervalo\nentre 1 e 50."
-    );
-}
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
-    println!(
-        "{}", cabeçalho_do_programa
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("044"),
+            String::from("Um programa que mostra no terminal todos\nos números pares que estão no intervalo\nentre 1 e 50.")
+        )
     );
 
-    descrição_do_exercício();
+    loop {
+        exercício_informações.mostrar_informações();
 
-    println!();
+        /* Corpo do Exercício */
+        let números_pares: Vec<u8> = obter_o_números_pares_até_x();
 
-    /* Corpo do Exercício */
-    let números_pares: Vec<u8> = obter_o_números_pares_até_x();
+        println!(
+            "Os números pares são:"
+        );
 
-    println!(
-        "Os números pares são:"
-    );
+        mostrar_resultado(
+            &números_pares
+        );
 
-    mostrar_resultado(
-        &números_pares
-    );
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
+        if !resposta_sobre_continuar {
+            break;
+        }
+    }
     /* Fim do Exercício */
-    sleep(Duration::from_millis(6000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
 fn mostrar_resultado(
@@ -60,7 +50,7 @@ fn mostrar_resultado(
         if index % 11 == 0 && index > 0 {
             print!("{número}, \n");
         } else if index == (números.len() - 1) {
-            println!("{número}.")
+            println!("{número}.\n")
         } else {
             print!("{número}, ");
         }
