@@ -1,74 +1,77 @@
 use std::{
-    io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() {
-    println!(
-        "Descrição do exercício 045:"
-    );
-    println!(
-        " Um programa que calcula a soma entre todos\nos números ímpares que são múltiplos de\ntrês e que se encontram no intervalo de 1\naté 500."
-    );
-}
+mod numeros_impares;
+
+use numeros_impares::NúmerosÍmpares;
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
-    println!(
-        "{}", cabeçalho_do_programa
-    );
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("045"),
+            String::from("Um programa que calcula a soma entre todos\nos números ímpares que são múltiplos de\ntrês e que se encontram no intervalo de 1\naté 500.")
+        )
+    ); 
 
-    descrição_do_exercício();
+    loop {
+        exercício_informações.mostrar_informações();
 
-    println!();
+        /* Corpo do Exercício */
+        let números_ímpares = NúmerosÍmpares::new(
+            obter_números_ímpares_até_quinhentos()
+        );
 
-    /* Corpo do Exercício */
-    let números_ímpares: Vec<u32> = obter_números_ímpares_até_quinhentos_até_quinhentos();
+        analisar_números(
+            &números_ímpares
+        );
 
-    somar_todos_os_números(
-        &números_ímpares
-    );
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
-    println!(
-        "{:?}", números_ímpares
-    );
-
-    /* Fim do Exercício */
-    sleep(Duration::from_millis(6000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
-}
-
-fn somar_todos_os_números(
-    números: &Vec<u32>
-) {
-    let mut soma_dos_números = 0;
-
-    for número in números {
-        soma_dos_números += número;
+        if !resposta_sobre_continuar {
+            break;
+        }
     }
 
-    println!(
-        "\nA soma de todos os números é: {}.\n",
-        soma_dos_números
-    );
+    /* Fim do Exercício */
+    rodar_final_do_exercício();
 }
 
-fn obter_números_ímpares_até_quinhentos_até_quinhentos() -> Vec<u32> {
+fn analisar_números(
+    números_ímpares: &NúmerosÍmpares
+) {
+    sleep(Duration::from_millis(1000));
+
+    println!(
+        "Analisando os números ímpares...\n"
+    );
+
+    sleep(Duration::from_millis(1500));
+
+    println!(
+        "Os Números ímpares:\n{:?}\n\nA soma de todos os números é: {}.\n",
+        números_ímpares.get_lista_de_números_ímpares(),
+        números_ímpares.get_soma_dos_números_ímpares()
+    );
+
+    sleep(Duration::from_millis(1100));
+}
+
+fn obter_números_ímpares_até_quinhentos() -> Vec<u32> {
     let mut números_ímpares: Vec<u32> = vec![];
 
     for número in 1..501 {

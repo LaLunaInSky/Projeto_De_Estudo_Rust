@@ -1,32 +1,31 @@
 use std::{
     io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
-
-fn descrição_do_exercício() -> String {
-    format!(
-        "Descrição do exercício 047:
- Um programa que lê seis números inteiros\ne mostre a soma apenas daqueles que forem\npares. Se o valor digitado for ímpar,\ndesconsidere-o.
-"
-    )
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("047"),
+            String::from("Um programa que lê seis números inteiros\ne mostre a soma apenas daqueles que forem\npares. Se o valor digitado for ímpar,\ndesconsidere-o.")
+        )
+    );
+
     loop {
-        println!(
-            "{}\n{}",
-            cabeçalho_do_programa,
-            descrição_do_exercício()
-        );
+        exercício_informações.mostrar_informações();
 
         /* Corpo do Exercício */
         let mut números_inteiros_digitados: Vec<u32> = vec![];
@@ -34,7 +33,7 @@ pub fn rodar_o_exercício(
         for quantidade in 1..7 {
             números_inteiros_digitados.push(
                 obter_um_número_inteiro(
-                    &cabeçalho_do_programa, 
+                    &exercício_informações, 
                     quantidade
                 )
             );
@@ -44,8 +43,8 @@ pub fn rodar_o_exercício(
             &números_inteiros_digitados
         );
 
-        let resposta_sobre_continuar = perguntar_se_quer_adicionar_novos_números(
-            &cabeçalho_do_programa
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
         );
 
         if !resposta_sobre_continuar {
@@ -54,56 +53,7 @@ pub fn rodar_o_exercício(
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
-}
-
-fn perguntar_se_quer_adicionar_novos_números(
-    cabeçalho_do_programa: &String
-) -> bool {
-    loop {
-        println!(
-            "Quer adicionar novos números? [S/N]"
-        );
-
-        let mut input = String::new();
-
-        match stdin().read_line(&mut input) {
-            Ok(_) => {
-                let resposta_da_pergunta = input.trim().to_lowercase();
-
-                let resposta_da_pergunta = resposta_da_pergunta.as_str();
-
-                match resposta_da_pergunta {
-                    "s" => {
-                        clean_terminal_linux();
-
-                        return true;
-                    }
-                    "n" => return false,
-                    _ => {
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
-
-                        println!(
-                            "Erro! Apenas é aceito S [sim] ou N [não]!\n"
-                        );
-                    }
-                }
-            }
-            Err(_) => (),
-        }
-    }
+    rodar_final_do_exercício();
 }
 
 fn analisar_os_números(
@@ -129,25 +79,25 @@ fn analisar_os_números(
         "Analisando os números...\n"
     );
 
-    sleep(Duration::from_millis(2500));
+    sleep(Duration::from_millis(1500));
 
     println!(
         "Os números pares: {:?} \nOs números ímpares: {:?}\n",
         números_pares, números_ímpares
     );
 
-    sleep(Duration::from_millis(1000));
+    sleep(Duration::from_millis(800));
 
     println!(
-        "A soma dos números pares é {}.\n",
+        "A soma dos números pares é: {}.\n",
         soma_dos_números_pares
     );
 
-    sleep(Duration::from_millis(2000));
+    sleep(Duration::from_millis(1100));
 }
 
 fn obter_um_número_inteiro(
-    cabeçalho_do_programa: &String,
+    exercício_informações: &ExercícioInformações,
     index_da_chamada: u8
 ) -> u32 {
     loop {
@@ -158,17 +108,15 @@ fn obter_um_número_inteiro(
 
         let mut input = String::new();
 
-        match stdin().read_line(&mut input) {
+        match stdin().read_line(
+            &mut input
+        ) {
             Ok(_) => {
                 match input.trim().parse::<u32>() {
                     Ok(número) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "O número {},\nfoi adicionado com sucesso!\n",
@@ -178,13 +126,9 @@ fn obter_um_número_inteiro(
                         return número;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "Erro! Digite apenas números.\n"

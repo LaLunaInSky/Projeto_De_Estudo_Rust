@@ -1,68 +1,46 @@
 use std::{
-    io::stdin,
-    thread::sleep,
-    time::Duration,
-    process::Command
+    io::stdin
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() -> String {
-    format!(
-        "Descrição do exercício 046:
- Refaça o Ex_007, mostrando a tabuada de\num número que o usuário escolher, só que\nagora utilizando uma respetição com\npergunta sobre continuar."
-    )
-}
+mod tabuada;
 
-struct Tabuada {
-    número: u32
-}
-
-impl Tabuada {
-    fn mostrar_tabuada(
-        número: u32
-    ) -> Self {
-        for count in 1..11 {
-            println!(
-                "{} X {:>2} = {}",
-                número, 
-                count,
-                (número * count)
-            );
-        }
-
-        println!();
-
-        Self {
-            número
-        }
-    }
-}
+use tabuada::Tabuada;
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercíco */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("046"),
+            String::from("Descrição do exercício 046:
+ Refaça o Ex_007, mostrando a tabuada de\num número que o usuário escolher, só que\nagora utilizando uma respetição com\npergunta sobre continuar.")
+        )
+    );
+
     loop {
-        println!(
-            "{}\n{}\n", 
-            cabeçalho_do_programa,
-            descrição_do_exercício()
-        );
+        exercício_informações.mostrar_informações();
 
         /* Corpo do Exercício */
-        let número_digitado = obter_o_número_inteiro(
-            &cabeçalho_do_programa
+        let número_para_tabuada = Tabuada::new(
+            obter_o_número_inteiro(
+                &exercício_informações
+            )
         );
 
-        Tabuada::mostrar_tabuada(
-            número_digitado
-        );
+        número_para_tabuada.mostrar_tabuada();
 
-        let resposta_sobre_continuar = perguntar_se_quer_adicionar_um_novo_número(
-            &cabeçalho_do_programa
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
         );
 
         if !resposta_sobre_continuar {
@@ -71,62 +49,11 @@ pub fn rodar_o_exercício(
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
-}
-
-fn  perguntar_se_quer_adicionar_um_novo_número(
-    cabeçalho_do_programa: &String
-) -> bool {
-    loop {
-        println!(
-            "Quer adicionar um novo número? [S/N]"
-        );
-
-        let mut input = String::new();
-
-        match stdin().read_line(&mut input) {
-            Ok(_) => {
-                let resposta_da_pergunta = input.trim().to_lowercase();
-
-                let resposta_da_pergunta = resposta_da_pergunta.as_str();
-
-                match resposta_da_pergunta {
-                    "s" => {
-                        clean_terminal_linux();
-                        
-                        return true;
-                    }
-                    "n" => return false,
-                    _ => {
-                        clean_terminal_linux();
-
-                        println!(
-                            "{}\n{}\n",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
-
-                        println!(
-                            "Erro! Apenas é aceito S [sim] ou N [não]!\n"
-                        );
-                    }
-                }
-            }
-            Err(_) => (),
-        }
-    }
+    rodar_final_do_exercício();
 }
 
 fn obter_o_número_inteiro(
-    cabeçalho_do_programa: &String,
+    exercício_informações: &ExercícioInformações,
 ) -> u32 {
     loop {
         println!(
@@ -139,13 +66,9 @@ fn obter_o_número_inteiro(
             Ok(_) => {
                 match input.trim().parse::<u32>() {
                     Ok(número) =>{
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}\n",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "O número {},\nfoi adicionado com sucesso!\n",
@@ -155,13 +78,9 @@ fn obter_o_número_inteiro(
                         return número;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}\n",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "Erro! Digite apenas números.\n"
