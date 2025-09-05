@@ -6,3 +6,15 @@ edition = "2024"
 [dependencies]
 rand = "0.9.1"
 chrono = "0.4.41"
+
+[package.metadata.deb]
+maintainer = "LaLunaInSky <lalunainsky@gmail.com>"
+copyright = "2025, LaLunaInSky <lalunainsky@gmail.com>"
+license-file = ["LICENSE", "4"]
+extended-description = """Um programa terminal de exercícios em rust!"""
+depends = "$auto"
+section = "utility"
+priority = "optional"
+assets = [
+    ["target/release/projeto_de_estudo_rust", "usr/bin/", "755"]
+]
