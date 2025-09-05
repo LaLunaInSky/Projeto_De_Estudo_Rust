@@ -1,84 +1,54 @@
 use std::{
     io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() -> String {
-    format!(
-        "Descrição do exercício 048:
- Um programa que lê o primeiro termo e a\nrazão de uma PA. No final, mostra os 10\nprimeiros termos dessa progressão.
-"
-    )
-}
+mod progressao_aritmetica;
 
-#[derive(Debug)]
-struct PA {
-    primeiro_termo: u32,
-    razão: u32,
-    dez_primeiros_termos: Vec<u32>,
-}
-
-impl PA {
-    fn new(
-        primeiro_termo: u32,
-        razão: u32
-    ) -> Self {
-        let mut dez_primeiros_termos: Vec<u32> = vec![];
-
-        for count in 1..11 {
-            if count == 1 {
-                dez_primeiros_termos.push(primeiro_termo);
-            } else {
-                let próximo_termo = (
-                    dez_primeiros_termos[
-                        count - 2
-                    ] + razão);
-
-                dez_primeiros_termos.push(próximo_termo);
-            }
-        }
-
-        Self {
-            primeiro_termo,
-            razão,
-            dez_primeiros_termos
-        }
-    }
-}
+use progressao_aritmetica::PA;
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("048"),
+            String::from("Um programa que lê o primeiro termo e a\nrazão de uma PA. No final, mostra os 10\nprimeiros termos dessa progressão.")
+        )
+    );
+
     loop {
-        println!(
-            "{}\n{}",
-            cabeçalho_do_programa,
-            descrição_do_exercício()
-        );
+        exercício_informações.mostrar_informações();
 
         /* Corpo do Exercício */
         let pa = PA::new(
             obter_um_número(
-                &cabeçalho_do_programa,
+                &exercício_informações,
                 "primeiro_termo"
             ),
             obter_um_número(
-                &cabeçalho_do_programa,
+                &exercício_informações,
                 "razão"
             )
         );
 
-        analisar_a_pa(&pa);
+        analisar_a_pa(
+            &pa
+        );
 
-        let resposta_sobre_continuar = perguntar_se_quer_adicionar_novos_valores(
-            &cabeçalho_do_programa
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
         );
 
         if !resposta_sobre_continuar {
@@ -87,60 +57,7 @@ pub fn rodar_o_exercício(
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de execícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
-}
-
-fn perguntar_se_quer_adicionar_novos_valores(
-    cabeçalho_do_programa: &String
-) -> bool {
-    loop {
-        println!(
-            "Quer adicionar novos valores? [S/N]"
-        );
-
-        let mut input = String::new();
-
-        match stdin().read_line(
-            &mut input
-        ) {
-            Ok(_) => {
-                let resposta_da_pergunta = input.trim().to_lowercase();
-
-                let resposta_da_pergunta = resposta_da_pergunta.as_str();
-
-                match resposta_da_pergunta {
-                    "s" => {
-                        clean_terminal_linux();
-
-                        return true;
-                    }
-                    "n" => return false,
-                    _ => {
-                        clean_terminal_linux();
-
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
-
-                        println!(
-                            "Erro! Apenas é aceito S [sim] ou N [não]!\n"
-                        );
-                    }
-                }
-            }
-            Err(_) => (),
-        }
-    }
+    rodar_final_do_exercício();
 }
 
 fn analisar_a_pa(
@@ -149,26 +66,31 @@ fn analisar_a_pa(
     sleep(Duration::from_millis(1000));
     
     println!(
-        "Analisando a PA...\n"
-    );
-
-    sleep(Duration::from_millis(2500));
-
-    println!(
-        "Primeiro Termo: {}\nA Razão: {}\n",
-        pa.primeiro_termo,
-        pa.razão
-    );
-
-    sleep(Duration::from_millis(1000));
-
-    println!(
-        "Logo os 10 termos são...\n"
+        "Analisando a PA..."
     );
 
     sleep(Duration::from_millis(1500));
 
-    for (index, número) in pa.dez_primeiros_termos.iter().enumerate() {
+    println!(
+        "
+Primeiro Termo: {}
+A Razão.......: {}
+",
+        pa.get_primeiro_termo(),
+        pa.get_razão()
+    );
+
+    sleep(Duration::from_millis(800));
+
+    println!(
+        "Logo os 10 primeiros termos são...\n"
+    );
+
+    sleep(Duration::from_millis(800));
+
+    for (
+        index, número
+    ) in pa.get_dez_primeiros_termos().iter().enumerate() {
         if index == 9 {
             print!(
                 "{}.\n\n", 
@@ -187,11 +109,11 @@ fn analisar_a_pa(
         }
     }
 
-    sleep(Duration::from_millis(1500));
+    sleep(Duration::from_millis(1100));
 }
 
 fn obter_um_número(
-    cabeçalho_do_programa: &String,
+    exercício_informações: &ExercícioInformações,
     argumento_de_chamada: &str
 ) -> u32 {
     loop {
@@ -212,26 +134,22 @@ fn obter_um_número(
             Ok(_) => {
                 match input.trim().parse::<u32>() {
                     Ok(número) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         if argumento_de_chamada == "razão" {
                             match número {
                                 0 => {
                                     println!(
-                                        "A razão de 1,\nfoi adicionado com sucesso!\n"
+                                        "A razão de 1,\nfoi adicionada com sucesso!\n"
                                     );
 
                                     return 1;
                                 }
                                 _ => {
                                     println!(
-                                        "A razão de {},\nfoi adicionado com sucesso!\n",
+                                        "A razão de {},\nfoi adicionada com sucesso!\n",
                                         número
                                     );
 
@@ -240,7 +158,7 @@ fn obter_um_número(
                             }
                         } else {
                             println!(
-                                "O primeiro termo {},\nfoi adicionado com sucesso!\n",
+                                "O primeiro termo {},\nfoi adicionada com sucesso!\n",
                                 número
                             );
 
@@ -248,13 +166,9 @@ fn obter_um_número(
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "Erro! Digite apenas número!\n"

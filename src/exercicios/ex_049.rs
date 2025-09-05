@@ -1,96 +1,40 @@
 use std::{
     io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() -> String {
-    format!(
-        "Descrição do exercício 049:
- Um programa que lê um número inteiro e\nretorna se ele é ou não um número primo.
-"
-    )
-}
+mod numero_primo;
 
-#[derive(Debug)]
-struct Número_Primo {
-    número: u32,
-    é_primo: bool
-}
-
-impl Número_Primo {
-    fn new(
-        número: u32
-    ) -> Self {
-        let é_primo = identificar_se_é_primo(
-            &número
-        );
-
-        Self {
-            número,
-            é_primo
-        }
-    }
-
-    
-}
-
-fn identificar_se_é_primo(
-    número: &u32
-) -> bool {
-    if *número > 1 {    
-        if número % 2 == 0 {
-            if *número == 2 {
-                return true;
-            } else {
-                return false;
-            }
-        } else if número % 3 == 0 {
-            if *número == 3 {
-                return true;
-            } else {
-                return false;
-            }
-        } else if número % 5 == 0 {
-            if *número == 5 {
-                return true;
-            } else {
-                return false
-            }
-        } else if número % 7 == 0 {
-            if *número == 7 {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        return true;
-    } else {
-        return false;
-    }
-}
+use numero_primo::NúmeroPrimo;
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("049"),
+            String::from("Um programa que lê um número inteiro e\nretorna se ele é ou não um número primo.")
+        )
+    );
+
     loop {
-        println!(
-            "{}\n{}",
-            cabeçalho_do_programa,
-            descrição_do_exercício()
-        );
+        exercício_informações.mostrar_informações();
 
         /* Corpo do Exercício */
-        let número_digitado = Número_Primo::new(
+        let número_digitado = NúmeroPrimo::new(
             obter_um_número_inteiro(
-                &cabeçalho_do_programa
+                &exercício_informações
             )
         );
 
@@ -98,8 +42,8 @@ pub fn rodar_o_exercício(
             &número_digitado
         );
         
-        let resposta_sobre_continuar = perguntar_se_quer_adicionar_um_novo_número(
-            &cabeçalho_do_programa
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
         );
 
         if !resposta_sobre_continuar {
@@ -108,19 +52,11 @@ pub fn rodar_o_exercício(
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando o menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
 fn analisar_o_número(
-    número: &Número_Primo
+    número: &NúmeroPrimo
 ) {
     sleep(Duration::from_millis(1000));
 
@@ -128,19 +64,19 @@ fn analisar_o_número(
         "Analisando o número...\n"
     );
 
-    sleep(Duration::from_millis(2500));
+    sleep(Duration::from_millis(1500));
 
     println!(
         "O número {}{} é PRIMO!\n",
-        número.número,
-        if !número.é_primo {" NÃO"} else {""}
+        número.get_número(),
+        if !número.get_é_primo() {" NÃO"} else {""}
     );
 
-    sleep(Duration::from_millis(1200));
+    sleep(Duration::from_millis(1100));
 }
 
 fn obter_um_número_inteiro(
-    cabeçalho_do_programa: &String
+    exercício_informações: &ExercícioInformações
 ) -> u32 {
     loop {
         println!(
@@ -155,13 +91,9 @@ fn obter_um_número_inteiro(
             Ok(_) => {
                 match input.trim().parse::<u32>() {
                     Ok(número) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "O número inteiro {},\nfoi adicionado com sucesso!\n",
@@ -171,61 +103,12 @@ fn obter_um_número_inteiro(
                         return número
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "Erro! Digite apenas números!\n"
-                        );
-                    }
-                }
-            }
-            Err(_) => (),
-        }
-    }
-}
-
-fn perguntar_se_quer_adicionar_um_novo_número(
-    cabeçalho_do_programa: &String
-) -> bool {
-    loop {
-        println!(
-            "Quer digitar um novo número? [S/N]"
-        );
-
-        let mut input = String::new();
-
-        match stdin().read_line(
-            &mut input
-        ) {
-            Ok(_) => {
-                let resposta_da_pergunta = input.trim().to_lowercase();
-
-                let resposta_da_pergunta = resposta_da_pergunta.as_str();
-
-                match resposta_da_pergunta {
-                    "s" => {
-                        clean_terminal_linux();
-
-                        return true;
-                    }
-                    "n" => return false,
-                    _ => {
-                        clean_terminal_linux();
-
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
-
-                        println!(
-                            "Erro! Apenas é aceito S [sim] ou N [não]!\n"
                         );
                     }
                 }

@@ -1,84 +1,47 @@
 use std::{
     io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() -> String {
-    format!(
-        "Descrição do exercício 050:
- Um programa que lê uma frase qualquer e\nretorna se ela é um palíndromo,\ndesconsiderando os espaços.
+mod frase;
+
+use frase::Frase;
+
+pub fn rodar_o_exercício(
+    cabeçalho_do_programa: &String
+) {
+    /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("050"),
+            String::from("Um programa que lê uma frase qualquer e\nretorna se ela é um palíndromo,\ndesconsiderando os espaços.
 
 Exemplos:
 - apos a sopa
 - a sacada da casa
 - a torre da derrota
 - o lobo ama o bolo
-- anotaram a data da maratona
-"
-    )
-}
+- anotaram a data da maratona")
+        )
+    );
 
-#[derive(Debug)]
-struct Frase {
-    frase: String,
-    frase_sem_espaços: String,
-    é_palíndromo: bool,
-}
-
-impl Frase {
-    fn new(
-        frase: String
-    ) -> Self {
-        let mut frase_sem_espaços = String::new();
-
-        for char in frase.chars() {
-            if char != ' ' {
-                let char = format!(
-                    "{}",
-                    char
-                );
-
-                let char = char.as_str();
-
-                frase_sem_espaços.push_str(char);
-            }
-        }
-
-        let é_palíndromo = if frase_sem_espaços == frase_sem_espaços.chars().rev().collect::<String>() {
-            true
-        } else {
-            false
-        };
-
-        Self {
-            frase,
-            frase_sem_espaços,
-            é_palíndromo
-        }
-    }
-}
-
-pub fn rodar_o_exercício(
-    cabeçalho_do_programa: &String
-) {
-    /* Começo do Exercício */
     loop {
-        println!(
-            "{}\n{}",
-            cabeçalho_do_programa,
-            descrição_do_exercício()
-        );
+        exercício_informações.mostrar_informações();
 
         /* Corpo do Exercício */
         let frase_digita = Frase::new(
             obter_uma_frase(
-                &cabeçalho_do_programa
+                &exercício_informações
             )
         );
 
@@ -86,8 +49,8 @@ pub fn rodar_o_exercício(
             &frase_digita
         );
 
-        let resposta_sobre_continuar = perguntar_se_quer_adicionar_uma_nova_frase(
-            &cabeçalho_do_programa
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
         );
 
         if !resposta_sobre_continuar {
@@ -96,15 +59,7 @@ pub fn rodar_o_exercício(
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
 fn analisar_a_frase(
@@ -116,29 +71,29 @@ fn analisar_a_frase(
         "Analisando a frase...\n"
     );
 
-    sleep(Duration::from_millis(2500));
-
-    println!(
-        "A frase sem espaços fica:\n{}\n\nLogo...\n",
-        frase.frase_sem_espaços
-    );
-
     sleep(Duration::from_millis(1500));
 
     println!(
+        "A frase sem espaços fica:\n{}\n\nLogo...\n",
+        frase.get_frase_sem_espaços()
+    );
+
+    sleep(Duration::from_millis(800));
+
+    println!(
         "A frase {}é PALÍNDROMO!\n",
-        if !frase.é_palíndromo {
+        if !frase.get_é_palíndromo() {
             "NÃO "
         } else {
             ""
         }
     );
 
-    sleep(Duration::from_millis(1200));
+    sleep(Duration::from_millis(1100));
 }
 
 fn obter_uma_frase(
-    cabeçalho_do_programa: &String
+    exercício_informações: &ExercícioInformações
 ) -> String {
     loop {
         println!(
@@ -153,13 +108,9 @@ fn obter_uma_frase(
             Ok(_) => {
                 let frase = input.trim().to_lowercase();
 
-                clean_terminal_linux();
+                limpar_terminal();
 
-                println!(
-                    "{}\n{}",
-                    cabeçalho_do_programa,
-                    descrição_do_exercício()
-                );
+                exercício_informações.mostrar_informações();
 
                 println!(
                     "A frase {},\nfoi adicionada com sucesso!\n",
@@ -167,51 +118,6 @@ fn obter_uma_frase(
                 );
 
                 return frase;
-            }
-            Err(_) => (),
-        }
-    }
-}
-
-fn perguntar_se_quer_adicionar_uma_nova_frase(
-    cabeçalho_do_programa: &String
-) -> bool {
-    loop {
-        println!(
-            "Quer digitar outra frase? [S/N]"
-        );
-
-        let mut input = String::new();
-
-        match stdin().read_line(
-            &mut input
-        ) {
-            Ok(_) => {
-                let resposta_da_pergunta = input.trim().to_lowercase();
-
-                let resposta_da_pergunta = resposta_da_pergunta.as_str();
-
-                match resposta_da_pergunta {
-                    "s" => {
-                        clean_terminal_linux();
-
-                        return true;
-                    }
-                    "n" => return false,
-                    _ => {
-                        clean_terminal_linux();
-
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
-
-                        println!(
-                            "Erro! Apenas é aceito S [sim] ou N [não]!\n"
-                        );
-                    }
-                }
             }
             Err(_) => (),
         }
