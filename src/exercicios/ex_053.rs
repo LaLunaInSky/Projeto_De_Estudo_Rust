@@ -14,88 +14,11 @@ use crate::recursos::{
 
 mod pessoa;
 mod generos;
+mod pessoas;
 
 use pessoa::Pessoa;
 use generos::Gêneros;
-
-struct Pessoas {
-    lista_de_pessoas: Vec<Pessoa>,
-    média_das_idades: u32,
-    dados_do_homem_mais_velho: Pessoa,
-    lista_de_mulheres_com_menos_de_20_anos: Vec<Pessoa>
-}
-
-impl Pessoas {
-    fn new() -> Self {
-        let dados_do_homem_mais_velho = Pessoa::new(
-            String::from("fulano de tal"),
-            0,
-            'm'
-        );
-
-        Self {
-            lista_de_pessoas: vec![],
-            média_das_idades: 0,
-            dados_do_homem_mais_velho,
-            lista_de_mulheres_com_menos_de_20_anos: vec![]
-        }
-    }
-
-    fn adicionar_uma_nova_pessoa(
-        &mut self,
-        pessoa: Pessoa
-    ) {
-        if self.lista_de_pessoas.len() == 0 {
-            // Calcular a média de idades
-            self.média_das_idades = pessoa.get_idade() as u32;
-
-            // Obter os dados do homem mais velho
-
-        } else {
-            // Calcular a média de idades
-            let mut soma_das_idades: u32 = 0;
-
-            for pessoa_na_lista in self.get_lista_de_pessoas() {
-                soma_das_idades += pessoa_na_lista.get_idade() as u32;
-            }
-
-            soma_das_idades += pessoa.get_idade() as u32;
-
-            self.média_das_idades = soma_das_idades / self.get_lista_de_pessoas().len() as u32;
-
-            // Obter os dados do homem mais velho
-
-        }
-
-        self.lista_de_pessoas.push(
-            pessoa
-        );
-    }
-
-    fn get_lista_de_pessoas(
-        &self
-    ) -> Vec<Pessoa> {
-        return self.lista_de_pessoas.clone();
-    }
-
-    fn get_média_das_idades(
-        &self
-    ) -> u32 {
-        return self.média_das_idades;
-    }
-
-    fn get_dados_do_homem_mais_velho(
-        &self
-    ) -> Pessoa {
-        return self.dados_do_homem_mais_velho.clone();
-    }
-
-    fn get_lista_de_mulheres_com_menos_de_20_anos(
-        &self
-    ) -> Vec<Pessoa> {
-        return self.lista_de_mulheres_com_menos_de_20_anos.clone();
-    }
-}
+use pessoas::Pessoas;
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
@@ -158,6 +81,8 @@ pub fn rodar_o_exercício(
 fn analisar_as_pessoas(
     pessoas: &Pessoas
 ) {
+    let quantidade_de_mulheres_com_menos_de_20_anos  = pessoas.get_lista_de_mulheres_com_menos_de_20_anos().len();
+
     sleep(Duration::from_millis(1000));
 
     println!(
@@ -167,11 +92,16 @@ fn analisar_as_pessoas(
     sleep(Duration::from_millis(1500));
 
     println!(
-        "A média de idade é de {}.\nO homem mais velho é o {} de {} anos.\nExiste {} mulheres com menos de 20 anos.\n",
+        "A média de idade é de {}.\nO homem mais velho é o {} de {} anos.\nExiste {} mulhere{} com menos de 20 anos.\n",
         pessoas.get_média_das_idades(),
         pessoas.get_dados_do_homem_mais_velho().get_nome(),
         pessoas.get_dados_do_homem_mais_velho().get_idade(),
-        pessoas.get_lista_de_mulheres_com_menos_de_20_anos().len()
+        quantidade_de_mulheres_com_menos_de_20_anos,
+        if quantidade_de_mulheres_com_menos_de_20_anos < 2 {
+            ""
+        }  else {
+            "s"
+        }
     );
 
     sleep(Duration::from_millis(1100));
@@ -269,10 +199,11 @@ fn obter_a_idade(
 fn obter_o_gênero(
     index_da_chamada: u8,
     exercício_informações: &ExercícioInformações
-) -> char {
+) -> Gêneros {
     loop {
         println!(
-            "Digite o gênero: [F/M]"
+            "Digite o gênero da {}ª Pessoa: [F/M]",
+            index_da_chamada
         );
 
         let mut input = String::new();
@@ -298,7 +229,11 @@ fn obter_o_gênero(
                             gênero
                         );
 
-                        return gênero;
+                        return match gênero {
+                            'm' => Gêneros::HOMEM,
+                            'f' => Gêneros::MULHER,
+                            _ => Gêneros::HOMEM
+                        }
                     }
                     _ => {
                         limpar_terminal();
