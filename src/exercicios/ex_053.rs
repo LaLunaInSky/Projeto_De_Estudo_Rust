@@ -1,221 +1,99 @@
 use std::{
     io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
+
+mod pessoa;
+mod generos;
+
+use pessoa::Pessoa;
+use generos::Gêneros;
+
+struct Pessoas {
+    lista_de_pessoas: Vec<Pessoa>,
+    média_das_idades: u32,
+    dados_do_homem_mais_velho: Pessoa,
+    lista_de_mulheres_com_menos_de_20_anos: Vec<Pessoa>
 }
 
-fn descrição_do_exercício() -> String {
-    format!(
-        "Descrição do exercício 052:
- Um programa que lê o nome, idade e\ngênero de 4 pessoas. No final do\nprograma, motra:
-
-- A média de idade do grupo.
-- Qual é o nome do homem mais velho.
-- Quantas mulheres têm menos de 20 anos.
-"
-    )
-}
-
-#[derive(Debug)]
-struct Pessoa {
-    nome: String,
-    idade: u8,
-    gênero: char,
-}
-
-impl Pessoa {
-    fn new(
-        index_da_chamada: u8,
-        cabeçalho_do_programa: &String
-    ) -> Self {
-        fn obter_o_nome(
-            index_da_chamada: &u8,
-            cabeçalho_do_programa: &String
-        ) -> String {
-            loop {
-                println!(
-                    "Qual o nome da {}ª Pessoa:",
-                    index_da_chamada
-                );
-
-                let mut input = String::new();
-
-                match stdin().read_line(
-                    &mut input
-                ) {
-                    Ok(_) => {
-                        let nome = (input.trim()).to_string();
-
-                        clean_terminal_linux();
-
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
-
-                        println!(
-                            "O nome {},\nfoi adicionado com sucesso!\n",
-                            nome
-                        );
-                        
-                        return nome;
-                    } 
-                    Err(_) => (),
-                }
-            }
-        }
-
-        fn obter_a_idade(
-            index_da_chamada: &u8,
-            cabeçalho_do_programa: &String
-        ) -> u8 {
-            loop {
-                println!(
-                    "Digite a idade da {}ª Pessoa:",
-                    index_da_chamada
-                );
-
-                let mut input = String::new();
-
-                match stdin().read_line(
-                    &mut input
-                ) {
-                    Ok(_) => {
-                        match input.trim().parse::<u8>() {
-                            Ok(idade) => {
-                                if idade <= 100 {
-                                    clean_terminal_linux();
-
-                                    println!(
-                                        "{}\n{}",
-                                        cabeçalho_do_programa,
-                                        descrição_do_exercício()
-                                    );
-
-                                    println!(
-                                        "A idade de {} anos,\nfoi adicionado com sucesso!\n",
-                                        idade
-                                    );
-
-                                    return idade;
-                                } else {
-                                    clean_terminal_linux();
-
-                                    println!(
-                                        "{}\n{}",
-                                        cabeçalho_do_programa,
-                                        descrição_do_exercício()
-                                    );
-
-                                    println!(
-                                        "Erro! Apenas idade até 100!\n"
-                                    );
-                                }
-                            }
-                            Err(_) => {
-                                clean_terminal_linux();
-
-                                println!(
-                                    "{}\n{}",
-                                    cabeçalho_do_programa,
-                                    descrição_do_exercício()
-                                );
-
-                                println!(
-                                    "Erro! Digite apenas número!\n"
-                                );
-                            }
-                        }
-                    }
-                    Err(_) => (),
-                }
-            }
-        }
-
-        fn obter_o_gênero(
-            index_da_chamada: &u8,
-            cabeçalho_do_programa: &String
-        ) -> char {
-            loop {
-                println!(
-                    "Digite o gênero: [F/M]"
-                );
-
-                let mut input = String::new();
-
-                match stdin().read_line(
-                    &mut input
-                ) {
-                    Ok(_) => {
-                        let resposta = input.trim().to_lowercase();
-
-                        let resposta = resposta.as_str();
-
-                        match resposta {
-                            "f" | "m" => {
-                                clean_terminal_linux();
-
-                                println!(
-                                    "{}\n{}",
-                                    cabeçalho_do_programa,
-                                    descrição_do_exercício()
-                                );
-
-                                let gênero: char = resposta.parse().unwrap();
-
-                                println!(
-                                    "O Gênero {},\nfoi adicionado com sucesso!\n",
-                                    gênero
-                                );
-
-                                return gênero;
-                            }
-                            _ => {
-                                clean_terminal_linux();
-
-                                println!(
-                                    "{}\n{}",
-                                    cabeçalho_do_programa,
-                                    descrição_do_exercício()
-                                );
-
-                                println!(
-                                    "Erro! Apenas é aceito F ou M!\n"
-                                );
-                            }
-                        }
-                    }
-                    Err(_) => (),
-                }
-            }
-        }
-
-        let nome: String = obter_o_nome(
-            &index_da_chamada, 
-            &cabeçalho_do_programa
+impl Pessoas {
+    fn new() -> Self {
+        let dados_do_homem_mais_velho = Pessoa::new(
+            String::from("fulano de tal"),
+            0,
+            'm'
         );
 
-        let idade: u8 = obter_a_idade(
-            &index_da_chamada, 
-            &cabeçalho_do_programa
-        );
-
-        let gênero: char = obter_o_gênero(
-            &index_da_chamada, 
-            &cabeçalho_do_programa
-        );
-        
         Self {
-            nome,
-            idade,
-            gênero
+            lista_de_pessoas: vec![],
+            média_das_idades: 0,
+            dados_do_homem_mais_velho,
+            lista_de_mulheres_com_menos_de_20_anos: vec![]
         }
+    }
+
+    fn adicionar_uma_nova_pessoa(
+        &mut self,
+        pessoa: Pessoa
+    ) {
+        if self.lista_de_pessoas.len() == 0 {
+            // Calcular a média de idades
+            self.média_das_idades = pessoa.get_idade() as u32;
+
+            // Obter os dados do homem mais velho
+
+        } else {
+            // Calcular a média de idades
+            let mut soma_das_idades: u32 = 0;
+
+            for pessoa_na_lista in self.get_lista_de_pessoas() {
+                soma_das_idades += pessoa_na_lista.get_idade() as u32;
+            }
+
+            soma_das_idades += pessoa.get_idade() as u32;
+
+            self.média_das_idades = soma_das_idades / self.get_lista_de_pessoas().len() as u32;
+
+            // Obter os dados do homem mais velho
+
+        }
+
+        self.lista_de_pessoas.push(
+            pessoa
+        );
+    }
+
+    fn get_lista_de_pessoas(
+        &self
+    ) -> Vec<Pessoa> {
+        return self.lista_de_pessoas.clone();
+    }
+
+    fn get_média_das_idades(
+        &self
+    ) -> u32 {
+        return self.média_das_idades;
+    }
+
+    fn get_dados_do_homem_mais_velho(
+        &self
+    ) -> Pessoa {
+        return self.dados_do_homem_mais_velho.clone();
+    }
+
+    fn get_lista_de_mulheres_com_menos_de_20_anos(
+        &self
+    ) -> Vec<Pessoa> {
+        return self.lista_de_mulheres_com_menos_de_20_anos.clone();
     }
 }
 
@@ -223,32 +101,50 @@ pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("053"),
+            String::from("Um programa que lê o nome, idade e\ngênero de 4 pessoas. No final do\nprograma, motra:
+
+- A média de idade do grupo.
+- Qual é o nome do homem mais velho.
+- Quantas mulheres têm menos de 20 anos.")
+        )
+    );
+
     loop {
-        println!(
-            "{}\n{}",
-            cabeçalho_do_programa,
-            descrição_do_exercício()
-        );
+        exercício_informações.mostrar_informações();
 
         /* Corpo do Exercício */
-        let mut pessoas: Vec<Pessoa> = vec![];
+        let mut pessoas = Pessoas::new();
 
         for quantidade in 1..5 {
-            pessoas.push(
+            pessoas.adicionar_uma_nova_pessoa(
                 Pessoa::new(
-                    quantidade,
-                    &cabeçalho_do_programa
+                    obter_o_nome(
+                        quantidade, 
+                        &exercício_informações
+                    ),
+                    obter_a_idade(
+                        quantidade, 
+                        &exercício_informações
+                    ),
+                    obter_o_gênero(
+                        quantidade, 
+                        &exercício_informações
+                    )
                 )
             );
         }
 
         analisar_as_pessoas(
-            pessoas
+            &pessoas
         );
 
-        let resposta_sobre_continuar = perguntar_se_quer_adicionar_novos_dados(
-            &cabeçalho_do_programa
-        );
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        ); 
 
         if !resposta_sobre_continuar {
             break;
@@ -256,70 +152,39 @@ pub fn rodar_o_exercício(
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
 fn analisar_as_pessoas(
-    pessoas: Vec<Pessoa>
+    pessoas: &Pessoas
 ) {
-    let mut média_das_idades: u32 = 0;
-    let mut nome_do_homem_mais_velho = String::new();
-    let mut idade_do_homem_mais_velho: u8 = 0;
-    let mut quantidade_de_mulheres_com_menos_de_20_anos: u8 = 0;
-
-    for pessoa in pessoas {
-        média_das_idades += pessoa.idade as u32;
-
-        if pessoa.gênero == 'm' {
-            if pessoa.idade > idade_do_homem_mais_velho {
-                idade_do_homem_mais_velho = pessoa.idade;
-                nome_do_homem_mais_velho = format!(
-                    "{}",
-                    pessoa.nome
-                );
-            }
-        } else {
-            if pessoa.idade <= 20 {
-                quantidade_de_mulheres_com_menos_de_20_anos += 1;
-            }
-        }
-    }
-
-    média_das_idades = média_das_idades / 4;
-
     sleep(Duration::from_millis(1000));
 
     println!(
         "Analisando as pessoas...\n"
     );
 
-    sleep(Duration::from_millis(2500));
+    sleep(Duration::from_millis(1500));
 
     println!(
         "A média de idade é de {}.\nO homem mais velho é o {} de {} anos.\nExiste {} mulheres com menos de 20 anos.\n",
-        média_das_idades,
-        nome_do_homem_mais_velho,
-        idade_do_homem_mais_velho,
-        quantidade_de_mulheres_com_menos_de_20_anos
+        pessoas.get_média_das_idades(),
+        pessoas.get_dados_do_homem_mais_velho().get_nome(),
+        pessoas.get_dados_do_homem_mais_velho().get_idade(),
+        pessoas.get_lista_de_mulheres_com_menos_de_20_anos().len()
     );
 
-    sleep(Duration::from_millis(1500));
+    sleep(Duration::from_millis(1100));
 }
 
-fn perguntar_se_quer_adicionar_novos_dados(
-    cabeçalho_do_programa: &String
-) -> bool {
+fn obter_o_nome(
+    index_da_chamada: u8,
+    exercício_informações: &ExercícioInformações
+) -> String {
     loop {
         println!(
-            "Quer adicionar novos valores? [S/N]"
+            "Qual o nome da {}ª Pessoa:",
+            index_da_chamada
         );
 
         let mut input = String::new();
@@ -328,28 +193,120 @@ fn perguntar_se_quer_adicionar_novos_dados(
             &mut input
         ) {
             Ok(_) => {
-                let resposta_da_pergunta = input.trim().to_lowercase();
+                let nome = input.trim().to_string();
+
+                limpar_terminal();
+
+                exercício_informações.mostrar_informações();
+
+                println!(
+                    "O nome {},\nfoi adicionado com sucesso!\n",
+                    nome
+                );
                 
-                let resposta_da_pergunta = resposta_da_pergunta.as_str();
+                return nome;
+            } 
+            Err(_) => (),
+        }
+    }
+}
 
-                match resposta_da_pergunta {
-                    "s" => {
-                        clean_terminal_linux();
+fn obter_a_idade(
+    index_da_chamada: u8,
+    exercício_informações: &ExercícioInformações
+) -> u8 {
+    loop {
+        println!(
+            "Digite a idade da {}ª Pessoa:",
+            index_da_chamada
+        );
 
-                        return true;
+        let mut input = String::new();
+
+        match stdin().read_line(
+            &mut input
+        ) {
+            Ok(_) => {
+                match input.trim().parse::<u8>() {
+                    Ok(idade) => {
+                        if idade <= 100 {
+                            limpar_terminal();
+
+                            exercício_informações.mostrar_informações();
+
+                            println!(
+                                "A idade de {} anos,\nfoi adicionado com sucesso!\n",
+                                idade
+                            );
+
+                            return idade;
+                        } else {
+                            limpar_terminal();
+
+                            exercício_informações.mostrar_informações();
+
+                            println!(
+                                "Erro! Apenas idade até 100!\n"
+                            );
+                        }
                     }
-                    "n" => return false,
-                    _ => {
-                        clean_terminal_linux();
+                    Err(_) => {
+                        limpar_terminal();
+
+                        exercício_informações.mostrar_informações();
 
                         println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
+                            "Erro! Digite apenas número!\n"
+                        );
+                    }
+                }
+            }
+            Err(_) => (),
+        }
+    }
+}
+
+fn obter_o_gênero(
+    index_da_chamada: u8,
+    exercício_informações: &ExercícioInformações
+) -> char {
+    loop {
+        println!(
+            "Digite o gênero: [F/M]"
+        );
+
+        let mut input = String::new();
+
+        match stdin().read_line(
+            &mut input
+        ) {
+            Ok(_) => {
+                let resposta = input.trim().to_lowercase();
+
+                let resposta = resposta.as_str();
+
+                match resposta {
+                    "f" | "m" => {
+                        limpar_terminal();
+
+                        exercício_informações.mostrar_informações();
+
+                        let gênero: char = resposta.parse().unwrap();
+
+                        println!(
+                            "O Gênero {},\nfoi adicionado com sucesso!\n",
+                            gênero
                         );
 
+                        return gênero;
+                    }
+                    _ => {
+                        limpar_terminal();
+
+                        exercício_informações.mostrar_informações();
+
                         println!(
-                            "Erro! Apenas é aceito S [sim] ou N [não]!\n"
+                            "Erro! Apenas é aceito F ou M!\n"
                         );
                     }
                 }
