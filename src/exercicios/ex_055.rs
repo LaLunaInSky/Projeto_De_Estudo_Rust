@@ -1,127 +1,50 @@
 use std::{
-    io::stdin,
-    thread::sleep,
-    time::Duration,
-    process::Command
+    io::stdin
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() -> String {
-    format!(
-        "Descrição do exercício 055:
- Crie um programa que leia dois números\ninteiros e mostre um menu como o do\nexemplo abaixo:
-    [ 1 ] Somar
-    [ 2 ] Multiplicar
-    [ 3 ] Qual é o Maior
-    [ 4 ] Informar Novos Números
-    [ 5 ] Fechar o programa
-Seu programa deverá realizar a operação\nsolicitada em cada caso.
-"
-    )
-}
+mod numeros;
 
-struct Números {
-    números: Vec<u32>,
-    soma: u32,
-    multiplicação: u32,
-    número_maior: u32,
-}
-
-impl Números {
-    fn new(
-        números: Vec<u32>
-    ) -> Self {
-        fn somar_números(
-            números: &Vec<u32>
-        ) -> u32 {
-            let mut soma: u32 = 0;
-
-            for número in números {
-                soma += *número
-            };
-
-            return soma;
-        }
-
-        fn multiplicar_números(
-            números: &Vec<u32>
-        ) -> u32 {
-            let mut mulplicação: u32 = 0;
-
-            for (index, número) in números.iter().enumerate() {
-                if index == 0 {
-                    mulplicação += número;
-                } else {
-                    mulplicação *= número;
-                }
-            }
-
-            return mulplicação;
-        }
-
-        fn obter_o_número_maior(
-            números: &Vec<u32>
-        ) -> u32 {
-            let mut o_número_maior: u32 = 0;
-
-            for (index, número) in números.iter().enumerate() {
-                if index == 0 {
-                    o_número_maior = *número;
-                } else {
-                    if *número > o_número_maior {
-                        o_número_maior = *número;
-                    }
-                }
-            }
-
-            return o_número_maior;
-        }
-
-        let soma: u32 = somar_números(
-            &números
-        );
-
-        let multiplicação: u32 = multiplicar_números(
-            &números
-        );
-
-        let número_maior: u32 = obter_o_número_maior(
-            &números
-        );
-
-        Self {
-            números,
-            soma,
-            multiplicação,
-            número_maior
-        }
-    }
-}
+use numeros::Números;
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("055"),
+            String::from("Crie um programa que leia dois números\ninteiros e mostre um menu como o do\nexemplo abaixo:
+    [ 1 ] Somar
+    [ 2 ] Multiplicar
+    [ 3 ] Qual é o Maior
+    [ 4 ] Informar Novos Números
+    [ 5 ] Fechar o programa
+Seu programa deverá realizar a operação\nsolicitada em cada caso.")
+        )
+    );
+
     loop {
-        println!(
-            "{}\n{}",
-            cabeçalho_do_programa,
-            descrição_do_exercício()
-        );
+        exercício_informações.mostrar_informações();
 
         /* Corpo do Exercício */
-        let mut números: Vec<u32> = vec![];
+        let mut números: [u32; 2] = [0, 0];
 
         for quantidade in 1..3 {
-            números.push(
-                obter_número_inteiro(
-                    &cabeçalho_do_programa, 
+            números[
+                (quantidade - 1)
+                as usize
+            ] = obter_número_inteiro(
+                    &exercício_informações, 
                     quantidade
-                )
-            );
+                );
         }
 
         let números = Números::new(
@@ -133,7 +56,7 @@ pub fn rodar_o_exercício(
         );
 
         let respota_sobre_novos_números = obter_a_opção_escolhida(
-            &cabeçalho_do_programa,
+            &exercício_informações,
             &números
         );
 
@@ -143,19 +66,11 @@ pub fn rodar_o_exercício(
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
 fn obter_a_opção_escolhida(
-    cabeçalho_do_programa: &String,
+    exercício_informações: &ExercícioInformações,
     números: &Números
 ) -> bool {
     loop {
@@ -176,59 +91,51 @@ fn obter_a_opção_escolhida(
                                 if opção == 5 {
                                     return false;
                                 } else if opção == 4 {
-                                    clean_terminal_linux();
+                                    limpar_terminal();
 
                                     return true;
                                 } else if opção == 3 {
-                                    clean_terminal_linux();
+                                    limpar_terminal();
 
-                                    println!(
-                                        "{}\n{}",
-                                        cabeçalho_do_programa,
-                                        descrição_do_exercício()
-                                    );
+                                    exercício_informações.mostrar_informações();
 
                                     println!(
                                         "O número maior é o {}.\n",
-                                        números.número_maior
+                                        números.get_número_maior()
                                     );
 
                                     mostrar_menu_de_opções(
                                         &números
                                     );
                                 } else if opção == 2 {
-                                    clean_terminal_linux();
+                                    limpar_terminal();
 
-                                    println!(
-                                        "{}\n{}",
-                                        cabeçalho_do_programa,
-                                        descrição_do_exercício()
-                                    );
+                                    exercício_informações.mostrar_informações();
+
+                                    let lista_de_números = números.get_números();
 
                                     println!(
                                         "Os números {} x {} = {}.\n",
-                                        números.números[0],
-                                        números.números[1],
-                                        números.multiplicação
+                                        lista_de_números[0],
+                                        lista_de_números[1],
+                                        números.get_multiplicação()
                                     );
 
                                     mostrar_menu_de_opções(
                                         &números
                                     );
                                 } else {
-                                    clean_terminal_linux();
+                                    limpar_terminal();
 
-                                    println!(
-                                        "{}\n{}",
-                                        cabeçalho_do_programa,
-                                        descrição_do_exercício()
-                                    );
+                                    exercício_informações.mostrar_informações();
+
+                                    let lista_de_números = números.get_números();
 
                                     println!(
                                         "Os números {} + {} = {}.\n",
-                                        números.números[0],
-                                        números.números[1],
-                                        números.soma
+                                        lista_de_números[0],
+                                        lista_de_números[1],
+                                        números.get_soma()
                                     );
 
                                     mostrar_menu_de_opções(
@@ -237,13 +144,9 @@ fn obter_a_opção_escolhida(
                                 }
                             }
                             _ => {
-                                clean_terminal_linux();
+                                limpar_terminal();
 
-                                println!(
-                                    "{}\n{}",
-                                    cabeçalho_do_programa,
-                                    descrição_do_exercício()
-                                );
+                                exercício_informações.mostrar_informações();
 
                                 mostrar_menu_de_opções(
                                     &números
@@ -256,13 +159,9 @@ fn obter_a_opção_escolhida(
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         mostrar_menu_de_opções(
                             &números
@@ -291,12 +190,12 @@ fn mostrar_menu_de_opções(
  [ 4 ] Adicionar novos números
  [ 5 ] Fechar o programa
 ",
-        números.números
+        números.get_números()
     )
 }
 
 fn obter_número_inteiro(
-    cabeçalho_do_programa: &String,
+    exercício_informações: &ExercícioInformações,
     index_da_chamada: u8
 ) -> u32 {
     loop {
@@ -313,13 +212,9 @@ fn obter_número_inteiro(
             Ok(_) => {
                 match input.trim().parse::<u32>() {
                     Ok(número) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "O número {},\nfoi adicionado com sucesso!\n",
@@ -329,13 +224,9 @@ fn obter_número_inteiro(
                         return número;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "Erro! Digite apenas números!\n"

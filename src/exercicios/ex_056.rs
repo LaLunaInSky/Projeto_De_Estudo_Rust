@@ -1,101 +1,43 @@
 use std::{
     io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() -> String {
-    format!(
-        "Descrição do exercício 056:
- Um programa que lê um número inteiro e\nmostre o seu fatorial.
+mod fatorial;
 
- Exemplo:
-5! = 5 x 4 x 3 x 2 x 1 = 120
-"
-    )
-}
-
-#[derive(Debug)]
-struct Fatorial {
-    número: u32,
-    fatorial: String
-}
-
-impl Fatorial {
-    fn new(
-        número: u32
-    ) -> Self {
-
-        fn obter_o_fatorial(
-            número: &u32
-        ) -> String {
-            let mut fatorial = String::new();
-
-            fatorial = format!(
-                "{}! = ",
-                *número
-            );
-
-            let mut multiplicação: u32 = 1;
-            let mut número_do_fatorial = *número;
-
-            while número_do_fatorial > 0 {
-                let mut número_formatado = String::new();
-
-                multiplicação *= número_do_fatorial;
-
-                if número_do_fatorial > 1 {
-                    número_formatado = format!(
-                        "{} x ",
-                        número_do_fatorial
-                    );
-                } else {
-                    número_formatado = format!(
-                        "{} = {}",
-                        número_do_fatorial,
-                        multiplicação
-                    )
-                }
-
-                fatorial.push_str(&número_formatado);
-
-                número_do_fatorial -= 1;
-            }
-
-            return fatorial;
-        }
-
-        let fatorial = obter_o_fatorial(
-            &número
-        );
-
-        Self {
-            número,
-            fatorial
-        }
-    }
-}
+use fatorial::Fatorial;
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("056"),
+            String::from("Um programa que lê um número inteiro e\nmostre o seu fatorial.
+
+ Exemplo:
+5! = 5 x 4 x 3 x 2 x 1 = 120")
+        )
+    );
+
     loop {
-        println!(
-            "{}\n{}",
-            cabeçalho_do_programa,
-            descrição_do_exercício()
-        );
+        exercício_informações.mostrar_informações();
 
         /* Corpo do Exercício */
         let fatorial = Fatorial::new(
             obter_o_número_inteiro(
-                &cabeçalho_do_programa
+                &exercício_informações
             )
         );
 
@@ -103,8 +45,8 @@ pub fn rodar_o_exercício(
             &fatorial
         );
 
-        let resposta_sobre_continuar = perguntar_se_quer_adicionar_um_novo_fatorial(
-            &cabeçalho_do_programa
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
         );
 
         if !resposta_sobre_continuar {
@@ -113,15 +55,7 @@ pub fn rodar_o_exercício(
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
 fn analisar_o_número(
@@ -133,18 +67,18 @@ fn analisar_o_número(
         "Analisando o fatorial...\n"
     );
 
-    sleep(Duration::from_millis(2500));
+    sleep(Duration::from_millis(1500));
 
     println!(
         "{}\n",
-        fatorial.fatorial
+        fatorial.get_fatorial()
     );
 
-    sleep(Duration::from_millis(1500));
+    sleep(Duration::from_millis(1100));
 }
 
 fn obter_o_número_inteiro(
-    cabeçalho_do_programa: &String
+    exercício_informações: &ExercícioInformações
 ) -> u32 {
     loop {
         println!(
@@ -160,13 +94,9 @@ fn obter_o_número_inteiro(
                 match input.trim().parse::<u32>() {
                     Ok(número) => {
                         if número >= 1 {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!(
-                                "{}\n{}",
-                                cabeçalho_do_programa,
-                                descrição_do_exercício()
-                            );
+                            exercício_informações.mostrar_informações();
 
                             println!(
                                 "O número {},\nfoi adicionado com sucesso!\n",
@@ -175,13 +105,9 @@ fn obter_o_número_inteiro(
 
                             return número;
                         } else {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!(
-                                "{}\n{}",
-                                cabeçalho_do_programa,
-                                descrição_do_exercício()
-                            );
+                            exercício_informações.mostrar_informações();
 
                             println!(
                                 "Erro! Digite um número maior que zero!\n"
@@ -189,61 +115,12 @@ fn obter_o_número_inteiro(
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "Erro! Digite apenas números!\n"
-                        );
-                    }
-                }
-            }
-            Err(_) => (),
-        }
-    }
-}
-
-fn perguntar_se_quer_adicionar_um_novo_fatorial(
-    cabeçalho_do_programa: &String
-) -> bool {
-    loop {
-        println!(
-            "Quer adicionar um novo fatorial? [S/N]"
-        );
-
-        let mut input = String::new();
-
-        match stdin().read_line(
-            &mut input
-        ) {
-            Ok(_) => {
-                let resposta_da_pergunta = input.trim().to_lowercase();
-
-                let resposta_da_pergunta = resposta_da_pergunta.as_str();
-
-                match resposta_da_pergunta {
-                    "s" => {
-                        clean_terminal_linux();
-
-                        return true;
-                    }
-                    "n" => return false,
-                    _ => {
-                        clean_terminal_linux();
-
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
-
-                        println!(
-                            "Erro! Apenas é aceito S [sim] ou N [não]!\n"
                         );
                     }
                 }
