@@ -6,7 +6,7 @@ use std::{
 
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     exercicio_informacoes::ExercícioInformações,
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
     final_do_exercicio::rodar_final_do_exercício
@@ -22,12 +22,8 @@ pub fn rodar_o_exercício(
     /* Começo do Exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("037"),
-            String::from("Um programa que lê duas notas de um aluno\ne calcula sua média, mostrando uma\nmensagem no final, de acordo com a média\natingida:
-- Média abaixo de 5.0: Reprovado
-- Média entre 5.0 e 6.9: Recuperação
-- Média 7.0 ou superior: Aprovado")
+        buscar_descrição_do_exercício(
+            String::from("037")
         )
     );
 

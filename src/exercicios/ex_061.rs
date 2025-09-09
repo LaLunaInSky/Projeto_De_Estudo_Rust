@@ -6,7 +6,7 @@ use std::{
 
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     exercicio_informacoes::ExercícioInformações,
     final_do_exercicio::rodar_final_do_exercício
 };
@@ -17,9 +17,8 @@ pub fn rodar_o_exercício(
     /* Começo do Exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("061"),
-            String::from("Um programa que mostra a tabuada de\nvários números, um de cada vez, para cada\nvalor digitado pelo usuário. O programa\nserá interrompido quando o número\nsolicitado for negativo.")
+        buscar_descrição_do_exercício(
+            String::from("061")
         )
     );
 

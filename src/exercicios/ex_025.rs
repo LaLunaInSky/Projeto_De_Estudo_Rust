@@ -6,7 +6,7 @@ use std::{
 
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     exercicio_informacoes::ExercícioInformações,
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
     final_do_exercicio::rodar_final_do_exercício
@@ -22,9 +22,8 @@ pub fn rodar_o_exercício(
     /* Começo do Exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("025"),
-            String::from("Um programa que faça o computador \"pensar\"\nem um número inteiro entre 0 e 5 e peça\npara o usuário tentar descobrir qual foi o\nnúmero escolhido pelo computador.\n O programa deverá escrever na tela se o\nusuário venceu ou perdeu.")
+        buscar_descrição_do_exercício(
+            String::from("025")
         )
     );
 

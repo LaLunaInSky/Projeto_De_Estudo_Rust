@@ -6,7 +6,7 @@ use std::{
 
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     exercicio_informacoes::ExercícioInformações,
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
     final_do_exercicio::rodar_final_do_exercício
@@ -24,15 +24,8 @@ pub fn rodar_o_exercício(
     /* Começo do Exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("040"),
-            String::from("Desenvolva uma lógica que lê o peso e a\naltura de uma pessoa, calcula o seu IMC e\nmostra seu status corporal, de acordo com\na tabela abaixo:
-
-- Abaixo de  18.5: Abaixo do peso
-- Entre 18.5 e 25: Peso ideal
-- Entre 25 e 30: Sobrepeso
-- Entre 30 e 40: Obesidade
-- Acima de 40: Obesidade mórbida")
+        buscar_descrição_do_exercício(
+            String::from("040")
         )
     );
 

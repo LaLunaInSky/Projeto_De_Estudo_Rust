@@ -6,7 +6,7 @@ use std::{
 
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     exercicio_informacoes::ExercícioInformações,
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
     final_do_exercicio::rodar_final_do_exercício
@@ -26,13 +26,8 @@ pub fn rodar_o_exercício(
     /* Começo do Exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("053"),
-            String::from("Um programa que lê o nome, idade e\ngênero de 4 pessoas. No final do\nprograma, motra:
-
-- A média de idade do grupo.
-- Qual é o nome do homem mais velho.
-- Quantas mulheres têm menos de 20 anos.")
+        buscar_descrição_do_exercício(
+            String::from("053")
         )
     );
 

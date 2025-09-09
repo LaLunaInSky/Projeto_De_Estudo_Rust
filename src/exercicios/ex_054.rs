@@ -6,7 +6,7 @@ use std::{
 
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     exercicio_informacoes::ExercícioInformações,
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
     final_do_exercicio::rodar_final_do_exercício
@@ -22,9 +22,8 @@ pub fn rodar_o_exercício(
     /* Começo do exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("054"),
-            String::from("Melhore o jogo do Ex_025 onde o\ncomputador vai \"pensar\" em um número\nentre 0 e 10. Só que agora o jogador vai\ntentar adivinhar até acertar, mostrando\nno final quantos palpites foram\nnecessários para vencer.")
+        buscar_descrição_do_exercício(
+            String::from("054")
         )
     );
     

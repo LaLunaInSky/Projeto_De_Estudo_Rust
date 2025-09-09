@@ -6,7 +6,7 @@ use std::{
 
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     exercicio_informacoes::ExercícioInformações,
     final_do_exercicio::rodar_final_do_exercício
 };
@@ -21,9 +21,8 @@ pub fn rodar_o_exercício(
     /* Começo do Exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("057"),
-            String::from("Melhore o EX_048, perguntando para o\nusuário se ele quer mostrar mais alguns\ntermos. O programa encerra quando ele\ndisser que quer mostrar 0 termos.")
+        buscar_descrição_do_exercício(
+            String::from("057")
         )
     );
 

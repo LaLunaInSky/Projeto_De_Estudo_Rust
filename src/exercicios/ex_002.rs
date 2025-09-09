@@ -6,7 +6,7 @@ use std::{
 
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     exercicio_informacoes::ExercícioInformações,
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
     final_do_exercicio::rodar_final_do_exercício
@@ -16,20 +16,8 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     /* Começo do Exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("002"),
-            String::from("Um programa que lê a entrada do teclado\ne mostra no terminal o seu tipo primitivo,\ne outras as informação possíveis sobre o\nque foi digitado.
-
-Exemplo:
-
-* Seu Tipo Primitivo
-* Se possui espaços
-* Se é apenas um número
-* Se é alfabético
-* Se é alfanumérico
-* Se está em maiúscula
-* Se está em minúscula
-* Se está capitalizada")
+        buscar_descrição_do_exercício(
+            String::from("002")
         )
     );
 

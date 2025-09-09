@@ -6,7 +6,7 @@ use std::{
 
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     exercicio_informacoes::ExercícioInformações,
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
     final_do_exercicio::rodar_final_do_exercício
@@ -18,9 +18,8 @@ pub fn rodar_o_exercício(
     /* Começo do Exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("028"),
-            String::from("Um programa que pergunta a distância de\numa viagem em Km. Calcula o preço da\npassagem, cobrando  R$0,50 por Km para\nviagens de até 200Km e R$0,45 para\nviagens mais longas.")
+        buscar_descrição_do_exercício(
+            String::from("028")
         )
     );
 

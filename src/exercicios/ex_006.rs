@@ -7,7 +7,7 @@ use std::{
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
     exercicio_informacoes::ExercícioInformações,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
     final_do_exercicio::rodar_final_do_exercício
 };
@@ -20,11 +20,8 @@ pub fn rodar_o_exercício(cabeçalho_do_programa: &String) {
     /* Começo do Exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("006"),
-            String::from("Um programa que lê um valor em metros e o\nexibe convertido em todos os tipos a\nseguir:
-
-km <- hm <- dam <- m -> dm -> cm -> mm")
+        buscar_descrição_do_exercício(
+            String::from("006")
         )
     );
 

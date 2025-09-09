@@ -4,7 +4,7 @@ use std::{
 
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     exercicio_informacoes::ExercícioInformações,
     final_do_exercicio::rodar_final_do_exercício
 };
@@ -21,14 +21,8 @@ pub fn rodar_o_exercício(
     /* Começo do Exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("041"),
-            String::from("Um programa que calcula o valor a ser\npago por um produto, considerando o seu\npreço normal e condição de pagamento:
-        
-- À vista dinheiro/cheque: 10% desconto
-- À vista no cartão: 5% desconto
-- Em até 2x no cartão: preço normal
-- 3x ou mais no cartão: 20% de juros")
+        buscar_descrição_do_exercício(
+            String::from("041")
         )
     );
 

@@ -6,7 +6,7 @@ use std::{
 
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     exercicio_informacoes::ExercícioInformações,
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
     final_do_exercicio::rodar_final_do_exercício
@@ -22,9 +22,8 @@ pub fn rodar_o_exercício(
     /* Começo do Exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("031"),
-            String::from("Um programa que pergunta o salário de\num funcinário e calcule o valor do seu\naumento. Para salários superiores a\nR$1.250,00, calcule um aumento de 10%.\n Para os inferiores ou iguais, o aumento\né de 15%.")
+        buscar_descrição_do_exercício(
+            String::from("031")
         )
     );
 

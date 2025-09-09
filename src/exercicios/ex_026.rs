@@ -6,7 +6,7 @@ use std::{
 
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     exercicio_informacoes::ExercícioInformações,
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
     final_do_exercicio::rodar_final_do_exercício
@@ -18,10 +18,8 @@ pub fn rodar_o_exercício(
     /* Começo do Exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("026"),
-            String::from("Um programa que lê a velocidade de\num carro, se o mesmo ultrapassar 80Km/h,\nmostre uma mensagem dizendo que ele foi\nmultado.
- A multa vai custar R$7,00 por cada\nquilometro acima do limite.")
+        buscar_descrição_do_exercício(
+            String::from("026")
         )
     );
 

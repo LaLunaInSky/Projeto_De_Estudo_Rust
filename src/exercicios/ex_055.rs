@@ -4,7 +4,7 @@ use std::{
 
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     exercicio_informacoes::ExercícioInformações,
     final_do_exercicio::rodar_final_do_exercício
 };
@@ -19,15 +19,8 @@ pub fn rodar_o_exercício(
     /* Começo do Exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("055"),
-            String::from("Crie um programa que leia dois números\ninteiros e mostre um menu como o do\nexemplo abaixo:
-    [ 1 ] Somar
-    [ 2 ] Multiplicar
-    [ 3 ] Qual é o Maior
-    [ 4 ] Informar Novos Números
-    [ 5 ] Fechar o programa
-Seu programa deverá realizar a operação\nsolicitada em cada caso.")
+        buscar_descrição_do_exercício(
+            String::from("055")
         )
     );
 

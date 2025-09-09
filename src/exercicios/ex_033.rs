@@ -6,7 +6,7 @@ use std::{
 
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     exercicio_informacoes::ExercícioInformações,
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
     final_do_exercicio::rodar_final_do_exercício
@@ -22,10 +22,8 @@ pub fn rodar_o_exercício(
     /* Começo do Exercício */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("033"),
-            String::from("Um programa para aprovar o empréstimo\nbancário para a compra de uma casa.\n Pergunte o valor da casa, o salário do\ncomprador e em quantos anos ele vai pagar.
- A prestação mensal não pode exceder 30%\ndo salário ou então o empréstimo será\nnegado.")
+        buscar_descrição_do_exercício(
+            String::from("033")
         )
     );
     

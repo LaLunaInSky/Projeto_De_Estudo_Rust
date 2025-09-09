@@ -4,7 +4,7 @@ use std::{
 
 use crate::recursos::{
     limpar_terminal::limpar_terminal,
-    descricao_de_exercicio::criar_descrição_do_exercício,
+    descricao_de_exercicio::buscar_descrição_do_exercício,
     exercicio_informacoes::ExercícioInformações,
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
     final_do_exercicio::rodar_final_do_exercício
@@ -20,9 +20,8 @@ pub fn rodar_o_exercício(
     /* Começo do Exercíco */
     let exercício_informações = ExercícioInformações::new(
         &cabeçalho_do_programa,
-        criar_descrição_do_exercício(
-            String::from("046"),
-            String::from("Refaça o Ex_007, mostrando a tabuada de\num número que o usuário escolher, só que\nagora utilizando uma respetição com\npergunta sobre continuar.")
+        buscar_descrição_do_exercício(
+            String::from("046")
         )
     );
 
