@@ -22,8 +22,7 @@ pub fn rodar_o_exercício(
         &cabeçalho_do_programa,
         criar_descrição_do_exercício(
             String::from("046"),
-            String::from("Descrição do exercício 046:
- Refaça o Ex_007, mostrando a tabuada de\num número que o usuário escolher, só que\nagora utilizando uma respetição com\npergunta sobre continuar.")
+            String::from("Refaça o Ex_007, mostrando a tabuada de\num número que o usuário escolher, só que\nagora utilizando uma respetição com\npergunta sobre continuar.")
         )
     );
 
