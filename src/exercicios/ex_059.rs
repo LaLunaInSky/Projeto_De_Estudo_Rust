@@ -1,113 +1,77 @@
 use std::{
     io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() -> String {
-    format!(
-        "Descrição do exercício 059:
- Um programa que lê vários números\ninteiros digitados. O programa só vai\nparar quando o usuário digitar o valor\n999, que é a condição de parada. No\nfinal, mostra quantos números foram\ndigitados e qual foi a soma entre eles\n(desconsiderando a flag.)
-"
-    )
-}
+mod numeros;
 
-#[derive(Debug)]
-struct Números {
-    números: Vec<u32>,
-    soma_dos_números: u32
-}
-
-impl Números {
-    fn new() -> Self {
-        Self {
-            números: vec![],
-            soma_dos_números: 0,
-        }
-    }
-
-    fn adicionar_número(
-        &mut self,
-        número: u32
-    ) {
-        self.números.push(
-            número
-        );
-    }
-
-    fn somar_números(
-        &mut self
-    ) {
-        let mut soma_dos_números: u32 = 0;
-        let números = self.números.clone();
-
-        for número in números {
-            soma_dos_números += número;
-        }
-
-        self.soma_dos_números = soma_dos_números;
-    }
-
-    fn retornar_quantidade_de_números_armazenados(
-        &self
-    ) -> u32 {
-        return self.números.len() as u32;
-    }
-}
+use numeros::Números;
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
-    println!(
-        "{}\n{}",
-        cabeçalho_do_programa,
-        descrição_do_exercício()
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("059"),
+            String::from("Um programa que lê vários números\ninteiros digitados. O programa só vai\nparar quando o usuário digitar o valor\n999, que é a condição de parada. No\nfinal, mostra quantos números foram\ndigitados e qual foi a soma entre eles\n(desconsiderando a flag.")
+        )
     );
 
-    /* Corpo do Exercício */
-    let mut números_digitados = Números::new();
-
     loop {
-        let número_digitado = obter_um_número_inteiro(
-            &cabeçalho_do_programa
+        exercício_informações.mostrar_informações();
+
+        /* Corpo do Exercício */
+        let mut números_digitados = Números::new();
+
+        loop {
+            let número_digitado = obter_um_número_inteiro(
+                &exercício_informações
+            );
+
+            if número_digitado != 999 {
+                números_digitados.adicionar_número(
+                    número_digitado
+                );
+            } else {
+                números_digitados.somar_números();
+
+                break;
+            }
+        }
+
+        analisar_os_números(
+            &mut números_digitados
         );
 
-        if número_digitado != 999 {
-            números_digitados.adicionar_número(
-                número_digitado
-            );
-        } else {
-            números_digitados.somar_números();
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
+        );
 
+        if !resposta_sobre_continuar {
             break;
         }
     }
 
-    analisar_os_números(
-        números_digitados
-    );
-
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
 fn analisar_os_números(
-    números_digitados: Números
+    números_digitados: &mut Números
 ) {
+    números_digitados.somar_números();
+
     sleep(Duration::from_millis(1000));
 
     println!(
@@ -118,16 +82,16 @@ fn analisar_os_números(
 
     println!(
         "Os números:\n{:?}\n\nNo total foram digitados {} números.\n\nA soma deles é igual à {}.\n",
-        números_digitados.números,
+        números_digitados.get_números(),
         números_digitados.retornar_quantidade_de_números_armazenados(),
-        números_digitados.soma_dos_números
+        números_digitados.get_soma_dos_números()
     );
 
-    sleep(Duration::from_millis(2500));
+    sleep(Duration::from_millis(1100));
 }
 
 fn obter_um_número_inteiro(
-    cabeçalho_do_programa: &String
+    exercício_informações: &ExercícioInformações
 ) -> u32 {
     loop {
         println!(
@@ -142,13 +106,9 @@ fn obter_um_número_inteiro(
             Ok(_) => {
                 match input.trim().parse::<u32>() {
                     Ok(número) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "O número {},\nfoi adicionado com sucesso!\n",
@@ -158,13 +118,9 @@ fn obter_um_número_inteiro(
                         return número;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "Erro! Digite apenas número!\n"

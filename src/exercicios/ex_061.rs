@@ -1,36 +1,34 @@
 use std::{
     io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
-
-fn descrição_do_exercício() -> String {
-    format!(
-        "Descrição do exercício 061:
- Um programa que mostra a tabuada de\nvários números, um de cada vez, para cada\nvalor digitado pelo usuário. O programa\nserá interrompido quando o número\nsolicitado for negativo.
-"
-    )
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
-    println!(
-        "{}\n{}",
-        cabeçalho_do_programa,
-        descrição_do_exercício()
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("061"),
+            String::from("Um programa que mostra a tabuada de\nvários números, um de cada vez, para cada\nvalor digitado pelo usuário. O programa\nserá interrompido quando o número\nsolicitado for negativo.")
+        )
     );
+
+    exercício_informações.mostrar_informações();
 
     /* Corpo do Exercício */
     loop {
         let número_digitado = obter_um_número(
-            &cabeçalho_do_programa
+            &exercício_informações
         );
     
         if número_digitado < 0 {
@@ -43,15 +41,7 @@ pub fn rodar_o_exercício(
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
 fn mostrar_tabuada(
@@ -77,7 +67,7 @@ fn mostrar_tabuada(
 }
 
 fn obter_um_número(
-    cabeçalho_do_programa: &String
+    exercício_informações: &ExercícioInformações
 ) -> i32 {
     loop {
         println!(
@@ -92,13 +82,9 @@ fn obter_um_número(
             Ok(_) => {
                 match input.trim().parse::<i32>() {
                     Ok(número) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "O número {},\nfoi adicionado com sucesso!\n",
@@ -108,13 +94,9 @@ fn obter_um_número(
                         return número;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "Erro! Apenas digite número!\n"

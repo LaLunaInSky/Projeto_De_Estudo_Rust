@@ -1,70 +1,43 @@
 use std::{
     io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() -> String {
-    format!(
-        "Descrição do exercício 058:
- Um programa que lê um número inteiro x e\nmostra no terminal os x primeiros\nelementos da Sequência de Fibonacci.
+mod sequencia_de_fibonacci;
 
- Exemplo:
-0 -> 1 -> 1 -> 2 -> 3 -> 5 -> 8
-"
-    )
-}
-
-struct SequênciaDeFibonacci {
-    penúltimo_elemento: u32,
-    último_elemento: u32,
-    próximo_elemento: u32,
-}
-
-impl SequênciaDeFibonacci{
-    fn new() -> Self {
-        let penúltimo_elemento = 0;
-        let último_elemento = 1;
-        let próximo_elemento = penúltimo_elemento + último_elemento;
-
-        Self {
-            penúltimo_elemento,
-            último_elemento,
-            próximo_elemento
-        }
-    }
-
-    fn obter_o_próximo_elemento(
-        &mut self
-    ) {
-        self.penúltimo_elemento = self.último_elemento;
-        self.último_elemento = self.próximo_elemento;
-        self.próximo_elemento = self.penúltimo_elemento + self.último_elemento;
-    }
-}
+use sequencia_de_fibonacci::SequênciaDeFibonacci;
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
- 
-    println!(
-        "{}\n{}",
-        cabeçalho_do_programa,
-        descrição_do_exercício()
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("058"),
+            String::from("Um programa que lê um número inteiro x e\nmostra no terminal os x primeiros\nelementos da Sequência de Fibonacci.
+
+ Exemplo:
+0 -> 1 -> 1 -> 2 -> 3 -> 5 -> 8")
+        )
     );
+ 
+    exercício_informações.mostrar_informações();
 
     /* Corpo do Exercício */
     let mut sequência_de_fibonacci = SequênciaDeFibonacci::new();
 
     loop {
         let quantidade_de_termos: u32 = obter_um_número_inteiro(
-            &cabeçalho_do_programa
+            &exercício_informações
         );
 
         if quantidade_de_termos == 0 {
@@ -78,15 +51,7 @@ pub fn rodar_o_exercício(
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
 fn mostrar_x_termos_da_sequência_de_fibonacci(
@@ -99,7 +64,7 @@ fn mostrar_x_termos_da_sequência_de_fibonacci(
     for termo in 0..quantidade_de_termos {
         print!(
             "{}",
-            sequência_de_fibonacci.penúltimo_elemento
+            sequência_de_fibonacci.get_penúltimo_elemento()
         );
 
         if quantidade_de_termos > 1 {
@@ -115,11 +80,11 @@ fn mostrar_x_termos_da_sequência_de_fibonacci(
 
     println!("\n");
 
-    sleep(Duration::from_millis(1500));
+    sleep(Duration::from_millis(1100));
 }
 
 fn obter_um_número_inteiro(
-    cabeçalho_do_programa: &String
+    exercício_informações: &ExercícioInformações
 ) -> u32 {
     loop {
         println!(
@@ -134,13 +99,9 @@ fn obter_um_número_inteiro(
             Ok(_) => {
                 match input.trim().parse::<u32>() {
                     Ok(quantidade_de_termos) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "A quantidade de {} termos,\nfoi adicionada com sucesso!\n",
@@ -150,13 +111,9 @@ fn obter_um_número_inteiro(
                         return quantidade_de_termos;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "Erro! Apenas digite números!\n"

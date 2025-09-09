@@ -1,66 +1,42 @@
 use std::{
     io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command
+    time::Duration
 };
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn descrição_do_exercício() -> String {
-    format!(
-        "Descrição do exercício 057:
- Melhore o EX_048, perguntando para o\nusuário se ele quer mostrar mais alguns\ntermos. O programa encerra quando ele\ndisser que quer mostrar 0 termos.
-"
-    )
-}
+mod progressao_aritimetica;
 
-#[derive(Debug)]
-struct PA {
-    número: u32,
-    razão: u32,
-    próximo_termo: u32,
-}
-
-impl PA {
-    fn new(
-        número: u32,
-        razão: u32
-    ) -> Self {
-        Self {
-            número,
-            razão,
-            próximo_termo: número + razão
-        }
-    }
-
-    fn buscar_o_próximo_termo(
-        &mut self
-    ) {
-        self.próximo_termo += self.razão;
-    }
-}
+use progressao_aritimetica::PA;
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
-    println!(
-        "{}\n{}",
-        cabeçalho_do_programa,
-        descrição_do_exercício()
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("057"),
+            String::from("Melhore o EX_048, perguntando para o\nusuário se ele quer mostrar mais alguns\ntermos. O programa encerra quando ele\ndisser que quer mostrar 0 termos.")
+        )
     );
+
+    exercício_informações.mostrar_informações();
 
     /* Corpo do Exercício */
     let mut pa = PA::new(
         obter_número_inteiro(
-            &cabeçalho_do_programa, 
+            &exercício_informações, 
             "pa"
         ),
         obter_número_inteiro(
-            &cabeçalho_do_programa,
+            &exercício_informações,
             "razão"
         )
     );
@@ -71,7 +47,7 @@ pub fn rodar_o_exercício(
 
     loop {
         let quantidade_de_novos_termos: u32 = obter_quantidade_de_novos_termos(
-            &cabeçalho_do_programa,
+            &exercício_informações,
             &pa
         );
 
@@ -86,15 +62,7 @@ pub fn rodar_o_exercício(
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
 fn mostrar_os_x_termos_da_pa(
@@ -107,7 +75,7 @@ fn mostrar_os_x_termos_da_pa(
         pa.buscar_o_próximo_termo();
 
         x_próximos_termos.push(
-            pa.próximo_termo
+            pa.get_próximo_termo()
         );
     }
 
@@ -125,11 +93,11 @@ fn mostrar_os_x_termos_da_pa(
         x_próximos_termos
     );
 
-    sleep(Duration::from_millis(1500));
+    sleep(Duration::from_millis(1100));
 }
 
 fn obter_quantidade_de_novos_termos(
-    cabeçalho_do_programa: &String,
+    exercício_informações: &ExercícioInformações,
     pa: &PA
 ) -> u32 {
     loop {
@@ -145,19 +113,15 @@ fn obter_quantidade_de_novos_termos(
             Ok(_) => {
                 match input.trim().parse::<u32>() {
                     Ok(número) => {
-                        clean_terminal_linux();
-                    
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        limpar_terminal();
+
+                        exercício_informações.mostrar_informações();
 
                         if número > 0 {
                             println!(
                                 "A PA de {}, com Razão de {}.\n",
-                                pa.número,
-                                pa.razão
+                                pa.get_número(),
+                                pa.get_razão()
                             );
     
                             println!(
@@ -169,13 +133,9 @@ fn obter_quantidade_de_novos_termos(
                         return número;
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "Erro! Digite apenas números!\n"
@@ -192,14 +152,15 @@ fn mostrar_os_10_primeiros_da_pa(
     pa: &mut PA
 ) {
     let mut dez_primeiros_termos_da_pa: Vec<u32> = vec![
-        pa.número, pa.próximo_termo
+        pa.get_número(), 
+        pa.get_próximo_termo()
     ];
 
     for _quantidade in 1..9 {
         pa.buscar_o_próximo_termo();
 
         dez_primeiros_termos_da_pa.push(
-            pa.próximo_termo
+            pa.get_próximo_termo()
         );
     }
 
@@ -216,11 +177,11 @@ fn mostrar_os_10_primeiros_da_pa(
         dez_primeiros_termos_da_pa
     );
 
-    sleep(Duration::from_millis(1500));
+    sleep(Duration::from_millis(1100));
 }
 
 fn obter_número_inteiro(
-    cabeçalho_do_programa: &String,
+    exercício_informações: &ExercícioInformações,
     nome_da_chamada: &str
 ) -> u32 {
     loop {
@@ -240,13 +201,9 @@ fn obter_número_inteiro(
                         if número == 0 && nome_da_chamada == "razão" {
                             let número: u32 = 1;
 
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!(
-                                "{}\n{}",
-                                cabeçalho_do_programa,
-                                descrição_do_exercício()
-                            );
+                            exercício_informações.mostrar_informações();
 
                             println!(
                                 "A {} de {},\nfoi adicionada com sucesso!\n",
@@ -257,13 +214,9 @@ fn obter_número_inteiro(
                             return número;
 
                         } else {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!(
-                                "{}\n{}",
-                                cabeçalho_do_programa,
-                                descrição_do_exercício()
-                            );
+                            exercício_informações.mostrar_informações();
 
                             println!(
                                 "A {} de {},\nfoi adicionada com sucesso!\n",
@@ -275,13 +228,9 @@ fn obter_número_inteiro(
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "Erro! Digite número inteiros!\n"

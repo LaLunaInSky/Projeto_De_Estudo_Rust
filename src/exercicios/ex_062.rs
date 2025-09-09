@@ -1,106 +1,50 @@
 use std::{
     io::stdin,
     thread::sleep,
-    time::Duration,
-    process::Command,
+    time::Duration
 };
 
-use rand::random_range;
+use crate::recursos::{
+    limpar_terminal::limpar_terminal,
+    descricao_de_exercicio::criar_descrição_do_exercício,
+    exercicio_informacoes::ExercícioInformações,
+    perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
+    final_do_exercicio::rodar_final_do_exercício
+};
 
-fn clean_terminal_linux() {
-    Command::new("clear").status().unwrap();
-}
+mod jogadores;
+mod escolhas;
+mod jogada;
 
-// ex_068!
-fn descrição_do_exercício() -> String {format!(
-        "Descrição do exercício 062:
- Um programa que joga par ou ímpar com o\nusuário. O jogo só será interrompido\nquando o usuário PERDER, mostrando o\ntotal de n vitórias consecutivas que o\nmesmo conquistou no final do jogo.
-"
-    )
-}
-
-#[derive(Debug, PartialEq)]
-enum Jogadores {
-    computador,
-    usuário
-}
-
-#[derive(Debug, PartialEq)]
-enum Escolhas {
-    par,
-    ímpar
-}
-
-#[derive(Debug)]
-struct Jogada {
-    jogada_computador: u8,
-    escolha_computador: Escolhas,
-    jogada_usuário: u8,
-    escolha_usuário: Escolhas,
-    ganhador: Jogadores
-}
-
-impl Jogada {
-    fn new(
-        jogada_usuário: u8,
-        escolha_usuário: Escolhas
-    ) -> Self {
-        let jogada_computador: u8 = random_range(0..11);
-        let mut escolha_computador = Escolhas::ímpar;
-
-        if escolha_usuário == Escolhas::ímpar {
-            escolha_computador = Escolhas::par;
-        }
-        
-        let soma_das_jogadas = jogada_computador + jogada_usuário;
-
-        let mut ganhador = Jogadores::computador;
-
-        if soma_das_jogadas % 2 == 0 {
-            if escolha_usuário == Escolhas::par {
-                ganhador = Jogadores::usuário;
-            } else {
-                ganhador = Jogadores::computador;
-            }
-        } else {
-            if escolha_usuário == Escolhas::ímpar {
-                ganhador = Jogadores::usuário;
-            } else {
-                ganhador = Jogadores::computador;
-            }
-        }
-
-        Self {
-            jogada_computador,
-            escolha_computador,
-            jogada_usuário,
-            escolha_usuário,
-            ganhador
-        }
-    }
-}
+use jogadores::Jogadores;
+use escolhas::Escolhas;
+use jogada::Jogada;
 
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
     /* Começo do Exercício */
+    let exercício_informações = ExercícioInformações::new(
+        &cabeçalho_do_programa,
+        criar_descrição_do_exercício(
+            String::from("062"),
+            String::from("Um programa que joga par ou ímpar com o\nusuário. O jogo só será interrompido\nquando o usuário PERDER, mostrando o\ntotal de n vitórias consecutivas que o\nmesmo conquistou no final do jogo.")
+        )
+    );
+
     loop {
-        println!(
-            "{}\n{}",
-            cabeçalho_do_programa,
-            descrição_do_exercício()
-        );
+        exercício_informações.mostrar_informações();
 
         /* Corpo do Exercício */
-        let mut quantidade_de_vezes_que_o_usuário_ganhou = 0;
+        let mut quantidade_de_vezes_que_o_usuário_ganhou: u32 = 0;
         
         loop {
             let jogada = Jogada::new(
                 obter_um_número_de_zero_à_dez(
-                    &cabeçalho_do_programa
+                    &exercício_informações
                 ),
                 obter_a_escolha_de_par_ou_impar(
-                    &cabeçalho_do_programa
+                    &exercício_informações
                 )
             );
             
@@ -108,7 +52,7 @@ pub fn rodar_o_exercício(
                 &jogada
             );
         
-            if jogada.ganhador == Jogadores::usuário {
+            if jogada.get_ganhador() == Jogadores::USUARIO {
                 quantidade_de_vezes_que_o_usuário_ganhou += 1;
             } else {
                 break;
@@ -121,8 +65,8 @@ pub fn rodar_o_exercício(
             if quantidade_de_vezes_que_o_usuário_ganhou != 1 {"es"} else {""}
         );
 
-        let resposta_sobre_continuar = perguntar_se_quer_jogar_novamente(
-            &cabeçalho_do_programa
+        let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
+            &exercício_informações
         );
 
         if !resposta_sobre_continuar {
@@ -131,25 +75,17 @@ pub fn rodar_o_exercício(
     }
 
     /* Fim do Exercício */
-    sleep(Duration::from_millis(3000));
-
-    println!(
-        "\nVoltando ao menu de exercícios...\n"
-    );
-
-    sleep(Duration::from_millis(3000));
-
-    clean_terminal_linux();
+    rodar_final_do_exercício();
 }
 
 fn analisar_jogada(
     jogada: &Jogada
 ) {
-    sleep(Duration::from_millis(1100));
+    sleep(Duration::from_millis(1000));
 
     println!(
         "Você {}!\n",
-        if jogada.ganhador == Jogadores::usuário {
+        if jogada.get_ganhador() == Jogadores::USUARIO {
             "ganhou".to_uppercase()
         } else {
             "perdeu".to_uppercase()
@@ -164,62 +100,17 @@ Computador.Escolha.: {}
 Usuário.....Jogada.: {}
 Usuário....Escolha.: {}
 ",
-        jogada.jogada_computador,
-        if jogada.escolha_computador == Escolhas::par {"Par"} else {"Ímpar"},
-        jogada.jogada_usuário,
-        if jogada.escolha_usuário == Escolhas::par {"Par"} else {"Ímpar"}
+        jogada.get_jogada_computador(),
+        if jogada.get_escolha_computador() == Escolhas::PAR {"Par"} else {"Ímpar"},
+        jogada.get_jogada_usuário(),
+        if jogada.get_escolha_usuário() == Escolhas::PAR {"Par"} else {"Ímpar"}
     );
 
-    sleep(Duration::from_millis(1700));
-}
-
-fn perguntar_se_quer_jogar_novamente(
-    cabeçalho_do_programa: &String
-) -> bool {
-    loop {
-        println!(
-            "Quer jogar novamente? [S/N]"
-        );
-
-        let mut input = String::new();
-
-        match stdin().read_line(
-            &mut input
-        ) {
-            Ok(_) => {
-                let resposta_da_pergunta = input.trim().to_lowercase();
-
-                let resposta_da_pergunta = resposta_da_pergunta.as_str();
-
-                match resposta_da_pergunta {
-                    "s" => {
-                        clean_terminal_linux();
-
-                        return true;
-                    }
-                    "n" => return false,
-                    _ => {
-                        clean_terminal_linux();
-
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
-
-                        println!(
-                            "Erro! Apenas é aceito S [sim] ou N [não]!\n"
-                        );
-                    }
-                }
-            }
-            Err(_) => (),
-        }
-    }
+    sleep(Duration::from_millis(1100));
 }
 
 fn obter_a_escolha_de_par_ou_impar(
-    cabeçalho_do_programa: &String
+    exercício_informações: &ExercícioInformações
 ) -> Escolhas {
     loop {
         println!(
@@ -238,13 +129,9 @@ fn obter_a_escolha_de_par_ou_impar(
 
                 match resposta {
                     "p" | "i" => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "A escolha de {},\nfoi adicionada com sucesso!\n",
@@ -252,19 +139,15 @@ fn obter_a_escolha_de_par_ou_impar(
                         );
 
                         if resposta == "p" {
-                            return Escolhas::par;
+                            return Escolhas::PAR;
                         } else {
-                            return Escolhas::ímpar;
+                            return Escolhas::IMPAR;
                         }
                     }
                     _ => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "Erro! Apenas é aceito p ou i!\n"
@@ -278,7 +161,7 @@ fn obter_a_escolha_de_par_ou_impar(
 }
 
 fn obter_um_número_de_zero_à_dez(
-    cabeçalho_do_programa: &String
+    exercício_informações: &ExercícioInformações
 ) -> u8 {
     loop {
         println!(
@@ -293,14 +176,10 @@ fn obter_um_número_de_zero_à_dez(
             Ok(_) => {
                 match input.trim().parse::<u8>() {
                     Ok(jogada) => {
-                        if jogada >= 0 && jogada <= 10 {
-                            clean_terminal_linux();
+                        if jogada <= 10 {
+                            limpar_terminal();
 
-                            println!(
-                                "{}\n{}",
-                                cabeçalho_do_programa,
-                                descrição_do_exercício()
-                            );
+                            exercício_informações.mostrar_informações();
 
                             println!(
                                 "A jogada de {},\nfoi adicionada com sucesso!\n",
@@ -309,13 +188,9 @@ fn obter_um_número_de_zero_à_dez(
 
                             return jogada;
                         } else {
-                            clean_terminal_linux();
+                            limpar_terminal();
 
-                            println!(
-                                "{}\n{}",
-                                cabeçalho_do_programa,
-                                descrição_do_exercício()
-                            );
+                            exercício_informações.mostrar_informações();
 
                             println!(
                                 "Erro! Apenas é aceito 0 à 10!\n"
@@ -323,13 +198,9 @@ fn obter_um_número_de_zero_à_dez(
                         }
                     }
                     Err(_) => {
-                        clean_terminal_linux();
+                        limpar_terminal();
 
-                        println!(
-                            "{}\n{}",
-                            cabeçalho_do_programa,
-                            descrição_do_exercício()
-                        );
+                        exercício_informações.mostrar_informações();
 
                         println!(
                             "Erro! Digite apenas números!\n"
