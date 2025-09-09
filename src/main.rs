@@ -4,8 +4,9 @@ use std::{
     time::Duration,
 };
 
-mod exercicios;
+pub mod exercicios;
 pub mod recursos;
+pub mod lista_de_exercicios;
 
 use recursos::{
     limpar_terminal::limpar_terminal
