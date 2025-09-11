@@ -1,18 +1,20 @@
+pub mod exercicios;
+pub mod recursos;
+pub mod lista_de_exercicios;
+
 use std::{
     io::stdin,
     thread::sleep,
     time::Duration,
 };
 
-pub mod exercicios;
-pub mod recursos;
-pub mod lista_de_exercicios;
-
 use recursos::{
     limpar_terminal::limpar_terminal
 };
 
-fn construir_a_lista_de_exercícios(
+use crate::lista_de_exercicios::obter_o_total_de_exercícios;
+
+fn _construir_a_lista_de_exercícios(
     cabeçalho_do_programa: &String, 
     total_de_exercícios: &u32
 ) {
@@ -62,14 +64,14 @@ fn construir_a_lista_de_exercícios(
     );
 }
 
-fn menu_de_opções_de_exercícios(
+fn _menu_de_opções_de_exercícios(
     cabeçalho_do_programa: &String,
     total_de_exercícios: u32
 ) {
     let mut complemento_da_pergunta = String::new();
     
     loop {
-        construir_a_lista_de_exercícios(
+        _construir_a_lista_de_exercícios(
             &cabeçalho_do_programa, 
             &total_de_exercícios);    
 
@@ -143,7 +145,7 @@ fn main() {
     limpar_terminal();
 
     /* Alterar para o número do último exercício em modelagem */
-    let total_de_exercícios: u32 = 63;
+    let total_de_exercícios: u32 = obter_o_total_de_exercícios();
 
     /* Não precisa mexer */
     let _último_exercício = &total_de_exercícios;
@@ -154,10 +156,16 @@ fn main() {
     );
 
     // Rodar o menu de exercícios
-    menu_de_opções_de_exercícios(&cabeçalho_do_programa, total_de_exercícios);
+    _menu_de_opções_de_exercícios(
+        &cabeçalho_do_programa, 
+        total_de_exercícios
+    );
 
     // Rodar apenas o exercício X
-    // exercicios::executar_o_exercício_x(*_último_exercício, &cabeçalho_do_programa);
+    // exercicios::executar_o_exercício_x(
+    //     *_último_exercício, 
+    //     &cabeçalho_do_programa
+    // );
 
     
 }

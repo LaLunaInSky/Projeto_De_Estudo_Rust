@@ -20,7 +20,6 @@ use pessoa::Pessoa;
 use genero::Gênero;
 use pessoas::Pessoas;
 
-// ex_069!
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
@@ -86,7 +85,7 @@ fn analisar_as_pessoas(
     sleep(Duration::from_millis(1000));
 
     println!(
-        "Analisando as pessoas..."
+        "\nAnalisando as pessoas..."
     );
 
     sleep(Duration::from_millis(1500));
@@ -95,7 +94,7 @@ fn analisar_as_pessoas(
         "
 Total de maiores de idade: {},
 Total de homens digitados: {},
-Total de mulheres com menos de 20: {};
+Total de mulheres com menos de 20: {}.
 ",
         pessoas.get_quantidade_de_pessoas_maiores_de_18_anos(),
         pessoas.get_quantidade_de_homens_cadastrados(),
@@ -126,6 +125,8 @@ fn perguntar_se_quer_adicionar_mais_uma_pessoa(
                 match resposta_da_pergunta {
                     "s" => {
                         limpar_terminal();
+
+                        exercício_informações.mostrar_informações();
 
                         return true;
                     }
@@ -218,7 +219,7 @@ fn obter_a_idade_de_uma_pessoa(
             &mut input
         ) {
             Ok(_) => {
-                match input.parse::<u8>() {
+                match input.trim().parse::<u8>() {
                     Ok(idade) => {
                         match idade {
                             0..100 => {
@@ -255,7 +256,7 @@ fn obter_a_idade_de_uma_pessoa(
                     }
                 }
             }
-            Err(_) => ()
+            Err(_) => (),
         }
     }
 }
