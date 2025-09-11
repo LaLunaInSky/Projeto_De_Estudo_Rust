@@ -141,54 +141,51 @@ pub fn lista_de_exercícios(
         "Refaça o Ex_007, mostrando a tabuada de um número que o usuário escolher, só que agora utilizando uma respetição com pergunta sobre continuar.",
         
         // 47
-        "Refaça o Ex_007, mostrando a tabuada de um número que o usuário escolher, só que agora utilizando uma respetição com pergunta sobre continuar.",
-        
-        // 48
         "Um programa que lê seis números inteiros e mostre a soma apenas daqueles que forem pares. Se o valor digitado for ímpar, desconsidere-o.",
         
-        // 49
+        // 48
         "Um programa que lê o primeiro termo e a razão de uma PA. No final, mostra os 10 primeiros termos dessa progressão.",
         
-        // 50
+        // 49
         "Um programa que lê um número inteiro e retorna se ele é ou não um número primo.",
         
-        // 51
+        // 50
         "Um programa que lê uma frase qualquer e retorna se ela é um palíndromo, desconsiderando os espaços.\n\nExemplos:\n- apos a sopa\n- a sacada da casa\n- a torre da derrota\n- o lobo ama o bolo\n- anotaram a data da maratona",
         
-        // 52
+        // 51
         "Um programa que lê o ano de nascimento de sete pessoas. No final, mostra quantas pessoas ainda não atingiram a maioridade e quantas já são maiores.",
         
-        // 53
+        // 52
         "Um programa que lê o peso de cinco pessoas. No final, mostra qual foi o maior e o menor peso lido.",
         
-        // 54
+        // 53
         "Um programa que lê o nome, idade e gênero de 4 pessoas. No final do programa, motra:\n\n- A média de idade do grupo;\n- Qual é o nome do homem mais velho;\n- Quantas mulheres têm menos de 20 anos.",
         
-        // 55
+        // 54
         "Melhore o jogo do Ex_025 onde o computador vai \"pensar\" em um número entre 0 e 10. Só que agora o jogador vai tentar adivinhar até acertar, mostrando no final quantos palpites foram necessários para vencer.",
 
-        // 56
+        // 55
         "Crie um programa que leia dois números inteiros e mostre um menu como o do exemplo abaixo:\n    [ 1 ] Somar\n    [ 2 ] Multiplicar\n    [ 3 ] Qual é o Maior\n    [ 4 ] Informar Novos Números\n    [ 5 ] Fechar o programa\nSeu programa deverá realizar a operação solicitada em cada caso.",
         
-        // 57
+        // 56
         "Um programa que lê um número inteiro e mostre o seu fatorial.\n\n Exemplo:\n5! = 5 x 4 x 3 x 2 x 1 = 120",
         
-        // 58
+        // 57
         "Melhore o EX_048, perguntando para o usuário se ele quer mostrar mais alguns termos. O programa encerra quando ele disser que quer mostrar 0 termos.",
         
-        // 59
+        // 58
         "Um programa que lê um número inteiro x e mostra no terminal os x primeiros elementos da Sequência de Fibonacci.\n\n Exemplo:\n0 -> 1 -> 1 -> 2 -> 3 -> 5 -> 8",
         
-        // 60
+        // 59
         "Um programa que lê vários números inteiros digitados. O programa só vai parar quando o usuário digitar o valor 999, que é a condição de parada. No final, mostra quantos números foram digitados e qual foi a soma entre eles (desconsiderando a flag.",
         
-        // 61
+        // 60
         "Um programa que lê vários números inteiros digitados. No final da execução, mostra a média entre todos os valores e qual foi o maior e o menor valor registrado. O programa deve perguntar ao usuário se ele quer ou não continuar a digitar valores.",
         
-        // 62
+        // 61
         "Um programa que mostra a tabuada de vários números, um de cada vez, para cada valor digitado pelo usuário. O programa será interrompido quando o número solicitado for negativo.",
         
-        // 63
+        // 62
         "Um programa que joga par ou ímpar com o usuário. O jogo só será interrompido quando o usuário PERDER, mostrando o total de n vitórias consecutivas que o mesmo conquistou no final do jogo.",
         
         // 63
