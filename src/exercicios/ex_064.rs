@@ -20,7 +20,6 @@ use produto::Produto;
 use arredondador_de_precos::arredondadar_preço;
 use produtos::Produtos;
 
-// 070!
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
