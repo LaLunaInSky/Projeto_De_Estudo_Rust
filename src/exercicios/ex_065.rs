@@ -12,51 +12,9 @@ use crate::recursos::{
     final_do_exercicio::rodar_final_do_exercício
 };
 
-struct ValorASacar {
-    _valor: u32,
-    quantidade_de_notas_de_cinquenta: u8,
-    quantidade_de_notas_de_vinte: u8,
-    quantidade_de_notas_de_dez: u8,
-    quantidade_de_notas_de_um: u8
-}
+mod valor_a_sacar;
 
-impl ValorASacar {
-    fn new(
-        valor: u32
-    ) -> Self {
-        Self {
-            _valor: valor,
-            quantidade_de_notas_de_cinquenta: 0,
-            quantidade_de_notas_de_vinte: 0,
-            quantidade_de_notas_de_dez: 0,
-            quantidade_de_notas_de_um: 0
-        }
-    }
-
-    fn get_quantidade_de_notas_de_cinquenta(
-        &self
-    ) -> u8 {
-        return self.quantidade_de_notas_de_cinquenta;
-    }
-
-    fn get_quantidade_de_notas_de_vinte(
-        &self
-    ) -> u8 {
-        return self.quantidade_de_notas_de_vinte;
-    }
-
-    fn get_quantidade_de_notas_de_dez(
-        &self
-    ) -> u8 {
-        return self.quantidade_de_notas_de_dez;
-    }
-
-    fn get_quantidade_de_notas_de_um(
-        &self
-    ) -> u8 {
-        return self.quantidade_de_notas_de_um;
-    }
-}
+use valor_a_sacar::ValorASacar;
 
 // 71!
 pub fn rodar_o_exercício(
