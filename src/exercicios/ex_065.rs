@@ -16,7 +16,6 @@ mod valor_a_sacar;
 
 use valor_a_sacar::ValorASacar;
 
-// 71!
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {

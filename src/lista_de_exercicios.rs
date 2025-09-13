@@ -193,7 +193,10 @@ fn lista_de_exercícios() -> Vec<String> {
         "Um programa que lê o nome e o preço de um produto. logo depois o programa deverá perguntar se o usuário quer adicionar mais um produto.\nNo final, mostre:\n\n1º - Qual é o total gasto na compra;\n2º - Quantos produtos custam mais de R$1000;\n3º - Qual é o nome e o valor do produto mais barato.".to_string(),
 
         // 65
-        "Um programa que simula o funcionameno de um caixa eletrônico. No início, pergunta ao usuário qual será o valor a ser sacado (número inteiro) e o programa informará quantas cédulas de cada valor serão entregues.\n\nObservação:\n Considere que o caixa possuí apenas cédulas de R$50, R$20, R$10 e R$1.".to_string()
+        "Um programa que simula o funcionameno de um caixa eletrônico. No início, pergunta ao usuário qual será o valor a ser sacado (número inteiro) e o programa informará quantas cédulas de cada valor serão entregues.\n\nObservação:\n Considere que o caixa possuí apenas cédulas de R$50, R$20, R$10 e R$1.".to_string(),
+
+        // 66
+        "Um programa que contém um array composto por uma contagem de zero à 20 por extenso.\n O programa deverá ler um número inteiro pelo teclado (entre 0 e 20) e mostrá-lo por extenso.".to_string(),
     ];
 
     return exercícios_descrições.clone();
