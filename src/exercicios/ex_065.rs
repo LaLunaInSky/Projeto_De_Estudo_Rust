@@ -1,7 +1,7 @@
 use std::{
     io::stdin,
-    // thread::sleep,
-    // time::Duration
+    thread::sleep,
+    time::Duration
 };
 
 use crate::recursos::{
@@ -11,6 +11,52 @@ use crate::recursos::{
     perguntar_se_quer_iniciar_novamento_o_exercicio::perguntar_se_quer_iniciar_novamente_o_exercício,
     final_do_exercicio::rodar_final_do_exercício
 };
+
+struct ValorASacar {
+    _valor: u32,
+    quantidade_de_notas_de_cinquenta: u8,
+    quantidade_de_notas_de_vinte: u8,
+    quantidade_de_notas_de_dez: u8,
+    quantidade_de_notas_de_um: u8
+}
+
+impl ValorASacar {
+    fn new(
+        valor: u32
+    ) -> Self {
+        Self {
+            _valor: valor,
+            quantidade_de_notas_de_cinquenta: 0,
+            quantidade_de_notas_de_vinte: 0,
+            quantidade_de_notas_de_dez: 0,
+            quantidade_de_notas_de_um: 0
+        }
+    }
+
+    fn get_quantidade_de_notas_de_cinquenta(
+        &self
+    ) -> u8 {
+        return self.quantidade_de_notas_de_cinquenta;
+    }
+
+    fn get_quantidade_de_notas_de_vinte(
+        &self
+    ) -> u8 {
+        return self.quantidade_de_notas_de_vinte;
+    }
+
+    fn get_quantidade_de_notas_de_dez(
+        &self
+    ) -> u8 {
+        return self.quantidade_de_notas_de_dez;
+    }
+
+    fn get_quantidade_de_notas_de_um(
+        &self
+    ) -> u8 {
+        return self.quantidade_de_notas_de_um;
+    }
+}
 
 // 71!
 pub fn rodar_o_exercício(
@@ -30,13 +76,14 @@ pub fn rodar_o_exercício(
         /* Corpo do Exercício */
         mostrar_slogan();
 
-        let valor_a_sacar = obter_um_número_inteiro(
-            &exercício_informações
+        let valor_a_sacar = ValorASacar::new(
+            obter_um_número_inteiro(
+                &exercício_informações
+            )
         );
 
-        println!(
-            "{}",
-            valor_a_sacar
+        analisar_o_valor_a_sacar(
+            &valor_a_sacar
         );
 
         let resposta_sobre_continuar = perguntar_se_quer_iniciar_novamente_o_exercício(
@@ -50,6 +97,35 @@ pub fn rodar_o_exercício(
 
     /* Fim do Exercício */
     rodar_final_do_exercício();
+}
+
+fn analisar_o_valor_a_sacar(
+    valor_a_sacar: &ValorASacar
+) {
+    sleep(Duration::from_millis(1000));
+
+    println!(
+        "Analisando o valor..."
+    );
+
+    sleep(Duration::from_millis(1500));
+
+    println!(
+        "
+{:^42}
+R$ 50.: {}
+R$ 20.: {}
+R$ 10.: {}
+R$ 1..: {}
+",
+        "Quantidade de Cédulas",
+        valor_a_sacar.get_quantidade_de_notas_de_cinquenta(),
+        valor_a_sacar.get_quantidade_de_notas_de_vinte(),
+        valor_a_sacar.get_quantidade_de_notas_de_dez(),
+        valor_a_sacar.get_quantidade_de_notas_de_um()
+    );
+
+    sleep(Duration::from_millis(1100));
 }
 
 fn mostrar_slogan() {
