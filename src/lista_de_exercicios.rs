@@ -197,6 +197,9 @@ fn lista_de_exercícios() -> Vec<String> {
 
         // 66
         "Um programa que contém um array composto por uma contagem de zero à 20 por extenso.\n O programa deverá ler um número inteiro pelo teclado (entre 0 e 20) e mostrá-lo por extenso.".to_string(),
+
+        // 67
+        "Um programa que contem um array preenchido com os 20 primeiros colocados da última tabela do Campeonato Brasileiro de Futebol, na ordem de colocação.\nDepois mostra:\n\n1º - Os 5 primeiros colocados;\n2º - Os últimos 4 colocados;\n3º - Os times em ordem alfabética;\n4º - Em qual posição está o time da Chapecoense.".to_string(),
     ];
 
     return exercícios_descrições.clone();

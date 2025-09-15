@@ -16,7 +16,6 @@ mod numeros_por_extensos;
 
 use numeros_por_extensos::NúmerosPorExtenso;
 
-// 72!
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {

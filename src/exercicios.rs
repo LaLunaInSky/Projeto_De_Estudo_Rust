@@ -64,9 +64,15 @@ mod ex_063;
 mod ex_064;
 mod ex_065;
 mod ex_066;
+mod ex_067;
 
 pub fn executar_o_exercício_x(número_do_exercício: u32, cabeçalho_do_programa: &String) {
-    if número_do_exercício == 66 {
+    if número_do_exercício == 67 {
+        ex_067::rodar_o_exercício(
+            &cabeçalho_do_programa
+        );
+
+    } else if número_do_exercício == 66 {
         ex_066::rodar_o_exercício(
             &cabeçalho_do_programa
         );
