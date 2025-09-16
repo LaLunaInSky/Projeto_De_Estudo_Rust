@@ -22,11 +22,6 @@ impl TabelaDoBrasileirão2025 {
             &tabela_em_ordem_de_colocação
         );
 
-        println!(
-            "{:?}",
-            tabela_em_ordem_de_colocação.clone().sort()
-        );
-
         let mut posição_do_time_chapecoense: i8 = -1;
 
         for (
@@ -168,7 +163,7 @@ impl TabelaDoBrasileirão2025 {
     pub fn get_tabela_em_ordem_alfabética(
         &self
     ) -> String {
-                let mut tabela_em_string = String::new();
+        let mut tabela_em_string = String::new();
 
         for (
             index,
@@ -181,7 +176,7 @@ impl TabelaDoBrasileirão2025 {
                         time
                     ).as_str()
                 );
-            } else if index != 0 && index % 3 == 0 && index > 3 && index == 2 {
+            } else if index != 0 && index % 3 == 0 && index > 3 || index == 2 {
                 tabela_em_string.push_str(
                     format!(
                         "{},\n",
