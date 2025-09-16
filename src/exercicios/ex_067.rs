@@ -11,7 +11,7 @@ use crate::recursos::{
 };
 
 mod tabela_do_brasileirao_2025;
-mod ordenador_alfabetico_de_array;
+mod orgnizacao_alfabeticamente;
 
 use tabela_do_brasileirao_2025::TabelaDoBrasileirão2025;
 
