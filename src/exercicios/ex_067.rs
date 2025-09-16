@@ -15,7 +15,6 @@ mod orgnizacao_alfabeticamente;
 
 use tabela_do_brasileirao_2025::TabelaDoBrasileirão2025;
 
-// 73!
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {

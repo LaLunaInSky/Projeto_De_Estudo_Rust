@@ -200,6 +200,9 @@ fn lista_de_exercícios() -> Vec<String> {
 
         // 67
         "Um programa que contem um array preenchido com os 20 primeiros colocados da última tabela do Campeonato Brasileiro de Futebol, na ordem de colocação.\nDepois mostra:\n\n1º - Os 5 primeiros colocados;\n2º - Os últimos 4 colocados;\n3º - Os times em ordem alfabética;\n4º - Em qual posição está o time da Chapecoense.".to_string(),
+
+        // 68
+        "Um programa que gera cinco múmeros aleatórios de 1 à 10 e os coloca em um array. Depois, mostra a listagem completa dos números gerados, logo após indicando o menor e o maior valor armazenado.".to_string(),
     ];
 
     return exercícios_descrições.clone();
