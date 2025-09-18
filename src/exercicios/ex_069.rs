@@ -16,7 +16,6 @@ mod numeros_digitados;
 
 use numeros_digitados::NúmeroDigitados;
 
-// 75!
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {

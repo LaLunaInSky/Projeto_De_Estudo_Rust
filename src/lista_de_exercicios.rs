@@ -206,6 +206,9 @@ fn lista_de_exercícios() -> Vec<String> {
 
         // 69
         "Um programa que lê quatro valores pelo teclado e os guarda em um array.\nNo final, mostra:\n\n1º - Quantas vezes apareceu o valor 9.\n2º - Em que posição foi digitado o primeiro valor 3.\n3º - Quais foram os números pares digitados.".to_string(),
+
+        // 70
+        "Um programa que contém um vetor com nomes de produtos e seus respectivos preços. No final, mostra uma listagem dos preços, organizado em forma tabular.\n\n Exemplo:\n\nlápis......R$  1.75\nborracha...R$  2.00\ncaderno....R$ 15.90".to_string(),
     ];
 
     return exercícios_descrições.clone();
