@@ -203,6 +203,9 @@ fn lista_de_exercícios() -> Vec<String> {
 
         // 68
         "Um programa que gera cinco múmeros aleatórios de 1 à 10 e os coloca em um array. Depois, mostra a listagem completa dos números gerados, logo após indicando o menor e o maior valor armazenado.".to_string(),
+
+        // 69
+        "Um programa que lê quatro valores pelo teclado e os guarda em um array.\nNo final, mostra:\n\n1º - Quantas vezes apareceu o valor 9.\n2º - Em que posição foi digitado o primeiro valor 3.\n3º - Quais foram os números pares digitados.".to_string(),
     ];
 
     return exercícios_descrições.clone();
