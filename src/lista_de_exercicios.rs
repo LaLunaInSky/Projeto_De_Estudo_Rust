@@ -212,6 +212,9 @@ fn lista_de_exercícios() -> Vec<String> {
 
         // 71
         "Um programa que contém vetor com várias palavras (não usando acentos). Depois, mostrará, para cada palavra, quais são as suas vogais.\n\n Palavras:\naprender, programar, linguagem, python, curso, gratis, estudar, praticar, trabalhar, mercado, programador, futuro.".to_string(),
+
+        // 72
+        "Um programa onde o usuário digitará vários valores numéricos, armazenando-os em um vetor. Caso o número digitado já exista no vetor, ele não será adicionado novamente. No final, será exibido todos os valores únicos adicionados em ordem crescente.".to_string(),
     ];
 
     return exercícios_descrições.clone();

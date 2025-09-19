@@ -14,7 +14,6 @@ mod palavras_e_suas_vogais;
 
 use palavras_e_suas_vogais::PalavrasESuasVogais;
 
-// 77!
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
