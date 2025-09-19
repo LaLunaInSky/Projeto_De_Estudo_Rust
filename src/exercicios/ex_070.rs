@@ -18,7 +18,6 @@ mod arredondador_de_numeros_reais;
 use produtos::Produtos;
 use arredondador_de_numeros_reais::arredondador_de_número_real;
 
-// 76!
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {

@@ -209,6 +209,9 @@ fn lista_de_exercícios() -> Vec<String> {
 
         // 70
         "Um programa que contém um vetor com nomes de produtos e seus respectivos preços. No final, mostra uma listagem dos preços, organizado em forma tabular.\n\n Exemplo:\n\nlápis......R$  1.75\nborracha...R$  2.00\ncaderno....R$ 15.90".to_string(),
+
+        // 71
+        "Um programa que contém vetor com várias palavras (não usando acentos). Depois, mostrará, para cada palavra, quais são as suas vogais.\n\nPalavras:\naprender, programar, linguagem, python, curso, gratis, estudar, praticar, trabalhar, mercado, programador, futuro.".to_string(),
     ];
 
     return exercícios_descrições.clone();
