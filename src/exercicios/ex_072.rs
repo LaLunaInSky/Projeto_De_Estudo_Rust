@@ -16,7 +16,6 @@ mod numeros_unicos_em_ordem;
 
 use numeros_unicos_em_ordem::NúmerosÚnicosEmOrdem;
 
-// 79!
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {

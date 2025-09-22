@@ -215,6 +215,9 @@ fn lista_de_exercícios() -> Vec<String> {
 
         // 72
         "Um programa onde o usuário digitará vários valores numéricos, armazenando-os em um vetor. Caso o número digitado já exista no vetor, ele não será adicionado novamente. No final, será exibido todos os valores únicos adicionados em ordem crescente.".to_string(),
+
+        // 73
+        "Um programa onde o usuário digitará cinco valores númericos inteiros, cadastrando-os em um vetor, na ordem crescente. No final, mostrará o vetor ordenado no terminal.".to_string(),
     ];
 
     return exercícios_descrições.clone();
