@@ -61,13 +61,13 @@ pub fn rodar_o_exercício(
 fn analisar_as_palavras(
     palavras_e_vogais: &PalavrasESuasVogais
 ) {
-    sleep(Duration::from_millis(00));
+    sleep(Duration::from_millis(1000));
 
     println!(
         "Analisando as palavras...\n"
     );
 
-    sleep(Duration::from_millis(00));
+    sleep(Duration::from_millis(1500));
 
     for (
         index, 
@@ -85,5 +85,5 @@ fn analisar_as_palavras(
 
     println!();
 
-    sleep(Duration::from_millis(00));
+    sleep(Duration::from_millis(1100));
 }

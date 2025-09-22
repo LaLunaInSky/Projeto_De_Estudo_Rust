@@ -199,13 +199,13 @@ fn perguntar_sobre_adicionar_mais_um_produto(
 fn analisar_os_produtos(
     produtos: &Produtos
 ) {
-    sleep(Duration::from_millis(00));
+    sleep(Duration::from_millis(1000));
 
     println!(
         "\nAnalisando os produtos...\n"
     );
 
-    sleep(Duration::from_millis(00));
+    sleep(Duration::from_millis(1500));
 
     for produto in produtos.get_lista_de_produtos() {
         println!(
@@ -220,5 +220,5 @@ fn analisar_os_produtos(
 
     println!();
 
-    sleep(Duration::from_millis(00));
+    sleep(Duration::from_millis(1100));
 }
