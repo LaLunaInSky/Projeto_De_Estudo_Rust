@@ -156,14 +156,14 @@ fn main() {
     );
 
     // Rodar o menu de exercícios
-    _menu_de_opções_de_exercícios(
-        &cabeçalho_do_programa, 
-        total_de_exercícios
-    );
+    // _menu_de_opções_de_exercícios(
+    //     &cabeçalho_do_programa, 
+    //     total_de_exercícios
+    // );
 
     // Rodar apenas o exercício X
-    // exercicios::executar_o_exercício_x(
-    //     *_último_exercício, 
-    //     &cabeçalho_do_programa
-    // );
+    exercicios::executar_o_exercício_x(
+        *_último_exercício, 
+        &cabeçalho_do_programa
+    );
 }
