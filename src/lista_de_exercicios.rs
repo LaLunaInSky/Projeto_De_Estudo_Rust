@@ -218,6 +218,9 @@ fn lista_de_exercícios() -> Vec<String> {
 
         // 73
         "Um programa onde o usuário digitará cinco valores númericos inteiros, cadastrando-os em um vetor, na ordem crescente. No final, mostrará o vetor ordenado no terminal.".to_string(),
+
+        // 74
+        "Um programa lê vários números inteiros e coloca-os em um vetor. Depois disso, mostra:\n\n1º - Quantos números foram digitados;\n2º - A Lista dos valores, ordenada de forma decrescente;\n3º - Se o valor 5 foi digitado, e está ou não na lista.".to_string(),
     ];
 
     return exercícios_descrições.clone();

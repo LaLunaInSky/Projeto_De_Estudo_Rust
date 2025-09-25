@@ -16,7 +16,6 @@ mod numeros_em_ordem_crescente;
 
 use numeros_em_ordem_crescente::NúmeroEmOrdemCrescente;
 
-// 80!
 pub fn rodar_o_exercício(
     cabeçalho_do_programa: &String
 ) {
