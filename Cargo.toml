@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-rand = "0.9.1"
-chrono = "0.4.41"
+rand = "0.9.2"
+chrono = "0.4.42"
 
 [package.metadata.deb]
 maintainer = "LaLunaInSky <lalunainsky@gmail.com>"
@@ -15,6 +15,4 @@ extended-description = """Um programa terminal de exercícios em rust!"""
 depends = "$auto"
 section = "utility"
 priority = "optional"
-assets = [
-    ["target/release/projeto_de_estudo_rust", "usr/bin/", "755"]
-]
+assets = [["target/release/projeto_de_estudo_rust", "usr/bin/", "755"]]
